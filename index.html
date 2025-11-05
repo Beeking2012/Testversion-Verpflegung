@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feldküche – DRK Intelligente Rezeptempfehlung</title>
+    
+    <!-- Externe Bibliotheken -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- CSS Dateien -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- DRK Header -->
+    <header class="drk-header">
+        <div class="drk-header-content">
+            <div class="drk-logo">
+                <div class="drk-logo-icon">DRK</div>
+                <div>
+                    <h1 class="drk-title">Feldküche</h1>
+                    <p class="drk-subtitle">Intelligente Rezeptempfehlung</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- HAUPT-NAVIGATION - 4 REITER -->
+        <div class="main-tabs">
+            <div class="main-tab active" onclick="switchMainTab('rezept')">🍲 Rezept</div>
+            <div class="main-tab" onclick="switchMainTab('einkauf')">🛒 Einkauf</div>
+            <div class="main-tab" onclick="switchMainTab('materiallager')">🏪 Materiallager</div>
+            <div class="main-tab" onclick="switchMainTab('lebensmittellager')">🥫 Lebensmittellager</div>
+        </div>
+
+        <!-- Rezept Tab -->
+        <div id="rezept-tab" class="main-tab-content active">
+            <!-- Inhalt wird dynamisch geladen -->
+        </div>
+
+        <!-- Einkauf Tab -->
+        <div id="einkauf-tab" class="main-tab-content">
+            <!-- Inhalt wird dynamisch geladen -->
+        </div>
+
+        <!-- Materiallager Tab -->
+        <div id="materiallager-tab" class="main-tab-content">
+            <!-- Inhalt wird dynamisch geladen -->
+        </div>
+
+        <!-- Lebensmittellager Tab -->
+        <div id="lebensmittellager-tab" class="main-tab-content">
+            <!-- Inhalt wird dynamisch geladen -->
+        </div>
+    </div>
+
+    <!-- DRK Footer -->
+    <footer class="drk-footer">
+        <div class="container">
+            <p>Deutsches Rotes Kreuz - Feldküche System</p>
+            <p>© 2023 DRK - Alle Rechte vorbehalten</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Dateien -->
+    <script src="data/allergene.js"></script>
+    <script src="data/produkte.js"></script>
+    <script src="data/rezepte.js"></script>
+    <script src="js/cloud-storage.js"></script>
+    <script src="js/allergen-manager.js"></script>
+    <script src="js/einkaufsmodus.js"></script>
+    <script src="js/lager-manager.js"></script>
+    <script src="js/equipment-manager.js"></script>
+    <script src="js/rezept-engine.js"></script>
+    <script src="js/pdf-export.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
