@@ -1,0 +1,56 @@
+/* Seite 2 - Cloud-Abgleich */
+.comparison-container {
+    background: var(--surface-color);
+    border-radius: 0.5rem;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.comparison-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comparison-content {
+    padding: 1.5rem;
+}
+
+.comparison-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.comparison-item:last-child {
+    border-bottom: none;
+}
+
+.comparison-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.status-match {
+    background-color: var(--success-color);
+}
+
+.status-mismatch {
+    background-color: var(--warning-color);
+}
+
+.status-error {
+    background-color: var(--error-color);
+}
