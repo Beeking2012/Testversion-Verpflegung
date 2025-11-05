@@ -5,7 +5,7 @@
 
 class CloudAPI {
     constructor() {
-        this.baseURL = window.dataManager.cloudBaseURL;
+        this.baseURL = window.dataManager?.cloudBaseURL || ''; // sicherer Zugriff
         this.cache = new Map();
         this.pendingRequests = new Map();
         this.kvStore = null;
