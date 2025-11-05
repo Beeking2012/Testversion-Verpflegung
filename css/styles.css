@@ -1,0 +1,306 @@
+/* =============================================
+   DRK DESIGN SYSTEM
+   ============================================= */
+
+:root {
+    /* DRK Farbpalette */
+    --drk-red: #b30000;
+    --drk-red-dark: #990000;
+    --drk-red-light: #cc0000;
+    --drk-white: #ffffff;
+    --drk-gray-light: #f5f5f5;
+    --drk-gray: #666666;
+    --drk-success: #4CAF50;
+    --drk-warning: #ff9800;
+    --drk-info: #2196F3;
+    
+    /* Abstände */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+}
+
+/* =============================================
+   BASIS-STYLES & RESET
+   ============================================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--drk-gray-light);
+    color: #333;
+    line-height: 1.6;
+}
+
+/* =============================================
+   LAYOUT KOMPONENTEN
+   ============================================= */
+
+/* Header */
+.drk-header {
+    background-color: var(--drk-white);
+    border-bottom: 3px solid var(--drk-red);
+    padding: var(--space-lg) 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.drk-header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-lg);
+}
+
+.drk-logo {
+    display: flex;
+    align-items: center;
+    margin-right: var(--space-lg);
+}
+
+.drk-logo-icon {
+    width: 50px;
+    height: 50px;
+    background-color: var(--drk-red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 24px;
+    margin-right: var(--space-md);
+}
+
+/* Haupt-Container */
+.container {
+    max-width: 1200px;
+    margin: var(--space-lg) auto;
+    background: var(--drk-white);
+    padding: var(--space-xl);
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-top: 4px solid var(--drk-red);
+}
+
+/* Footer */
+.drk-footer {
+    background-color: var(--drk-white);
+    border-top: 3px solid var(--drk-red);
+    padding: var(--space-lg) 0;
+    margin-top: var(--space-xl);
+    text-align: center;
+    color: var(--drk-gray);
+    font-size: 0.9em;
+}
+
+/* =============================================
+   HAUPT-NAVIGATION (4 REITER)
+   ============================================= */
+
+.main-tabs {
+    display: flex;
+    margin: var(--space-xl) 0;
+    border-bottom: 2px solid var(--drk-red);
+    flex-wrap: wrap;
+    background: #f8f9fa;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.main-tab {
+    flex: 1;
+    min-width: 150px;
+    padding: var(--space-md) var(--space-lg);
+    cursor: pointer;
+    background: #f8f9fa;
+    text-align: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    border-bottom: 3px solid transparent;
+}
+
+.main-tab:hover {
+    background: #e9ecef;
+    border-bottom: 3px solid var(--drk-red-light);
+}
+
+.main-tab.active {
+    background: var(--drk-white);
+    color: var(--drk-red);
+    border-bottom: 3px solid var(--drk-red);
+}
+
+.main-tab-content {
+    display: none;
+    padding: var(--space-xl) 0;
+    animation: fadeIn 0.5s ease;
+}
+
+.main-tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* =============================================
+   TYPOGRAPHIE
+   ============================================= */
+
+.drk-title {
+    color: var(--drk-red);
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.drk-subtitle {
+    color: var(--drk-gray);
+    margin: 0;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+h1 {
+    color: var(--drk-red);
+    text-align: center;
+    margin-bottom: var(--space-xl);
+    font-weight: 600;
+    border-bottom: 1px solid #eee;
+    padding-bottom: var(--space-md);
+}
+
+h2 {
+    color: var(--drk-red);
+    font-weight: 600;
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+    border-bottom: 1px solid #eee;
+    padding-bottom: var(--space-sm);
+}
+
+h3 {
+    color: var(--drk-red);
+    font-weight: 600;
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+}
+
+/* =============================================
+   FORMULAR ELEMENTE
+   ============================================= */
+
+label {
+    display: block;
+    margin: var(--space-sm) 0 var(--space-xs) 0;
+    font-weight: 600;
+    color: #444;
+}
+
+input, select, button {
+    width: 100%;
+    padding: var(--space-sm);
+    margin: var(--space-xs) 0;
+    border: 1px solid #ddd;
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--drk-red);
+    box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: var(--space-md);
+        margin: var(--space-sm);
+    }
+    
+    .form-row {
+        flex-direction: column;
+    }
+    
+    .form-row .form-group {
+        min-width: 100%;
+    }
+    
+    .main-tabs, .sub-tabs {
+        flex-direction: column;
+    }
+    
+    .main-tab, .sub-tab {
+        margin-bottom: var(--space-xs);
+        border-radius: var(--radius-sm);
+    }
+    
+    .cloud-actions {
+        flex-direction: column;
+    }
+    
+    .cloud-actions button {
+        width: 100%;
+    }
+    
+    .lager-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .lager-actions {
+        flex-direction: column;
+    }
+    
+    .lager-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-xs);
+    }
+    
+    /* Responsive für Kategorien-Grid */
+    .kategorien-grid {
+        grid-template-columns: 1fr;
+        gap: var(--space-sm);
+    }
+    
+    .kategorie-group {
+        padding: var(--space-sm);
+    }
+    
+    .rezept-container {
+        flex-direction: column;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .allergen-grid-compact {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Für sehr große Bildschirme */
+@media (min-width: 1200px) {
+    .kategorien-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
