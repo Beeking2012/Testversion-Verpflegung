@@ -1,31 +1,15 @@
 {
   "version": 2,
-  "name": "cloud-app",
   "builds": [
     {
-      "src": "index.html",
+      "src": "package.json",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/css/(.*)",
-      "dest": "/css/$1"
-    },
-    {
-      "src": "/js/(.*)",
-      "dest": "/js/$1"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
-    },
-    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
-  ],
-  "env": {
-    "CLOUD_API_URL": "https://your-cloud-api.vercel.app/api"
-  }
+  ]
 }
