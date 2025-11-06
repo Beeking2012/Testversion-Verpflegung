@@ -3,600 +3,2828 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modulare Website mit Reitern</title>
+    <title>Feldküche – DRK Intelligente Rezeptempfehlung</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
     <style>
-        /* === BASIS STYLES === */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    /* DRK-STYLES */
+    :root {
+        --drk-red: #b30000;
+        --drk-red-dark: #990000;
+        --drk-red-light: #cc0000;
+        --drk-white: #ffffff;
+        --drk-gray-light: #f5f5f5;
+        --drk-gray: #666666;
+        --drk-success: #4CAF50;
+        --drk-warning: #ff9800;
+        --drk-info: #2196F3;
+    }
+    
+    * {
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--drk-gray-light);
+        color: #333;
+        line-height: 1.6;
+    }
+    
+    .drk-header {
+        background-color: var(--drk-white);
+        border-bottom: 3px solid var(--drk-red);
+        padding: 15px 0;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .drk-header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+    }
+    
+    .drk-logo {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+    }
+    
+    .drk-logo-icon {
+        width: 50px;
+        height: 50px;
+        background-color: var(--drk-red);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: bold;
+        font-size: 24px;
+        margin-right: 15px;
+    }
+    
+    .drk-title {
+        color: var(--drk-red);
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+    }
+    
+    .drk-subtitle {
+        color: var(--drk-gray);
+        margin: 0;
+        font-size: 14px;
+        font-weight: normal;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        background: var(--drk-white);
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        border-top: 4px solid var(--drk-red);
+    }
+    
+    h1 {
+        color: var(--drk-red);
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: 600;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+    }
+    
+    h2 {
+        color: var(--drk-red);
+        font-weight: 600;
+        margin-top: 25px;
+        margin-bottom: 15px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+    
+    h3 {
+        color: var(--drk-red);
+        font-weight: 600;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .info {
+        background-color: #f0f8ff;
+        padding: 15px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        border-left: 4px solid var(--drk-info);
+    }
+    
+    label {
+        display: block;
+        margin: 10px 0 5px 0;
+        font-weight: 600;
+        color: #444;
+    }
+    
+    input, select, button {
+        width: 100%;
+        padding: 12px;
+        margin: 5px 0;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-family: inherit;
+        font-size: 16px;
+    }
+    
+    input:focus, select:focus {
+        outline: none;
+        border-color: var(--drk-red);
+        box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.1);
+    }
+    
+    button {
+        background-color: var(--drk-red);
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        margin: 10px 0;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    button:after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+    }
+    
+    button:focus:not(:active)::after {
+        animation: ripple 1s ease-out;
+    }
+    
+    @keyframes ripple {
+        0% {
+            transform: scale(0, 0);
+            opacity: 0.5;
         }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            padding: 20px;
-            line-height: 1.6;
+        100% {
+            transform: scale(20, 20);
+            opacity: 0;
         }
+    }
+    
+    button:hover {
+        background-color: var(--drk-red-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    
+    button:active {
+        transform: translateY(0);
+    }
+    
+    button.success {
+        background-color: var(--drk-success);
+    }
+    
+    button.success:hover {
+        background-color: #45a049;
+    }
+    
+    button.secondary {
+        background-color: var(--drk-gray);
+    }
+    
+    button.secondary:hover {
+        background-color: #555;
+    }
+    
+    button.pdf {
+        background-color: #ff4444;
+    }
+    
+    button.pdf:hover {
+        background-color: #cc0000;
+    }
+    
+    button.equipment {
+        background-color: var(--drk-warning);
+    }
+    
+    button.equipment:hover {
+        background-color: #e68900;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    th, td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+    
+    th {
+        background-color: var(--drk-red);
+        color: white;
+        font-weight: 600;
+    }
+    
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    
+    tr:hover {
+        background-color: #f0f0f0;
+    }
+    
+    .tabs {
+        display: flex;
+        margin: 20px 0;
+        border-bottom: 2px solid var(--drk-red);
+        flex-wrap: wrap;
+    }
+    
+    .tab {
+        padding: 12px 24px;
+        cursor: pointer;
+        background: #f0f0f0;
+        margin-right: 5px;
+        border-radius: 5px 5px 0 0;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 1px solid transparent;
+        border-bottom: none;
+    }
+    
+    .tab:hover {
+        background: #e0e0e0;
+    }
+    
+    .tab.active {
+        background: var(--drk-red);
+        color: white;
+    }
+    
+    .tab-content {
+        display: none;
+        padding: 20px 0;
+        animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+    
+    .cost-summary {
+        background-color: #e8f4e8;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 20px;
+        border-left: 4px solid var(--drk-success);
+    }
+    
+    .packaging-info {
+        font-size: 0.9em;
+        color: var(--drk-gray);
+        font-style: italic;
+    }
+    
+    .unit-conversion {
+        font-size: 0.85em;
+        color: var(--drk-gray);
+        margin-left: 5px;
+    }
+    
+    .packaging-details {
+        font-size: 0.9em;
+        color: #555;
+    }
+    
+    .lager-section {
+        background: #f0f8ff;
+        padding: 20px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border-left: 4px solid var(--drk-info);
+    }
+    
+    .lager-form {
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    
+    .form-group {
+        margin: 10px 0;
+    }
+    
+    .form-row {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .form-row .form-group {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .lager-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        margin: 8px 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+    }
+    
+    .lager-item:hover {
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .lager-actions {
+        display: flex;
+        gap: 10px;
+        margin: 20px 0;
+        flex-wrap: wrap;
+    }
+    
+    .expired {
+        background-color: #ffebee !important;
+        border-left: 4px solid #f44336 !important;
+    }
+    
+    .expiring-soon {
+        background-color: #fff3e0 !important;
+        border-left: 4px solid var(--drk-warning) !important;
+    }
+    
+    .recommendation-section {
+        background: #e8f5e8;
+        padding: 20px;
+        border-radius: 5px;
+        margin: 20px 0;
+        border-left: 4px solid var(--drk-success);
+    }
+    
+    .recommendation-card {
+        background: white;
+        padding: 20px;
+        margin: 10px 0;
+        border-radius: 5px;
+        border: 2px solid var(--drk-success);
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .best-choice {
+        background: #f1f8e9;
+    }
+    
+    .cost-saving {
+        color: var(--drk-success);
+        font-weight: bold;
+        font-size: 1.1em;
+    }
+    
+    .loading {
+        text-align: center;
+        padding: 20px;
+        font-size: 1.2em;
+    }
+    
+    .recommendation-stats {
+        display: flex;
+        justify-content: space-around;
+        margin: 15px 0;
+        flex-wrap: wrap;
+    }
+    
+    .stat-item {
+        text-align: center;
+        padding: 10px;
+    }
+    
+    .stat-value {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: var(--drk-red);
+    }
+    
+    .stat-label {
+        font-size: 0.9em;
+        color: var(--drk-gray);
+    }
+    
+    .einkaufsmodus-selector {
+        background: #fff3cd;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border: 1px solid #ffc107;
+    }
+    
+    .modus-option {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+    }
+    
+    .modus-option input {
+        margin-right: 10px;
+        width: auto;
+    }
+    
+    .modus-explanation {
+        font-size: 0.9em;
+        color: var(--drk-gray);
+        margin-left: 25px;
+    }
+    
+    .lager-verwendung {
+        background-color: #e8f5e8 !important;
+    }
+    
+    .komplett-kauf {
+        background-color: #fff3e0 !important;
+    }
+    
+    /* PDF Export Button Styles */
+    .pdf-export-section {
+        background: #ffe6e6;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border-left: 4px solid #ff4444;
+    }
+    
+    /* ALLERGEN-STYLES */
+    .allergene-info-box {
+        background: #fff3e0;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border-left: 4px solid var(--drk-warning);
+    }
+    
+    .allergen-grid-compact {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 8px;
+        margin: 10px 0;
+    }
+    
+    .allergen-item-compact {
+        display: flex;
+        align-items: center;
+        padding: 5px 8px;
+        background: white;
+        border-radius: 3px;
+        border: 1px solid #ddd;
+        font-size: 0.85em;
+    }
+    
+    .allergen-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        margin: 2px;
+        background: var(--drk-warning);
+        color: white;
+        border-radius: 12px;
+        font-size: 0.8em;
+        font-weight: bold;
+    }
+    
+    .allergen-critical {
+        background: #f44336;
+    }
+    
+    .allergen-moderate {
+        background: var(--drk-warning);
+    }
+    
+    .allergen-mild {
+        background: var(--drk-success);
+    }
+    
+    .allergen-legend {
+        background: white;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+        border: 1px solid #ddd;
+        font-size: 0.9em;
+    }
 
+    /* EQUIPMENT-STYLES */
+    .equipment-section {
+        background: #fff3e0;
+        padding: 20px;
+        border-radius: 5px;
+        margin: 20px 0;
+        border-left: 4px solid var(--drk-warning);
+    }
+    
+    .equipment-subtabs {
+        display: flex;
+        margin: 20px 0;
+        border-bottom: 2px solid var(--drk-warning);
+        flex-wrap: wrap;
+    }
+    
+    .equipment-subtab {
+        padding: 10px 20px;
+        cursor: pointer;
+        background: #fff3e0;
+        margin-right: 5px;
+        border-radius: 5px 5px 0 0;
+        border: 1px solid var(--drk-warning);
+        border-bottom: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .equipment-subtab:hover {
+        background: #ffe0b2;
+    }
+    
+    .equipment-subtab.active {
+        background: var(--drk-warning);
+        color: white;
+    }
+    
+    .equipment-subcontent {
+        display: none;
+        padding: 20px 0;
+    }
+    
+    .equipment-subcontent.active {
+        display: block;
+    }
+    
+    .einsatz-optionen {
+        background: #e3f2fd;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border-left: 4px solid var(--drk-info);
+    }
+    
+    .einsatz-ergebnis {
+        background: #e8f5e8;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border-left: 4px solid var(--drk-success);
+    }
+    
+    .material-quelle {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+        padding: 10px;
+        background: white;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+    
+    .material-quelle input {
+        width: auto;
+        margin-right: 10px;
+    }
+    
+    .transfer-section {
+        background: #e3f2fd;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border-left: 4px solid var(--drk-info);
+    }
+    
+    /* CLOUD STORAGE STYLES */
+    .cloud-storage-section {
+        background: #e8f5e9;
+        padding: 20px;
+        border-radius: 5px;
+        margin: 20px 0;
+        border-left: 4px solid var(--drk-success);
+    }
+    
+    .cloud-actions {
+        display: flex;
+        gap: 10px;
+        margin: 15px 0;
+        flex-wrap: wrap;
+    }
+    
+    .cloud-actions button {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .cloud-status {
+        background: #e3f2fd;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border-left: 4px solid var(--drk-info);
+        min-height: 60px;
+    }
+    
+    .status-success {
+        color: var(--drk-success);
+        font-weight: bold;
+    }
+    
+    .status-error {
+        color: #f44336;
+        font-weight: bold;
+    }
+    
+    .status-info {
+        color: var(--drk-info);
+    }
+    
+    .drk-footer {
+        background-color: var(--drk-white);
+        border-top: 3px solid var(--drk-red);
+        padding: 20px 0;
+        margin-top: 40px;
+        text-align: center;
+        color: var(--drk-gray);
+        font-size: 0.9em;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-
-        /* === TAB NAVIGATION === */
-        .tabs {
-            display: flex;
-            background-color: #f8f9fa;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .tab-button {
-            padding: 12px 24px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            border-bottom: 3px solid transparent;
-            flex: 1;
-        }
-
-        .tab-button:hover {
-            background-color: #e9ecef;
-        }
-
-        .tab-button.active {
-            background-color: white;
-            border-bottom-color: #007bff;
-            color: #007bff;
-            font-weight: bold;
-        }
-
-        /* === TAB CONTENT === */
-        .tab-content {
-            padding: 30px;
-        }
-
-        .tab-pane {
-            display: none;
-        }
-
-        .tab-pane.active {
-            display: block;
-            animation: fadeIn 0.5s ease-in;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* === GEMEINSAME KOMPONENTEN === */
-        h2 {
-            margin-bottom: 20px;
-            color: #333;
-            border-bottom: 2px solid #007bff;
-            padding-bottom: 10px;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: white;
-        }
-
-        .data-table th,
-        .data-table td {
-            padding: 12px 15px;
-            text-align: left;
-            border: 1px solid #ddd;
-        }
-
-        .data-table th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .data-table tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-
-        .data-table tr:hover {
-            background-color: #e3f2fd;
-        }
-
-        .button-group {
-            margin: 20px 0;
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .action-btn {
-            padding: 12px 24px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            min-width: 150px;
-        }
-
-        .action-btn:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .content-area {
-            min-height: 200px;
-            border: 2px dashed #ddd;
-            padding: 25px;
-            border-radius: 8px;
-            background-color: #fafafa;
-            margin-top: 20px;
-        }
-
-        .example-text {
-            background: #e7f3ff;
-            padding: 20px;
-            border-radius: 6px;
-            border-left: 4px solid #007bff;
-            margin: 20px 0;
-        }
-
-        .info-box {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
             padding: 15px;
-            border-radius: 6px;
-            margin: 15px 0;
+            margin: 10px;
         }
-    </style>
+        
+        .form-row {
+            flex-direction: column;
+        }
+        
+        .form-row .form-group {
+            min-width: 100%;
+        }
+        
+        .tabs, .equipment-subtabs {
+            flex-direction: column;
+        }
+        
+        .tab, .equipment-subtab {
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+        
+        .lager-actions, .cloud-actions {
+            flex-direction: column;
+        }
+        
+        .lager-actions button, .cloud-actions button {
+            width: 100%;
+        }
+        
+        .recommendation-stats {
+            flex-direction: column;
+        }
+        
+        .drk-header-content {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .drk-logo {
+            margin-right: 0;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+    }
+    
+    /* Verbesserte Lesbarkeit für kleine Bildschirme */
+    @media (max-width: 480px) {
+        body {
+            font-size: 14px;
+        }
+        
+        h1 {
+            font-size: 1.5em;
+        }
+        
+        h2 {
+            font-size: 1.3em;
+        }
+        
+        button {
+            padding: 10px;
+        }
+        
+        .container {
+            padding: 10px;
+        }
+    }
+</style>
 </head>
 <body>
+    <!-- DRK Header -->
+    <header class="drk-header">
+        <div class="drk-header-content">
+            <div class="drk-logo">
+                <div class="drk-logo-icon">DRK</div>
+                <div>
+                    <h1 class="drk-title">Feldküche</h1>
+                    <p class="drk-subtitle">Intelligente Rezeptempfehlung</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
     <div class="container">
-        <!-- TAB NAVIGATION -->
-        <nav class="tabs" id="tabNavigation">
-            <button class="tab-button active" data-tab="page1">📊 Seite 1</button>
-            <button class="tab-button" data-tab="page2">📝 Seite 2</button>
-            <button class="tab-button" data-tab="page3">🎮 Seite 3</button>
-            <button class="tab-button" data-tab="page4">⚡ Seite 4</button>
-        </nav>
+        <div class="info">
+            <p>Das System analysiert automatisch alle Rezepte und empfiehlt das günstigste basierend auf Ihrem Lagerbestand.</p>
+        </div>
 
-        <!-- TAB CONTENT AREA -->
-        <div class="tab-content">
-            <!-- ============================================
-                 REITER 1: LEERE TABELLE
-            ============================================ -->
-            <div id="page1" class="tab-pane active">
-                <h2>📊 Leere Datenübersicht</h2>
-                <div class="info-box">
-                    <strong>Info:</strong> Diese Tabelle ist aktuell leer. Daten können später hinzugefügt werden.
+        <!-- Intelligente Empfehlungs-Section -->
+        <div class="recommendation-section">
+            <h2>🤖 Intelligente Rezeptempfehlung</h2>
+            <label for="empfohlen-personen">Personenzahl für Empfehlung:</label>
+            <input type="number" id="empfohlen-personen" placeholder="z. B. 50" min="1" value="50">
+            <button onclick="zeigeRezeptEmpfehlungen()" class="success">🎯 Bestes Rezept finden</button>
+            <div id="rezept-empfehlungen"></div>
+        </div>
+
+        <!-- Klassische Rezeptauswahl -->
+        <h2>Manuelle Rezeptauswahl</h2>
+        <label for="rezept">Rezept auswählen:</label>
+        <select id="rezept">
+            <option value="kartoffelsuppe">Kartoffelsuppe</option>
+            <option value="gulasch">Gulasch</option>
+            <option value="chili_con_carne">Chili con Carne</option>
+            <option value="bolognese">Bolognese</option>
+            <option value="haehnchencurry">Hähnchencurry</option>
+            <option value="linseneintopf">Linseneintopf</option>
+            <option value="erbseneintopf">Erbseneintopf</option>
+            <option value="kohlrouladen">Kohlrouladen</option>
+            <option value="jaegerschnitzel">Jägerschnitzel</option>
+            <option value="hackbraten">Hackbraten</option>
+        </select>
+
+        <label for="personen">Personenzahl:</label>
+        <input type="number" id="personen" placeholder="z. B. 50" min="1" value="50">
+
+        <button onclick="zeigeRezept()">Rezept & Einkaufsliste anzeigen</button>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('rezept')">Rezept</div>
+            <div class="tab" onclick="switchTab('einkaufsliste')">Einkaufsliste</div>
+            <div class="tab" onclick="switchTab('equipment')">🍳 Equipment</div>
+            <div class="tab" onclick="switchTab('lager')">🏪 Lager</div>
+        </div>
+
+        <div id="rezept-tab" class="tab-content active">
+            <div id="ausgabe"></div>
+            
+            <!-- ALLERGEN-INFO BOX -->
+            <div id="allergene-info-box" class="allergene-info-box" style="display: none;">
+                <h3>⚠️ Allergen-Informationen</h3>
+                <div id="allergen-anzeige"></div>
+            </div>
+        </div>
+
+        <div id="einkaufsliste-tab" class="tab-content">
+            <!-- Einkaufsmodus Auswahl -->
+            <div class="einkaufsmodus-selector">
+                <h3>🛒 Einkaufsmodus auswählen</h3>
+                <div class="modus-option">
+                    <input type="radio" id="modus-lager" name="einkaufsmodus" value="lager" checked>
+                    <label for="modus-lager"><strong>Nur fehlende Mengen kaufen</strong> (Lagerbestand wird berücksichtigt)</label>
                 </div>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Bezeichnung</th>
-                            <th>Kategorie</th>
-                            <th>Status</th>
-                            <th>Aktionen</th>
-                        </tr>
-                    </thead>
-                    <tbody id="emptyTableBody">
-                        <!-- Tabelle bleibt bewusst leer -->
-                    </tbody>
-                </table>
-                <div class="example-text">
-                    <p>Dies ist ein Platzhalter für zukünftige Daten. Die Tabellenstruktur ist vorbereitet und kann dynamisch mit Inhalten gefüllt werden.</p>
+                <div class="modus-explanation">
+                    Beispiel: Bei 15 kg benötigt und 12 kg im Lager → nur 3 kg kaufen
+                </div>
+                
+                <div class="modus-option">
+                    <input type="radio" id="modus-komplett" name="einkaufsmodus" value="komplett">
+                    <label for="modus-komplett"><strong>Alles neu kaufen</strong> (Lagerbestand ignorieren)</label>
+                </div>
+                <div class="modus-explanation">
+                    Beispiel: Bei 15 kg benötigt → komplette 15 kg kaufen (auch wenn Lager vorhanden)
+                </div>
+                
+                <button onclick="aktualisiereEinkaufsliste()" class="secondary">🔄 Einkaufsliste aktualisieren</button>
+            </div>
+            
+            <!-- PDF Export Section -->
+            <div class="pdf-export-section">
+                <h3>📄 PDF Export</h3>
+                <p>Exportieren Sie die Einkaufsliste als PDF für den Druck oder zur Weitergabe:</p>
+                <button onclick="exportAsPDF()" class="pdf">📥 Einkaufsliste als PDF exportieren</button>
+                <div class="hint">
+                    Das PDF enthält alle Informationen der Einkaufsliste in einem druckoptimierten Format.
                 </div>
             </div>
+            
+            <div id="einkaufsliste"></div>
+        </div>
 
-            <!-- ============================================
-                 REITER 2: BEISPIELTEXT UND TABELLE
-            ============================================ -->
-            <div id="page2" class="tab-pane">
-                <h2>📝 Beispielinhalt mit Daten</h2>
+        <!-- EQUIPMENT TAB -->
+        <div id="equipment-tab" class="tab-content">
+            <div class="equipment-section">
+                <h2>🍳 Equipment-Verwaltung</h2>
                 
-                <div class="example-text">
-                    <h3>Willkommen auf Seite 2</h3>
-                    <p>Diese Seite demonstriert die Kombination aus informativem Text und strukturierten Tabellendaten. Die untenstehende Tabelle zeigt beispielhafte Benutzerinformationen.</p>
-                    <p>Die Daten sind statisch eingebunden und dienen Demonstrationszwecken. In einer realen Anwendung würden diese Daten typischerweise aus einer Datenbank oder API bezogen.</p>
+                <!-- Untertabs für Equipment -->
+                <div class="equipment-subtabs">
+                    <div class="equipment-subtab active" onclick="switchEquipmentSubTab('gw-beladung')">🚐 GW-V Beladung</div>
+                    <div class="equipment-subtab" onclick="switchEquipmentSubTab('kv-lager')">🏢 KV-Lager</div>
+                    <div class="equipment-subtab" onclick="switchEquipmentSubTab('einsatz')">🔄 Einsatz</div>
                 </div>
 
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Alter</th>
-                            <th>Stadt</th>
-                            <th>Beruf</th>
-                            <th>Erfahrung</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Max Mustermann</td>
-                            <td>28</td>
-                            <td>Berlin</td>
-                            <td>Web Developer</td>
-                            <td>5 Jahre</td>
-                        </tr>
-                        <tr>
-                            <td>Anna Schmidt</td>
-                            <td>32</td>
-                            <td>Hamburg</td>
-                            <td>Designerin</td>
-                            <td>8 Jahre</td>
-                        </tr>
-                        <tr>
-                            <td>Peter Müller</td>
-                            <td>25</td>
-                            <td>München</td>
-                            <td>Projektmanager</td>
-                            <td>3 Jahre</td>
-                        </tr>
-                        <tr>
-                            <td>Sarah Weber</td>
-                            <td>29</td>
-                            <td>Köln</td>
-                            <td>Data Analyst</td>
-                            <td>4 Jahre</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <!-- GW-V Beladung -->
+                <div id="gw-beladung-subtab" class="equipment-subcontent active">
+                    <h3>🚐 GW-Verpflegung Beladung (HIK 3.0)</h3>
+                    
+                    <!-- Formular für GW-Beladung -->
+                    <div class="lager-form">
+                        <h4>Neues Equipment hinzufügen</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="gw-name">Bezeichnung:</label>
+                                <input type="text" id="gw-name" placeholder="z.B. Kochtopf 100L">
+                            </div>
+                            <div class="form-group">
+                                <label for="gw-menge">Menge:</label>
+                                <input type="number" id="gw-menge" min="1" value="1" placeholder="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="gw-kategorie">Kategorie (HIK 3.0):</label>
+                                <select id="gw-kategorie">
+                                    <option value="Kochausrüstung">Kochausrüstung</option>
+                                    <option value="Geschirr">Geschirr</option>
+                                    <option value="Besteck">Besteck</option>
+                                    <option value="Küchengeräte">Küchengeräte</option>
+                                    <option value="Reinigung">Reinigung</option>
+                                    <option value="Schutzausrüstung">Schutzausrüstung</option>
+                                    <option value="Brenner & Energie">Brenner & Energie</option>
+                                    <option value="Wasseraufbereitung">Wasseraufbereitung</option>
+                                    <option value="Lebensmittelzubereitung">Lebensmittelzubereitung</option>
+                                    <option value="Sonstiges">Sonstiges</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="gw-notizen">Notizen:</label>
+                                <input type="text" id="gw-notizen" placeholder="Lagerort, Besonderheiten...">
+                            </div>
+                        </div>
+                        <button onclick="fuegeGWEquipmentHinzu()" class="success">➕ Equipment hinzufügen</button>
+                    </div>
+
+                    <!-- Aktionsbuttons -->
+                    <div class="lager-actions">
+                        <button onclick="EquipmentManager.ladeHIKDefault('gw')" class="success">📋 HIK 3.0 Default laden</button>
+                        <button onclick="EquipmentManager.gwLeeren()" class="secondary">🗑️ GW-Beladung leeren</button>
+                    </div>
+
+                    <!-- GW-Beladungsanzeige -->
+                    <div id="gw-beladung"></div>
+                </div>
+
+                <!-- KV-Lager -->
+                <div id="kv-lager-subtab" class="equipment-subcontent">
+                    <h3>🏢 KV-Lager (Kreisverband)</h3>
+                    
+                    <!-- Formular für KV-Lager -->
+                    <div class="lager-form">
+                        <h4>Neues Equipment zum KV-Lager hinzufügen</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="kv-lager-name">Bezeichnung:</label>
+                                <input type="text" id="kv-lager-name" placeholder="z.B. Kochtopf 100L">
+                            </div>
+                            <div class="form-group">
+                                <label for="kv-lager-menge">Menge:</label>
+                                <input type="number" id="kv-lager-menge" min="1" value="1" placeholder="1">
+                            </div>
+                            <div class="form-group">
+                                <label for="kv-lager-kategorie">Kategorie:</label>
+                                <select id="kv-lager-kategorie">
+                                    <option value="Kochausrüstung">Kochausrüstung</option>
+                                    <option value="Geschirr">Geschirr</option>
+                                    <option value="Besteck">Besteck</option>
+                                    <option value="Küchengeräte">Küchengeräte</option>
+                                    <option value="Reinigung">Reinigung</option>
+                                    <option value="Schutzausrüstung">Schutzausrüstung</option>
+                                    <option value="Brenner & Energie">Brenner & Energie</option>
+                                    <option value="Wasseraufbereitung">Wasseraufbereitung</option>
+                                    <option value="Lebensmittelzubereitung">Lebensmittelzubereitung</option>
+                                    <option value="Sonstiges">Sonstiges</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="kv-lager-notizen">Notizen:</label>
+                                <input type="text" id="kv-lager-notizen" placeholder="Lagerort, Besonderheiten...">
+                            </div>
+                        </div>
+                        <button onclick="fuegeKVLagerHinzu()" class="success">➕ Equipment hinzufügen</button>
+                    </div>
+
+                    <!-- Aktionsbuttons für KV-Lager -->
+                    <div class="lager-actions">
+                        <button onclick="EquipmentManager.ladeHIKDefault('kv-lager')" class="success">📋 HIK 3.0 Default laden</button>
+                        <button onclick="EquipmentManager.kvLagerLeeren()" class="secondary">🗑️ KV-Lager leeren</button>
+                    </div>
+
+                    <!-- Transfer-Buttons zwischen Lager und Fahrzeug -->
+                    <div class="transfer-section">
+                        <h4>🔄 Transfer zwischen Lager und Fahrzeug</h4>
+                        <div class="lager-actions">
+                            <button onclick="EquipmentManager.transferAllToVehicle()" class="equipment">🚚 Alles auf Fahrzeug laden</button>
+                            <button onclick="EquipmentManager.transferAllToStorage()" class="secondary">🏢 Alles ins Lager räumen</button>
+                            <button onclick="EquipmentManager.syncInventory()" class="success">🔄 Bestände synchronisieren</button>
+                        </div>
+                    </div>
+
+                    <!-- KV-Lager-Anzeige -->
+                    <div id="kv-lager"></div>
+                </div>
+
+                <!-- Einsatz -->
+                <div id="einsatz-subtab" class="equipment-subcontent">
+                    <h3>🔄 Einsatzmaterial-Berechnung</h3>
+                    
+                    <div class="einsatz-optionen">
+                        <h4>Einsatzkonfiguration</h4>
+                        <label for="einsatz-personen">Personenzahl:</label>
+                        <input type="number" id="einsatz-personen" min="1" value="50" placeholder="50">
+                        
+                        <label for="einsatz-dauer">Einsatzdauer (Tage):</label>
+                        <input type="number" id="einsatz-dauer" min="1" value="1" placeholder="1">
+                        
+                        <h4>Material-Quellen:</h4>
+                        <div class="material-quelle">
+                            <input type="radio" id="quelle-auto" name="material-quelle" value="auto" checked>
+                            <label for="quelle-auto"><strong>Zuerst Fahrzeug, dann Lager</strong> - GW-V Beladung zuerst nutzen</label>
+                        </div>
+                        <div class="material-quelle">
+                            <input type="radio" id="quelle-lager" name="material-quelle" value="lager">
+                            <label for="quelle-lager"><strong>Zuerst Lager, dann Fahrzeug</strong> - Lagerbestand zuerst nutzen</label>
+                        </div>
+                        
+                        <button onclick="berechneEinsatzMaterial()" class="success">🧮 Materialbedarf berechnen</button>
+                    </div>
+
+                    <div id="einsatz-ergebnis"></div>
+                </div>
             </div>
+        </div>
 
-            <!-- ============================================
-                 REITER 3: INTERAKTIVE ELEMENTE
-            ============================================ -->
-            <div id="page3" class="tab-pane">
-                <h2>🎮 Interaktive Inhalte</h2>
-                <p>Klicke auf die Buttons unten, um verschiedene Inhalte anzuzeigen. Die Inhalte wechseln sich gegenseitig ab.</p>
+        <div id="lager-tab" class="tab-content">
+            <div class="lager-section">
+                <h2>Lebensmittel-Lagerverwaltung</h2>
                 
-                <div class="button-group">
-                    <button class="action-btn" onclick="page3.showTable()">
-                        📋 Produkttabelle anzeigen
-                    </button>
-                    <button class="action-btn" onclick="page3.showText()">
-                        📖 Produktinformationen anzeigen
-                    </button>
-                    <button class="action-btn" onclick="page3.clearContent()">
-                        🗑️ Inhalt löschen
-                    </button>
+                <!-- Formular zum Hinzufügen von Lebensmitteln -->
+                <div class="lager-form">
+                    <h3>Neues Lebensmittel hinzufügen</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="lager-name">Name:</label>
+                            <input type="text" id="lager-name" placeholder="z.B. Mehl">
+                        </div>
+                        <div class="form-group">
+                            <label for="lager-menge">Menge:</label>
+                            <input type="number" id="lager-menge" step="0.001" min="0" placeholder="0.000">
+                        </div>
+                        <div class="form-group">
+                            <label for="lager-einheit">Einheit:</label>
+                            <select id="lager-einheit">
+                                <option value="kg">kg</option>
+                                <option value="g">g</option>
+                                <option value="L">Liter</option>
+                                <option value="ml">ml</option>
+                                <option value="Stück">Stück</option>
+                                <option value="Packung">Packung</option>
+                                <option value="Dose">Dose</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="lager-kategorie">Kategorie:</label>
+                            <select id="lager-kategorie">
+                                <option value="Gemüse">Gemüse</option>
+                                <option value="Obst">Obst</option>
+                                <option value="Fleisch">Fleisch</option>
+                                <option value="Fisch">Fisch</option>
+                                <option value="Milchprodukte">Milchprodukte</option>
+                                <option value="Getreide">Getreide</option>
+                                <option value="Gewürze">Gewürze</option>
+                                <option value="Öle & Fette">Öle & Fette</option>
+                                <option value="Getränke">Getränke</option>
+                                <option value="Konserven">Konserven</option>
+                                <option value="Tiefkühl">Tiefkühl</option>
+                                <option value="Sonstiges">Sonstiges</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="lager-haltbarkeit">Haltbarkeitsdatum:</label>
+                            <input type="date" id="lager-haltbarkeit">
+                        </div>
+                        <div class="form-group">
+                            <label for="lager-notizen">Notizen:</label>
+                            <input type="text" id="lager-notizen" placeholder="Lagerort, Besonderheiten...">
+                        </div>
+                    </div>
+                    <button onclick="fuegeLebensmittelHinzu()" class="success">➕ Lebensmittel hinzufügen</button>
                 </div>
 
-                <div id="page3Content" class="content-area">
-                    <div style="text-align: center; color: #666; padding: 60px 20px;">
-                        <p>👆 Wähle eine Aktion aus den Buttons oben</p>
-                        <p>Hier werden die angeforderten Inhalte erscheinen</p>
+                <!-- Cloud Storage Section -->
+                <div class="cloud-storage-section">
+                    <h3>☁️ Cloud Storage</h3>
+                    <div class="cloud-actions">
+                        <button onclick="CloudStorage.autoSync()" class="success">🔄 Mit Cloud synchronisieren</button>
+                        <button onclick="CloudStorage.createFullBackup()" class="secondary">💾 Cloud Backup erstellen</button>
+                        <button onclick="CloudStorage.restoreFullBackup()" class="secondary">🔄 Backup wiederherstellen</button>
+                    </div>
+                    <div class="cloud-status" id="cloud-status">
+                        <p>📡 Verbindung zu Vercel KV Storage...</p>
                     </div>
                 </div>
-            </div>
 
-            <!-- ============================================
-                 REITER 4: ERWEITERTE BEISPIELE
-            ============================================ -->
-            <div id="page4" class="tab-pane">
-                <h2>⚡ Erweiterte Funktionen</h2>
-                <p>Diese Seite bietet erweiterte interaktive Elemente mit unterschiedlichen Inhalten.</p>
-                
-                <div class="button-group">
-                    <button class="action-btn" onclick="page4.showProjectList()">
-                        📅 Projektliste anzeigen
-                    </button>
-                    <button class="action-btn" onclick="page4.showStatistics()">
-                        📈 Statistiken anzeigen
-                    </button>
-                    <button class="action-btn" onclick="page4.showTeamInfo()">
-                        👥 Teaminformationen
-                    </button>
+                <!-- Aktionsbuttons (CSV entfernt) -->
+                <div class="lager-actions">
+                    <button onclick="lagerLeeren()" class="secondary">🗑️ Lager leeren</button>
+                    <button onclick="zeigeAbgelaufene()" class="secondary">⚠️ Abgelaufene anzeigen</button>
                 </div>
 
-                <div id="page4Content" class="content-area">
-                    <div style="text-align: center; color: #666; padding: 60px 20px;">
-                        <p>🚀 Wähle eine Funktion aus den Buttons oben</p>
-                        <p>Entdecke verschiedene Arten von Inhalten und Darstellungen</p>
-                    </div>
-                </div>
+                <!-- Lagerbestandsanzeige -->
+                <div id="lager-bestand"></div>
             </div>
         </div>
     </div>
 
+    <!-- DRK Footer -->
+    <footer class="drk-footer">
+        <div class="container">
+            <p>Deutsches Rotes Kreuz - Feldküche System</p>
+            <p>© 2023 DRK - Alle Rechte vorbehalten</p>
+        </div>
+    </footer>
+
     <script>
-        // ============================================
-        // MODUL: TAB-MANAGEMENT
-        // ============================================
-        const TabManager = {
-            init() {
-                this.setupEventListeners();
-                console.log("Tab-Manager initialisiert");
-            },
+    // =============================================
+    // ALLERGENE DATENBANK (LMIV - 14 Hauptallergene)
+    // =============================================
 
-            setupEventListeners() {
-                const tabButtons = document.querySelectorAll('.tab-button');
+    const allergene = {
+        'A': { name: 'Glutenhaltiges Getreide', kritikalitaet: 'hoch', icon: '🟥' },
+        'B': { name: 'Krebstiere', kritikalitaet: 'hoch', icon: '🟥' },
+        'C': { name: 'Eier', kritikalitaet: 'hoch', icon: '🟥' },
+        'D': { name: 'Fisch', kritikalitaet: 'hoch', icon: '🟥' },
+        'E': { name: 'Erdnüsse', kritikalitaet: 'hoch', icon: '🟥' },
+        'F': { name: 'Soja', kritikalitaet: 'mittel', icon: '🟨' },
+        'G': { name: 'Milch/Laktose', kritikalitaet: 'hoch', icon: '🟥' },
+        'H': { name: 'Schalenfrüchte', kritikalitaet: 'hoch', icon: '🟥' },
+        'I': { name: 'Sellerie', kritikalitaet: 'mittel', icon: '🟨' },
+        'J': { name: 'Senf', kritikalitaet: 'mittel', icon: '🟨' },
+        'K': { name: 'Sesamsamen', kritikalitaet: 'hoch', icon: '🟥' },
+        'L': { name: 'Schwefeldioxid/Sulfite', kritikalitaet: 'mittel', icon: '🟨' },
+        'M': { name: 'Lupinen', kritikalitaet: 'hoch', icon: '🟥' },
+        'N': { name: 'Weichtiere', kritikalitaet: 'hoch', icon: '🟥' }
+    };
+
+    // =============================================
+    // WASGAU PRODUKTDATENBANK MIT ALLERGENEN
+    // =============================================
+
+    const wasgauProdukte = {
+        "Kartoffelwürfel": { einheit: "kg", packungsgroessen: [2.5, 5, 10], preise: [1.99, 3.49, 6.49] },
+        "Rapsöl": { einheit: "L", packungsgroessen: [1, 3, 5], preise: [2.29, 5.99, 9.49] },
+        "Zwiebeln (TK oder frisch)": { einheit: "kg", packungsgroessen: [1, 2.5, 5], preise: [1.49, 2.99, 5.49] },
+        "Gemüsebrühe": { einheit: "L", packungsgroessen: [1, 5], preise: [0.99, 3.99] },
+        "Majoran": { einheit: "kg", packungsgroessen: [0.05, 0.1], preise: [4.99, 8.99] },
+        "Salz": { einheit: "kg", packungsgroessen: [0.5, 1], preise: [0.49, 0.79] },
+        "Pfeffer": { einheit: "kg", packungsgroessen: [0.05, 0.1], preise: [6.99, 12.99] },
+        "Kartoffelbreipulver": { einheit: "Packung", packungsgroessen: [1], preise: [2.49] },
+        "Muskatnuss": { einheit: "kg", packungsgroessen: [0.05], preise: [12.99] },
+        "Petersilie": { einheit: "Packung", packungsgroessen: [1], preise: [1.29] },
+        "Gemüse-TK (Mirepoix)": { einheit: "kg", packungsgroessen: [1, 2.5], preise: [2.49, 4.99] },
+        "Rindergulasch": { einheit: "kg", packungsgroessen: [1, 2.5, 5], preise: [12.99, 29.99, 56.99] },
+        "Paprikaschoten": { einheit: "kg", packungsgroessen: [1, 2.5], preise: [3.99, 8.99] },
+        "Tomatenmark": { einheit: "kg", packungsgroessen: [0.2, 0.5, 1], preise: [1.99, 3.99, 6.99] },
+        "Rinderfond": { einheit: "L", packungsgroessen: [1, 5], preise: [2.49, 9.99] },
+        "Rotwein": { einheit: "L", packungsgroessen: [0.75, 1.5], preise: [4.99, 8.99] },
+        "Paprikapulver": { einheit: "kg", packungsgroessen: [0.05, 0.1], preise: [5.99, 10.99] },
+        "Kümmel": { einheit: "kg", packungsgroessen: [0.05], preise: [7.99] },
+        "Knoblauch": { einheit: "kg", packungsgroessen: [0.2, 0.5], preise: [4.99, 10.99] },
+        "Rinderhackfleisch": { einheit: "kg", packungsgroessen: [1, 2.5, 5], preise: [9.99, 22.99, 42.99] },
+        "Kidneybohnen (Dose)": { einheit: "kg", packungsgroessen: [0.4, 1], preise: [1.29, 2.49] },
+        "Mais (Dose)": { einheit: "kg", packungsgroessen: [0.34, 0.8], preise: [1.19, 2.29] },
+        "Tomaten (stückig, Dose)": { einheit: "kg", packungsgroessen: [0.4, 1], preise: [1.39, 2.99] },
+        "Chilipulver": { einheit: "kg", packungsgroessen: [0.05], preise: [6.99] },
+        "Kreuzkümmel": { einheit: "kg", packungsgroessen: [0.05], preise: [8.99] },
+        "Oregano": { einheit: "kg", packungsgroessen: [0.05, 0.1], preise: [5.99, 10.99] },
+        "Rinderbrühe": { einheit: "L", packungsgroessen: [1, 5], preise: [1.29, 4.99] },
+        "Karotten": { einheit: "kg", packungsgroessen: [1, 2.5], preise: [1.29, 2.79] },
+        "Sellerie": { einheit: "kg", packungsgroessen: [1], preise: [2.49] },
+        "Milch": { einheit: "L", packungsgroessen: [1, 3], preise: [1.09, 2.79] },
+        "Olivenöl": { einheit: "L", packungsgroessen: [0.5, 1, 3], preise: [4.99, 8.99, 24.99] },
+        "Basilikum": { einheit: "kg", packungsgroessen: [0.05], preise: [6.99] },
+        "Hähnchenbrust": { einheit: "kg", packungsgroessen: [1, 2.5, 5], preise: [8.99, 19.99, 37.99] },
+        "Ingwer": { einheit: "kg", packungsgroessen: [0.2, 0.5], preise: [4.49, 9.99] },
+        "Kokosmilch": { einheit: "L", packungsgroessen: [0.4, 1], preise: [1.79, 3.99] },
+        "Currypaste": { einheit: "kg", packungsgroessen: [0.2, 0.5], preise: [3.99, 8.99] },
+        "Reis (als Beilage)": { einheit: "kg", packungsgroessen: [1, 2.5, 5], preise: [1.99, 4.49, 7.99] },
+        "Zitronengras": { einheit: "kg", packungsgroessen: [0.1], preise: [9.99] },
+        "Koriander": { einheit: "kg", packungsgroessen: [0.05], preise: [7.99] },
+        "Limettensaft": { einheit: "L", packungsgroessen: [0.25, 0.5], preise: [2.49, 4.29] },
+        "Linsen": { einheit: "kg", packungsgroessen: [0.5, 1, 2.5], preise: [1.79, 3.29, 7.49] },
+        "Speck": { einheit: "kg", packungsgroessen: [0.5, 1], preise: [6.99, 12.99] },
+        "Würstchen": { einheit: "kg", packungsgroessen: [1, 2.5], preise: [5.99, 13.99] },
+        "Essig": { einheit: "L", packungsgroessen: [0.5, 1], preise: [1.29, 2.19] },
+        "Erbsen (getrocknet)": { einheit: "kg", packungsgroessen: [0.5, 1, 2.5], preise: [1.99, 3.49, 7.99] },
+        "Weißkohlköpfe": { einheit: "Stück", packungsgroessen: [1], preise: [2.49] },
+        "Schweinehackfleisch": { einheit: "kg", packungsgroessen: [1, 2.5, 5], preise: [7.99, 17.99, 34.99] },
+        "Sahne": { einheit: "L", packungsgroessen: [0.2, 0.5, 1], preise: [1.49, 2.99, 5.49] },
+        "Schweineschnitzel": { einheit: "kg", packungsgroessen: [1, 2.5, 5], preise: [9.99, 22.99, 43.99] },
+        "Champignons": { einheit: "kg", packungsgroessen: [0.5, 1], preise: [3.49, 5.99] },
+        "Wein (weiß)": { einheit: "L", packungsgroessen: [0.75, 1.5], preise: [4.49, 7.99] },
+        "Mehl": { einheit: "kg", packungsgroessen: [1, 2.5, 5], preise: [0.69, 1.49, 2.69] },
+        "Brühe": { einheit: "L", packungsgroessen: [1, 5], preise: [1.19, 4.49] },
+        "Semmelbrösel": { einheit: "kg", packungsgroessen: [0.5, 1], preise: [1.29, 2.19] },
+        "Eier": { einheit: "Stück", packungsgroessen: [10, 30], preise: [2.49, 6.49] },
+        "Senf": { einheit: "kg", packungsgroessen: [0.2, 0.5], preise: [1.49, 2.99] },
+        "Thymian": { einheit: "kg", packungsgroessen: [0.05], preise: [6.99] }
+    };
+
+    // Allergene in Wasgau Produkten
+    const produktAllergene = {
+        "Kartoffelwürfel": [],
+        "Rapsöl": [],
+        "Zwiebeln (TK oder frisch)": [],
+        "Gemüsebrühe": ['G', 'A'],
+        "Majoran": [],
+        "Salz": [],
+        "Pfeffer": [],
+        "Kartoffelbreipulver": ['G', 'A'],
+        "Muskatnuss": [],
+        "Petersilie": [],
+        "Gemüse-TK (Mirepoix)": [],
+        "Rindergulasch": [],
+        "Paprikaschoten": [],
+        "Tomatenmark": [],
+        "Rinderfond": [],
+        "Rotwein": ['L'],
+        "Paprikapulver": [],
+        "Kümmel": [],
+        "Knoblauch": [],
+        "Rinderhackfleisch": [],
+        "Kidneybohnen (Dose)": [],
+        "Mais (Dose)": [],
+        "Tomaten (stückig, Dose)": [],
+        "Chilipulver": [],
+        "Kreuzkümmel": [],
+        "Oregano": [],
+        "Rinderbrühe": ['G', 'A'],
+        "Karotten": [],
+        "Sellerie": ['I'],
+        "Milch": ['G'],
+        "Olivenöl": [],
+        "Basilikum": [],
+        "Hähnchenbrust": [],
+        "Ingwer": [],
+        "Kokosmilch": [],
+        "Currypaste": ['F', 'J'],
+        "Reis (als Beilage)": [],
+        "Zitronengras": [],
+        "Koriander": [],
+        "Limettensaft": [],
+        "Linsen": [],
+        "Speck": [],
+        "Würstchen": ['G', 'A', 'C'],
+        "Essig": [],
+        "Erbsen (getrocknet)": [],
+        "Weißkohlköpfe": [],
+        "Schweinehackfleisch": [],
+        "Sahne": ['G'],
+        "Schweineschnitzel": [],
+        "Champignons": [],
+        "Wein (weiß)": ['L'],
+        "Mehl": ['A'],
+        "Brühe": ['G', 'A'],
+        "Semmelbrösel": ['A', 'C'],
+        "Eier": ['C'],
+        "Senf": ['J'],
+        "Thymian": []
+    };
+
+    // =============================================
+    // REZEPTE DATENBANK
+    // =============================================
+
+    const rezepte = {
+        kartoffelsuppe: {
+            basisPortionen: 250,
+            zutaten: [
+                { name: "Kartoffelwürfel", menge: 30, einheit: "kg" },
+                { name: "Rapsöl", menge: 0.08, einheit: "L" },
+                { name: "Zwiebeln (TK oder frisch)", menge: 4, einheit: "kg" },
+                { name: "Gemüsebrühe", menge: 30, einheit: "L" },
+                { name: "Majoran", menge: 0.05, einheit: "kg" },
+                { name: "Salz", menge: 1, einheit: "kg" },
+                { name: "Pfeffer", menge: 0.025, einheit: "kg" }
+            ]
+        },
+        gulasch: {
+            basisPortionen: 250,
+            zutaten: [
+                { name: "Rindergulasch", menge: 30, einheit: "kg" },
+                { name: "Zwiebeln (TK oder frisch)", menge: 10, einheit: "kg" },
+                { name: "Tomatenmark", menge: 1.5, einheit: "kg" },
+                { name: "Rinderfond", menge: 25, einheit: "L" },
+                { name: "Paprikapulver", menge: 0.2, einheit: "kg" }
+            ]
+        },
+        chili_con_carne: {
+            basisPortionen: 250,
+            zutaten: [
+                { name: "Rinderhackfleisch", menge: 25, einheit: "kg" },
+                { name: "Zwiebeln (TK oder frisch)", menge: 8, einheit: "kg" },
+                { name: "Kidneybohnen (Dose)", menge: 15, einheit: "kg" },
+                { name: "Tomaten (stückig, Dose)", menge: 12, einheit: "kg" },
+                { name: "Tomatenmark", menge: 1, einheit: "kg" }
+            ]
+        },
+        bolognese: {
+            basisPortionen: 250,
+            zutaten: [
+                { name: "Rinderhackfleisch", menge: 25, einheit: "kg" },
+                { name: "Zwiebeln (TK oder frisch)", menge: 6, einheit: "kg" },
+                { name: "Tomaten (stückig, Dose)", menge: 15, einheit: "kg" },
+                { name: "Tomatenmark", menge: 1.5, einheit: "kg" },
+                { name: "Milch", menge: 2, einheit: "L" }
+            ]
+        },
+        haehnchencurry: {
+            basisPortionen: 250,
+            zutaten: [
+                { name: "Hähnchenbrust", menge: 30, einheit: "kg" },
+                { name: "Zwiebeln (TK oder frisch)", menge: 6, einheit: "kg" },
+                { name: "Kokosmilch", menge: 10, einheit: "L" },
+                { name: "Currypaste", menge: 0.8, einheit: "kg" },
+                { name: "Reis (als Beilage)", menge: 15, einheit: "kg" }
+            ]
+        },
+        linseneintopf: {
+            basisPortionen: 250,
+            zutaten: [
+                { name: "Linsen", menge: 12, einheit: "kg" },
+                { name: "Zwiebeln (TK oder frisch)", menge: 5, einheit: "kg" },
+                { name: "Karotten", menge: 6, einheit: "kg" },
+                { name: "Kartoffelwürfel", menge: 10, einheit: "kg" },
+                { name: "Gemüsebrühe", menge: 25, einheit: "L" }
+            ]
+        },
+        erbseneintopf: {
+            basisPortionen: 250,
+            zutaten: [
+                { name: "Erbsen (getrocknet)", menge: 15, einheit: "kg" },
+                { name: "Zwiebeln (TK oder frisch)", menge: 5, einheit: "kg" },
+                { name: "Karotten", menge: 6, einheit: "kg" },
+                { name: "Kartoffelwürfel", menge: 10, einheit: "kg" },
+                { name: "Gemüsebrühe", menge: 30, einheit: "L" }
+            ]
+        },
+        kohlrouladen: {
+            basisPortionen: 250,
+            zutaten: [
+                { name: "Weißkohlköpfe", menge: 12, einheit: "Stück" },
+                { name: "Rinderhackfleisch", menge: 20, einheit: "kg" },
+                { name: "Schweinehackfleisch", menge: 10, einheit: "kg" },
+                { name: "Reis (als Beilage)", menge: 8, einheit: "kg" },
+                { name: "Rinderbrühe", menge: 20, einheit: "L" }
+            ]
+        },
+        jaegerschnitzel: {
+            basisPortionen: 250,
+            zutaten: [
+                { name: "Schweineschnitzel", menge: 35, einheit: "kg" },
+                { name: "Zwiebeln (TK oder frisch)", menge: 6, einheit: "kg" },
+                { name: "Champignons", menge: 15, einheit: "kg" },
+                { name: "Sahne", menge: 8, einheit: "L" },
+                { name: "Mehl", menge: 3, einheit: "kg" }
+            ]
+        },
+        hackbraten: {
+            basisPortionen: 250,
+            zutaten: [
+                { name: "Rinderhackfleisch", menge: 20, einheit: "kg" },
+                { name: "Schweinehackfleisch", menge: 15, einheit: "kg" },
+                { name: "Zwiebeln (TK oder frisch)", menge: 4, einheit: "kg" },
+                { name: "Eier", menge: 60, einheit: "Stück" },
+                { name: "Milch", menge: 2, einheit: "L" }
+            ]
+        }
+    };
+
+    // =============================================
+    // CLOUD STORAGE MANAGEMENT
+    // =============================================
+
+    const CloudStorage = {
+        apiBase: '/api/kv',
+        
+        async saveToCloud(key, data) {
+            try {
+                const response = await fetch(`${this.apiBase}/save`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ key, data })
+                });
+                const result = await response.json();
                 
-                tabButtons.forEach(button => {
-                    button.addEventListener('click', (event) => {
-                        this.switchTab(event.target);
-                    });
-                });
-            },
-
-            switchTab(clickedButton) {
-                // Alle Tabs deaktivieren
-                document.querySelectorAll('.tab-button').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.querySelectorAll('.tab-pane').forEach(pane => {
-                    pane.classList.remove('active');
-                });
-
-                // Aktiven Tab aktivieren
-                clickedButton.classList.add('active');
-                const tabId = clickedButton.getAttribute('data-tab');
-                document.getElementById(tabId).classList.add('active');
-
-                console.log(`Zum Tab gewechselt: ${tabId}`);
+                if (result.success) {
+                    this.updateCloudStatus(`✅ ${key} in Cloud gespeichert`, 'success');
+                    return true;
+                } else {
+                    this.updateCloudStatus(`❌ Fehler: ${result.error}`, 'error');
+                    return false;
+                }
+            } catch (error) {
+                this.updateCloudStatus('❌ Offline - Keine Cloud-Verbindung', 'error');
+                return false;
             }
-        };
+        },
 
-        // ============================================
-        // MODUL: SEITE 3 - INTERAKTIVE ELEMENTE
-        // ============================================
-        const page3 = {
-            contentElement: null,
-
-            init() {
-                this.contentElement = document.getElementById('page3Content');
-                console.log("Page3 Modul initialisiert");
-            },
-
-            showTable() {
-                const tableHTML = `
-                    <div style="animation: fadeIn 0.5s ease-in;">
-                        <h3 style="color: #007bff; margin-bottom: 20px;">📦 Produktübersicht</h3>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Produkt</th>
-                                    <th>Kategorie</th>
-                                    <th>Preis</th>
-                                    <th>Lager</th>
-                                    <th>Bewertung</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Gaming Laptop</td>
-                                    <td>Elektronik</td>
-                                    <td>€ 1.299</td>
-                                    <td>12 Stück</td>
-                                    <td>⭐️⭐️⭐️⭐️⭐️</td>
-                                </tr>
-                                <tr>
-                                    <td>Mechanische Tastatur</td>
-                                    <td>Zubehör</td>
-                                    <td>€ 89</td>
-                                    <td>45 Stück</td>
-                                    <td>⭐️⭐️⭐️⭐️</td>
-                                </tr>
-                                <tr>
-                                    <td>Wireless Maus</td>
-                                    <td>Zubehör</td>
-                                    <td>€ 35</td>
-                                    <td>78 Stück</td>
-                                    <td>⭐️⭐️⭐️⭐️⭐️</td>
-                                </tr>
-                                <tr>
-                                    <td>27" Monitor</td>
-                                    <td>Elektronik</td>
-                                    <td>€ 249</td>
-                                    <td>23 Stück</td>
-                                    <td>⭐️⭐️⭐️⭐️</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-                this.contentElement.innerHTML = tableHTML;
-            },
-
-            showText() {
-                const textHTML = `
-                    <div style="animation: fadeIn 0.5s ease-in;">
-                        <h3 style="color: #28a745; margin-bottom: 15px;">📖 Produktinformationen</h3>
-                        <div class="example-text">
-                            <h4>Unsere Produktphilosophie</h4>
-                            <p>Wir legen größten Wert auf Qualität und Langlebigkeit unserer Produkte. 
-                               Jedes Produkt durchläuft strenge Qualitätskontrollen und wird mit einer 
-                               <strong>3-jährigen Garantie</strong> ausgeliefert.</p>
-                            
-                            <h4>Kundenservice</h4>
-                            <p>Unser Support-Team steht Ihnen montags bis freitags von 8:00 bis 18:00 Uhr 
-                               zur Verfügung. Bei technischen Fragen bieten wir auch remote Support an.</p>
-                            
-                            <h4>Lieferung</h4>
-                            <p>Standardlieferung: 2-3 Werktage | Express: 24 Stunden (zzgl. € 9,90)</p>
-                        </div>
-                    </div>
-                `;
-                this.contentElement.innerHTML = textHTML;
-            },
-
-            clearContent() {
-                this.contentElement.innerHTML = `
-                    <div style="text-align: center; color: #666; padding: 60px 20px;">
-                        <p>🗑️ Inhalt wurde gelöscht</p>
-                        <p>Wähle eine neue Aktion aus den Buttons oben</p>
-                    </div>
-                `;
+        async loadFromCloud(key) {
+            try {
+                const response = await fetch(`${this.apiBase}/load?key=${encodeURIComponent(key)}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    if (result.data) {
+                        this.updateCloudStatus(`✅ ${key} von Cloud geladen`, 'success');
+                        return result.data;
+                    } else {
+                        this.updateCloudStatus(`ℹ️ Keine Daten für ${key} in Cloud`, 'info');
+                        return null;
+                    }
+                } else {
+                    this.updateCloudStatus(`❌ Fehler: ${result.error}`, 'error');
+                    return null;
+                }
+            } catch (error) {
+                this.updateCloudStatus('❌ Offline - Keine Cloud-Verbindung', 'error');
+                return null;
             }
-        };
+        },
 
-        // ============================================
-        // MODUL: SEITE 4 - ERWEITERTE FUNKTIONEN
-        // ============================================
-        const page4 = {
-            contentElement: null,
-
-            init() {
-                this.contentElement = document.getElementById('page4Content');
-                console.log("Page4 Modul initialisiert");
-            },
-
-            showProjectList() {
-                const projectsHTML = `
-                    <div style="animation: fadeIn 0.5s ease-in;">
-                        <h3 style="color: #dc3545; margin-bottom: 20px;">📋 Aktuelle Projekte</h3>
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>Projektname</th>
-                                    <th>Startdatum</th>
-                                    <th>Deadline</th>
-                                    <th>Status</th>
-                                    <th>Fortschritt</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Website Relaunch</td>
-                                    <td>01.10.2024</td>
-                                    <td>15.12.2024</td>
-                                    <td><span style="color: #ffc107;">● In Bearbeitung</span></td>
-                                    <td>
-                                        <div style="background: #e9ecef; border-radius: 10px; height: 10px;">
-                                            <div style="background: #007bff; width: 65%; height: 100%; border-radius: 10px;"></div>
-                                        </div>
-                                        65%
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>App Entwicklung</td>
-                                    <td>15.11.2024</td>
-                                    <td>28.02.2025</td>
-                                    <td><span style="color: #17a2b8;">● Geplant</span></td>
-                                    <td>
-                                        <div style="background: #e9ecef; border-radius: 10px; height: 10px;">
-                                            <div style="background: #17a2b8; width: 15%; height: 100%; border-radius: 10px;"></div>
-                                        </div>
-                                        15%
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Datenbank Migration</td>
-                                    <td>01.09.2024</td>
-                                    <td>30.11.2024</td>
-                                    <td><span style="color: #28a745;">● Abgeschlossen</span></td>
-                                    <td>
-                                        <div style="background: #e9ecef; border-radius: 10px; height: 10px;">
-                                            <div style="background: #28a745; width: 100%; height: 100%; border-radius: 10px;"></div>
-                                        </div>
-                                        100%
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-                this.contentElement.innerHTML = projectsHTML;
-            },
-
-            showStatistics() {
-                const statsHTML = `
-                    <div style="animation: fadeIn 0.5s ease-in;">
-                        <h3 style="color: #6f42c1; margin-bottom: 20px;">📈 Unternehmensstatistiken</h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
-                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
-                                <div style="font-size: 2em; font-weight: bold;">1.247</div>
-                                <div>Kunden</div>
-                            </div>
-                            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
-                                <div style="font-size: 2em; font-weight: bold;">89%</div>
-                                <div>Zufriedenheit</div>
-                            </div>
-                            <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
-                                <div style="font-size: 2em; font-weight: bold;">42</div>
-                                <div>Projekte</div>
-                            </div>
-                            <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
-                                <div style="font-size: 2em; font-weight: bold;">15</div>
-                                <div>Mitarbeiter</div>
-                            </div>
-                        </div>
-                        
-                        <div class="example-text">
-                            <h4>Quartalsanalyse Q4/2024</h4>
-                            <p>Das vierte Quartal zeigt ein starkes Wachstum in allen Bereichen. 
-                               Die Kundenzufriedenheit ist im Vergleich zum Vorquartal um 12% gestiegen.</p>
-                            <p><strong>Top-Performer:</strong> Webentwicklungs-Projekte (+23% Umsatz)</p>
-                        </div>
-                    </div>
-                `;
-                this.contentElement.innerHTML = statsHTML;
-            },
-
-            showTeamInfo() {
-                const teamHTML = `
-                    <div style="animation: fadeIn 0.5s ease-in;">
-                        <h3 style="color: #fd7e14; margin-bottom: 20px;">👥 Unser Team</h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
-                            <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px; text-align: center;">
-                                <div style="font-size: 3em; margin-bottom: 10px;">👨‍💼</div>
-                                <h4>Max Mustermann</h4>
-                                <p><strong>Projektleiter</strong></p>
-                                <p>8 Jahre Erfahrung</p>
-                                <p>max@example.com</p>
-                            </div>
-                            <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px; text-align: center;">
-                                <div style="font-size: 3em; margin-bottom: 10px;">👩‍💻</div>
-                                <h4>Anna Schmidt</h4>
-                                <p><strong>Senior Developer</strong></p>
-                                <p>6 Jahre Erfahrung</p>
-                                <p>anna@example.com</p>
-                            </div>
-                            <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px; text-align: center;">
-                                <div style="font-size: 3em; margin-bottom: 10px;">👨‍🎨</div>
-                                <h4>Peter Müller</h4>
-                                <p><strong>UI/UX Designer</strong></p>
-                                <p>5 Jahre Erfahrung</p>
-                                <p>peter@example.com</p>
-                            </div>
-                        </div>
-                        
-                        <div class="info-box" style="margin-top: 20px;">
-                            <strong>Team-Sprechzeiten:</strong> Daily Standup 9:30 Uhr | Team-Meeting Freitags 14:00 Uhr
-                        </div>
-                    </div>
-                `;
-                this.contentElement.innerHTML = teamHTML;
+        updateCloudStatus(message, type = 'info') {
+            const statusElement = document.getElementById('cloud-status');
+            if (statusElement) {
+                const typeClass = type === 'success' ? 'status-success' : 
+                                type === 'error' ? 'status-error' : 'status-info';
+                statusElement.innerHTML = `<p class="${typeClass}">${message}</p>`;
             }
-        };
+        },
 
-        // ============================================
-        // INITIALISIERUNG BEIM LADEN DER SEITE
-        // ============================================
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tab-Manager starten
-            TabManager.init();
+        async autoSync() {
+            const keys = [
+                { key: 'equipment_gw', name: 'GW-Beladung' },
+                { key: 'equipment_kv_lager', name: 'KV-Lager' },
+                { key: 'feldkueche_lager', name: 'Lebensmittel-Lager' }
+            ];
             
-            // Seiten-Module initialisieren
-            page3.init();
-            page4.init();
+            let syncedCount = 0;
+            this.updateCloudStatus('🔄 Starte Synchronisation...', 'info');
+
+            for (const item of keys) {
+                const localData = localStorage.getItem(item.key);
+                
+                if (localData) {
+                    try {
+                        const parsedData = JSON.parse(localData);
+                        const success = await this.saveToCloud(item.key, parsedData);
+                        if (success) syncedCount++;
+                        await new Promise(resolve => setTimeout(resolve, 100));
+                    } catch (error) {
+                        console.error(`Fehler beim Sync von ${item.key}:`, error);
+                    }
+                }
+            }
+
+            this.updateCloudStatus(`✅ ${syncedCount}/${keys.length} Datensätze synchronisiert`, 'success');
+            return syncedCount;
+        },
+
+        async createFullBackup() {
+            const backupData = {
+                equipment_gw: JSON.parse(localStorage.getItem('equipment_gw') || '[]'),
+                equipment_kv_lager: JSON.parse(localStorage.getItem('equipment_kv_lager') || '[]'),
+                feldkueche_lager: JSON.parse(localStorage.getItem('feldkueche_lager') || '[]'),
+                backupCreated: new Date().toISOString(),
+                version: '1.0'
+            };
+
+            const success = await this.saveToCloud('full_backup', backupData);
             
-            console.log("Alle Module erfolgreich initialisiert");
+            if (success) {
+                alert('✅ Vollständiges Backup in Cloud gespeichert!');
+            } else {
+                alert('❌ Backup fehlgeschlagen!');
+            }
+            
+            return success;
+        },
+
+        async restoreFullBackup() {
+            if (!confirm('Cloud-Backup wiederherstellen? Lokale Daten werden überschrieben!')) {
+                return false;
+            }
+
+            this.updateCloudStatus('🔄 Lade Backup von Cloud...', 'info');
+            const backupData = await this.loadFromCloud('full_backup');
+            
+            if (backupData) {
+                localStorage.setItem('equipment_gw', JSON.stringify(backupData.equipment_gw || []));
+                localStorage.setItem('equipment_kv_lager', JSON.stringify(backupData.equipment_kv_lager || []));
+                localStorage.setItem('feldkueche_lager', JSON.stringify(backupData.feldkueche_lager || []));
+                
+                EquipmentManager.aktualisiereGWAnzeige();
+                EquipmentManager.aktualisiereKVLagerAnzeige();
+                LagerManager.aktualisiereAnzeige();
+                
+                const backupDate = new Date(backupData.backupCreated).toLocaleDateString('de-DE');
+                alert(`✅ Backup vom ${backupDate} wiederhergestellt!`);
+                return true;
+            } else {
+                alert('❌ Kein Backup in Cloud gefunden!');
+                return false;
+            }
+        }
+    };
+
+    // =============================================
+    // ALLERGEN-MANAGEMENT FUNKTIONEN
+    // =============================================
+
+    function getRezeptAllergene(rezeptName) {
+        const rezept = rezepte[rezeptName];
+        if (!rezept) return [];
+        
+        const rezeptAllergene = new Set();
+        
+        rezept.zutaten.forEach(zutat => {
+            const zutatAllergene = produktAllergene[zutat.name] || [];
+            zutatAllergene.forEach(allergen => rezeptAllergene.add(allergen));
         });
+        
+        return Array.from(rezeptAllergene);
+    }
+
+    const AllergenManager = {
+        getAlleRezeptAllergene(rezeptName) {
+            return getRezeptAllergene(rezeptName);
+        },
+
+        erstelleAllergenBadges(allergenCodes) {
+            if (!allergenCodes || allergenCodes.length === 0) {
+                return '<span class="allergen-badge allergen-mild">Allergenfrei</span>';
+            }
+            
+            return allergenCodes.map(code => {
+                const allergen = allergene[code];
+                const kritikalitaetClass = `allergen-${allergen.kritikalitaet === 'hoch' ? 'critical' : 
+                                          allergen.kritikalitaet === 'mittel' ? 'moderate' : 'mild'}`;
+                return `<span class="allergen-badge ${kritikalitaetClass}" title="${allergen.name}">${allergen.icon} ${code}</span>`;
+            }).join(' ');
+        },
+
+        zeigeRezeptAllergene(rezeptName) {
+            const rezeptAllergene = this.getAlleRezeptAllergene(rezeptName);
+            const container = document.getElementById('allergen-anzeige');
+            const infoBox = document.getElementById('allergene-info-box');
+            
+            if (rezeptAllergene.length === 0) {
+                container.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="color: #4CAF50; font-size: 1.2em;">✅</span>
+                        <div>
+                            <strong>Dieses Rezept ist allergenfrei</strong>
+                            <p style="margin: 5px 0 0 0; color: #666; font-size: 0.9em;">
+                                Enthält keine der 14 Hauptallergene gemäß LMIV
+                            </p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                const allergenListe = rezeptAllergene.map(code => {
+                    const allergen = allergene[code];
+                    return `<div class="allergen-item-compact">
+                        <span class="allergen-badge allergen-${allergen.kritikalitaet === 'hoch' ? 'critical' : 'moderate'}" 
+                              style="margin-right: 8px;">${allergen.icon} ${code}</span>
+                        ${allergen.name}
+                    </div>`;
+                }).join('');
+                
+                container.innerHTML = `
+                    <div style="margin-bottom: 10px;">
+                        <strong>Enthaltene Allergene:</strong>
+                    </div>
+                    <div class="allergen-grid-compact">
+                        ${allergenListe}
+                    </div>
+                    <div class="allergen-legend">
+                        <strong>Legende:</strong> 
+                        <span class="allergen-badge allergen-critical">🟥 Hoch</span>
+                        <span class="allergen-badge allergen-moderate">🟨 Mittel</span>
+                        - Kennzeichnungspflichtige Allergene gemäß LMIV
+                    </div>
+                `;
+            }
+            
+            infoBox.style.display = 'block';
+        }
+    };
+
+    // =============================================
+    // EQUIPMENT MANAGEMENT SYSTEM
+    // =============================================
+
+    const EquipmentManager = {
+        gwBeladung: JSON.parse(localStorage.getItem('equipment_gw')) || [],
+        kvLager: JSON.parse(localStorage.getItem('equipment_kv_lager')) || [],
+
+        hikGWDefault: [
+            { name: "Kochtopf 100L", menge: 2, kategorie: "Kochausrüstung", notizen: "Hauptkochtopf" },
+            { name: "Kochtopf 60L", menge: 1, kategorie: "Kochausrüstung", notizen: "Zwischengröße" },
+            { name: "Kochtopf 30L", menge: 1, kategorie: "Kochausrüstung", notizen: "Für Soßen" },
+            { name: "Gasbrenner 15kW", menge: 4, kategorie: "Brenner & Energie", notizen: "Hauptbrenner" },
+            { name: "Reservegasflasche", menge: 6, kategorie: "Brenner & Energie", notizen: "11kg Propan" },
+            { name: "Feldkochgeschirr", menge: 300, kategorie: "Geschirr", notizen: "Für 300 Personen" },
+            { name: "Besteck-Sets", menge: 300, kategorie: "Besteck", notizen: "Messer, Gabel, Löffel" },
+            { name: "Becher", menge: 300, kategorie: "Geschirr", notizen: "300ml Trinkbecher" },
+            { name: "Schneidbretter groß", menge: 4, kategorie: "Küchengeräte", notizen: "Kunststoff" },
+            { name: "Kochlöffel", menge: 6, kategorie: "Küchengeräte", notizen: "Verschiedene Größen" },
+            { name: "Schöpfkellen", menge: 4, kategorie: "Küchengeräte", notizen: "Ausgabe" },
+            { name: "Küchenmesser", menge: 6, kategorie: "Küchengeräte", notizen: "Chefmesser + Gemüsemesser" },
+            { name: "Gemüseschäler", menge: 4, kategorie: "Küchengeräte", notizen: "Standard" },
+            { name: "Küchenwaage", menge: 2, kategorie: "Küchengeräte", notizen: "Bis 10kg" },
+            { name: "Spülmittel", menge: 4, kategorie: "Reinigung", notizen: "Konzentrat" },
+            { name: "Schwämme", menge: 12, kategorie: "Reinigung", notizen: "Spülschwämme" },
+            { name: "Handtücher", menge: 8, kategorie: "Reinigung", notizen: "Küchenhandtücher" },
+            { name: "Arbeitshandschuhe", menge: 12, kategorie: "Schutzausrüstung", notizen: "Hitze beständig" },
+            { name: "Schürzen", menge: 6, kategorie: "Schutzausrüstung", notizen: "Küchenschürzen" },
+            { name: "Wasserkanister 20L", menge: 4, kategorie: "Wasseraufbereitung", notizen: "Trinkwasser" }
+        ],
+
+        fuegeGWEquipmentHinzu(equipment) {
+            this.gwBeladung.push({
+                id: Date.now() + Math.random(),
+                name: equipment.name,
+                menge: parseInt(equipment.menge),
+                kategorie: equipment.kategorie,
+                notizen: equipment.notizen,
+                hinzugefuegtAm: new Date().toISOString()
+            });
+            this.speichereGW();
+            this.aktualisiereGWAnzeige();
+        },
+
+        entferneGW(id) {
+            this.gwBeladung = this.gwBeladung.filter(item => item.id !== id);
+            this.speichereGW();
+            this.aktualisiereGWAnzeige();
+        },
+
+        gwLeeren() {
+            if (confirm('Möchten Sie wirklich die gesamte GW-Beladung löschen?')) {
+                this.gwBeladung = [];
+                this.speichereGW();
+                this.aktualisiereGWAnzeige();
+            }
+        },
+
+        speichereGW() {
+            localStorage.setItem('equipment_gw', JSON.stringify(this.gwBeladung));
+            CloudStorage.saveToCloud('equipment_gw', this.gwBeladung);
+        },
+
+        fuegeKVLagerHinzu(equipment) {
+            this.kvLager.push({
+                id: Date.now() + Math.random(),
+                name: equipment.name,
+                menge: parseInt(equipment.menge),
+                kategorie: equipment.kategorie,
+                notizen: equipment.notizen,
+                hinzugefuegtAm: new Date().toISOString()
+            });
+            this.speichereKVLager();
+            this.aktualisiereKVLagerAnzeige();
+        },
+
+        entferneKVLager(id) {
+            this.kvLager = this.kvLager.filter(item => item.id !== id);
+            this.speichereKVLager();
+            this.aktualisiereKVLagerAnzeige();
+        },
+
+        kvLagerLeeren() {
+            if (confirm('Möchten Sie wirklich das gesamte KV-Lager leeren?')) {
+                this.kvLager = [];
+                this.speichereKVLager();
+                this.aktualisiereKVLagerAnzeige();
+            }
+        },
+
+        speichereKVLager() {
+            localStorage.setItem('equipment_kv_lager', JSON.stringify(this.kvLager));
+            CloudStorage.saveToCloud('equipment_kv_lager', this.kvLager);
+        },
+
+        transferToVehicle(itemId) {
+            const item = this.kvLager.find(i => i.id === itemId);
+            if (item && item.menge > 0) {
+                item.menge -= 1;
+                
+                const existingInVehicle = this.gwBeladung.find(i => i.name === item.name);
+                if (existingInVehicle) {
+                    existingInVehicle.menge += 1;
+                } else {
+                    this.gwBeladung.push({
+                        id: Date.now() + Math.random(),
+                        name: item.name,
+                        menge: 1,
+                        kategorie: item.kategorie,
+                        notizen: item.notizen + " (vom KV-Lager)",
+                        hinzugefuegtAm: new Date().toISOString()
+                    });
+                }
+                
+                if (item.menge === 0) {
+                    this.kvLager = this.kvLager.filter(i => i.id !== itemId);
+                }
+                
+                this.speichereGW();
+                this.speichereKVLager();
+                this.aktualisiereGWAnzeige();
+                this.aktualisiereKVLagerAnzeige();
+                
+                alert(`1x ${item.name} wurde auf das Fahrzeug geladen.`);
+            }
+        },
+
+        transferToStorage(itemId) {
+            const item = this.gwBeladung.find(i => i.id === itemId);
+            if (item && item.menge > 0) {
+                item.menge -= 1;
+                
+                const existingInStorage = this.kvLager.find(i => i.name === item.name);
+                if (existingInStorage) {
+                    existingInStorage.menge += 1;
+                } else {
+                    this.kvLager.push({
+                        id: Date.now() + Math.random(),
+                        name: item.name,
+                        menge: 1,
+                        kategorie: item.kategorie,
+                        notizen: item.notizen + " (vom Fahrzeug)",
+                        hinzugefuegtAm: new Date().toISOString()
+                    });
+                }
+                
+                if (item.menge === 0) {
+                    this.gwBeladung = this.gwBeladung.filter(i => i.id !== itemId);
+                }
+                
+                this.speichereGW();
+                this.speichereKVLager();
+                this.aktualisiereGWAnzeige();
+                this.aktualisiereKVLagerAnzeige();
+                
+                alert(`1x ${item.name} wurde ins KV-Lager geräumt.`);
+            }
+        },
+
+        transferAllToVehicle() {
+            if (this.kvLager.length === 0) {
+                alert("KV-Lager ist leer!");
+                return;
+            }
+            
+            if (confirm('Möchten Sie ALLE verfügbaren Gegenstände vom KV-Lager auf das Fahrzeug laden?')) {
+                this.kvLager.forEach(lagerItem => {
+                    const existingInVehicle = this.gwBeladung.find(vehicleItem => vehicleItem.name === lagerItem.name);
+                    if (existingInVehicle) {
+                        existingInVehicle.menge += lagerItem.menge;
+                    } else {
+                        this.gwBeladung.push({
+                            ...lagerItem,
+                            id: Date.now() + Math.random(),
+                            notizen: lagerItem.notizen + " (vom KV-Lager transferiert)"
+                        });
+                    }
+                });
+                
+                this.kvLager = [];
+                this.speichereGW();
+                this.speichereKVLager();
+                this.aktualisiereGWAnzeige();
+                this.aktualisiereKVLagerAnzeige();
+                
+                alert("Komplettes KV-Lager wurde auf das Fahrzeug geladen!");
+            }
+        },
+
+        transferAllToStorage() {
+            if (this.gwBeladung.length === 0) {
+                alert("Fahrzeug ist leer!");
+                return;
+            }
+            
+            if (confirm('Möchten Sie ALLE Gegenstände vom Fahrzeug ins KV-Lager räumen?')) {
+                this.gwBeladung.forEach(vehicleItem => {
+                    const existingInStorage = this.kvLager.find(lagerItem => lagerItem.name === vehicleItem.name);
+                    if (existingInStorage) {
+                        existingInStorage.menge += vehicleItem.menge;
+                    } else {
+                        this.kvLager.push({
+                            ...vehicleItem,
+                            id: Date.now() + Math.random(),
+                            notizen: vehicleItem.notizen + " (vom Fahrzeug transferiert)"
+                        });
+                    }
+                });
+                
+                this.gwBeladung = [];
+                this.speichereGW();
+                this.speichereKVLager();
+                this.aktualisiereGWAnzeige();
+                this.aktualisiereKVLagerAnzeige();
+                
+                alert("Komplette Fahrzeugbeladung wurde ins KV-Lager geräumt!");
+            }
+        },
+
+        syncInventory() {
+            let synced = false;
+            const allItems = {};
+            
+            [...this.gwBeladung, ...this.kvLager].forEach(item => {
+                if (!allItems[item.name]) {
+                    allItems[item.name] = { ...item, gesamtMenge: 0, quellen: [] };
+                }
+                allItems[item.name].gesamtMenge += item.menge;
+            });
+            
+            Object.values(allItems).forEach(item => {
+                const targetVehicle = Math.ceil(item.gesamtMenge * 0.5);
+                const targetStorage = item.gesamtMenge - targetVehicle;
+                
+                const currentVehicle = this.gwBeladung.find(i => i.name === item.name)?.menge || 0;
+                const currentStorage = this.kvLager.find(i => i.name === item.name)?.menge || 0;
+                
+                if (currentVehicle !== targetVehicle || currentStorage !== targetStorage) {
+                    synced = true;
+                    
+                    const vehicleItem = this.gwBeladung.find(i => i.name === item.name);
+                    if (vehicleItem) {
+                        vehicleItem.menge = targetVehicle;
+                    } else if (targetVehicle > 0) {
+                        this.gwBeladung.push({
+                            id: Date.now() + Math.random(),
+                            name: item.name,
+                            menge: targetVehicle,
+                            kategorie: item.kategorie,
+                            notizen: item.notizen + " (synchronisiert)",
+                            hinzugefuegtAm: new Date().toISOString()
+                        });
+                    }
+                    
+                    const storageItem = this.kvLager.find(i => i.name === item.name);
+                    if (storageItem) {
+                        storageItem.menge = targetStorage;
+                    } else if (targetStorage > 0) {
+                        this.kvLager.push({
+                            id: Date.now() + Math.random(),
+                            name: item.name,
+                            menge: targetStorage,
+                            kategorie: item.kategorie,
+                            notizen: item.notizen + " (synchronisiert)",
+                            hinzugefuegtAm: new Date().toISOString()
+                        });
+                    }
+                }
+            });
+            
+            this.gwBeladung = this.gwBeladung.filter(item => item.menge > 0);
+            this.kvLager = this.kvLager.filter(item => item.menge > 0);
+            
+            this.speichereGW();
+            this.speichereKVLager();
+            this.aktualisiereGWAnzeige();
+            this.aktualisiereKVLagerAnzeige();
+            
+            if (synced) {
+                alert("Bestände wurden erfolgreich synchronisiert (50% Fahrzeug / 50% Lager)!");
+            } else {
+                alert("Bestände sind bereits optimal verteilt!");
+            }
+        },
+
+        ladeHIKDefault(typ) {
+            if (typ === 'gw') {
+                this.gwBeladung = [...this.hikGWDefault.map(item => ({
+                    ...item,
+                    id: Date.now() + Math.random(),
+                    hinzugefuegtAm: new Date().toISOString()
+                }))];
+                this.speichereGW();
+                this.aktualisiereGWAnzeige();
+                alert('HIK 3.0 Default Beladung für GW-Verpflegung geladen!');
+            } else if (typ === 'kv-lager') {
+                this.kvLager = [...this.hikGWDefault.map(item => ({
+                    ...item,
+                    id: Date.now() + Math.random(),
+                    notizen: item.notizen + " - Lagervorrat",
+                    hinzugefuegtAm: new Date().toISOString()
+                }))];
+                this.speichereKVLager();
+                this.aktualisiereKVLagerAnzeige();
+                alert('HIK 3.0 Default für KV-Lager geladen!');
+            }
+        },
+
+        aktualisiereGWAnzeige() {
+            const container = document.getElementById('gw-beladung');
+            if (this.gwBeladung.length === 0) {
+                container.innerHTML = '<p>Keine Equipment im GW-Verpflegung.</p>';
+                return;
+            }
+
+            let html = '<h4>Aktuelle GW-Beladung</h4>';
+            
+            const kategorien = {};
+            this.gwBeladung.forEach(item => {
+                if (!kategorien[item.kategorie]) {
+                    kategorien[item.kategorie] = [];
+                }
+                kategorien[item.kategorie].push(item);
+            });
+
+            Object.keys(kategorien).sort().forEach(kategorie => {
+                html += `<h5>${kategorie}</h5>`;
+                kategorien[kategorie].forEach(item => {
+                    html += `
+                        <div class="lager-item">
+                            <div style="flex: 1;">
+                                <strong>${item.name}</strong><br>
+                                <small>Menge: ${item.menge} • Kategorie: ${item.kategorie}</small>
+                                ${item.notizen ? `<br><small>Notiz: ${item.notizen}</small>` : ''}
+                            </div>
+                            <div>
+                                <button onclick="EquipmentManager.transferToStorage(${item.id})" class="secondary" title="Ins Lager räumen">🏢</button>
+                                <button onclick="EquipmentManager.entferneGW(${item.id})" class="secondary">Entfernen</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+
+            container.innerHTML = html;
+        },
+
+        aktualisiereKVLagerAnzeige() {
+            const container = document.getElementById('kv-lager');
+            if (this.kvLager.length === 0) {
+                container.innerHTML = '<p>Keine Equipment im KV-Lager.</p>';
+                return;
+            }
+
+            let html = '<h4>Aktueller KV-Lagerbestand</h4>';
+            
+            const kategorien = {};
+            this.kvLager.forEach(item => {
+                if (!kategorien[item.kategorie]) {
+                    kategorien[item.kategorie] = [];
+                }
+                kategorien[item.kategorie].push(item);
+            });
+
+            Object.keys(kategorien).sort().forEach(kategorie => {
+                html += `<h5>${kategorie}</h5>`;
+                kategorien[kategorie].forEach(item => {
+                    html += `
+                        <div class="lager-item">
+                            <div style="flex: 1;">
+                                <strong>${item.name}</strong><br>
+                                <small>Menge: ${item.menge} • Kategorie: ${item.kategorie}</small>
+                                ${item.notizen ? `<br><small>Notiz: ${item.notizen}</small>` : ''}
+                            </div>
+                            <div>
+                                <button onclick="EquipmentManager.transferToVehicle(${item.id})" class="equipment" title="Auf Fahrzeug laden">🚚</button>
+                                <button onclick="EquipmentManager.entferneKVLager(${item.id})" class="secondary" title="Aus Lager entfernen">Entfernen</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+
+            container.innerHTML = html;
+        },
+
+        berechneEinsatzMaterial() {
+            const personen = parseInt(document.getElementById('einsatz-personen').value) || 50;
+            const dauer = parseInt(document.getElementById('einsatz-dauer').value) || 1;
+            const quelle = document.querySelector('input[name="material-quelle"]:checked').value;
+            
+            let ergebnisHTML = `<div class="einsatz-ergebnis">
+                <h4>Einsatzmaterial für ${personen} Personen (${dauer} Tag${dauer > 1 ? 'e' : ''})</h4>
+                <p><strong>Material-Quelle:</strong> ${quelle === 'auto' ? 'Zuerst Fahrzeug, dann Lager' : 'Zuerst Lager, dann Fahrzeug'}</p>
+            `;
+            
+            ergebnisHTML += `
+                <h5>Benötigtes Material:</h5>
+                <ul>
+                    <li>Geschirr: ${personen} Sets</li>
+                    <li>Besteck: ${personen} Sets</li>
+                    <li>Kochtöpfe: ${Math.ceil(personen / 100)} große Töpfe</li>
+                    <li>Gasflaschen: ${Math.ceil(personen / 50)} Stück</li>
+                    <li>Verbandmaterial: Basis-Set + ${Math.ceil(personen / 10)} Erweiterungen</li>
+                </ul>
+                
+                <h5>Quellen-Zuordnung:</h5>
+                <p>Die Materialien werden entsprechend der gewählten Quelle (${quelle === 'auto' ? 'Fahrzeug zuerst' : 'Lager zuerst'}) zugeordnet.</p>
+                
+                <div class="action-buttons">
+                    <button onclick="druckeEinsatzliste()" class="equipment">🖨️ Einsatzliste drucken</button>
+                    <button onclick="exportEinsatzPDF()" class="pdf">📥 Einsatz als PDF</button>
+                </div>
+            </div>`;
+            
+            document.getElementById('einsatz-ergebnis').innerHTML = ergebnisHTML;
+        }
+    };
+
+    // =============================================
+    // EINKAUFSMODUS MANAGEMENT
+    // =============================================
+
+    const Einkaufsmodus = {
+        aktuellerModus: 'lager',
+
+        getAktuellerModus() {
+            const selected = document.querySelector('input[name="einkaufsmodus"]:checked');
+            return selected ? selected.value : 'lager';
+        },
+
+        berechneZuKaufendeMenge(benoetigteMenge, zutatName) {
+            const modus = this.getAktuellerModus();
+            
+            if (modus === 'komplett') {
+                return {
+                    zuKaufen: benoetigteMenge,
+                    vorhanden: 0,
+                    verwendeterLagerbestand: 0
+                };
+            } else {
+                const lagerItem = this.findeImLager(zutatName, LagerManager.lagerbestand);
+                
+                if (lagerItem) {
+                    const verwendeteMenge = Math.min(benoetigteMenge, lagerItem.menge);
+                    const zuKaufendeMenge = Math.max(0, benoetigteMenge - verwendeteMenge);
+                    
+                    return {
+                        zuKaufen: zuKaufendeMenge,
+                        vorhanden: verwendeteMenge,
+                        verwendeterLagerbestand: verwendeteMenge
+                    };
+                } else {
+                    return {
+                        zuKaufen: benoetigteMenge,
+                        vorhanden: 0,
+                        verwendeterLagerbestand: 0
+                    };
+                }
+            }
+        },
+
+        findeImLager(zutatName, lagerbestand) {
+            for (const item of lagerbestand) {
+                if (item.name.toLowerCase() === zutatName.toLowerCase()) {
+                    return item;
+                }
+                const n1 = item.name.toLowerCase().replace(/[^a-zäöüß]/g, '');
+                const n2 = zutatName.toLowerCase().replace(/[^a-zäöüß]/g, '');
+                if (n1.includes(n2) || n2.includes(n1)) {
+                    return item;
+                }
+            }
+            return null;
+        }
+    };
+
+    // =============================================
+    // INTELLIGENTE REZEPT-EMPFEHLUNGS-ENGINE
+    // =============================================
+
+    const RezeptEmpfehlungsEngine = {
+        analysiereRezepte(personen, lagerbestand) {
+            const ergebnisse = [];
+            
+            for (const [rezeptName, rezeptDaten] of Object.entries(rezepte)) {
+                const analyse = this.analysiereEinzelnesRezept(rezeptName, rezeptDaten, personen, lagerbestand);
+                if (analyse) {
+                    ergebnisse.push(analyse);
+                }
+            }
+            
+            return ergebnisse.sort((a, b) => a.gesamtKosten - b.gesamtKosten);
+        },
+
+        analysiereEinzelnesRezept(rezeptName, rezeptDaten, personen, lagerbestand) {
+            const faktor = personen / rezeptDaten.basisPortionen;
+            let gesamtKosten = 0;
+            let benoetigteZutaten = [];
+            let verwendeterLagerbestand = {};
+            let fehlendeZutaten = [];
+            
+            for (const zutat of rezeptDaten.zutaten) {
+                const benoetigteMenge = zutat.menge * faktor;
+                const lagerItem = this.findeImLager(zutat.name, lagerbestand);
+                
+                if (lagerItem) {
+                    const verwendeteMenge = Math.min(benoetigteMenge, lagerItem.menge);
+                    const zuKaufendeMenge = Math.max(0, benoetigteMenge - verwendeteMenge);
+                    
+                    verwendeterLagerbestand[zutat.name] = {
+                        verwendet: verwendeteMenge,
+                        rest: lagerItem.menge - verwendeteMenge
+                    };
+                    
+                    if (zuKaufendeMenge > 0) {
+                        const packungsInfo = berechnePackungen(zuKaufendeMenge, zutat.name);
+                        gesamtKosten += packungsInfo.gesamtPreis;
+                        benoetigteZutaten.push({
+                            name: zutat.name,
+                            benoetigt: benoetigteMenge,
+                            vorhanden: verwendeteMenge,
+                            zuKaufen: zuKaufendeMenge,
+                            kosten: packungsInfo.gesamtPreis
+                        });
+                    } else {
+                        benoetigteZutaten.push({
+                            name: zutat.name,
+                            benoetigt: benoetigteMenge,
+                            vorhanden: verwendeteMenge,
+                            zuKaufen: 0,
+                            kosten: 0
+                        });
+                    }
+                } else {
+                    const packungsInfo = berechnePackungen(benoetigteMenge, zutat.name);
+                    gesamtKosten += packungsInfo.gesamtPreis;
+                    benoetigteZutaten.push({
+                        name: zutat.name,
+                        benoetigt: benoetigteMenge,
+                        vorhanden: 0,
+                        zuKaufen: benoetigteMenge,
+                        kosten: packungsInfo.gesamtPreis
+                    });
+                    fehlendeZutaten.push(zutat.name);
+                }
+            }
+            
+            return {
+                rezeptName: rezeptName,
+                anzeigeName: this.getRezeptAnzeigeName(rezeptName),
+                gesamtKosten: gesamtKosten,
+                kostenProPortion: gesamtKosten / personen,
+                benoetigteZutaten: benoetigteZutaten,
+                fehlendeZutaten: fehlendeZutaten,
+                zuKaufendePositionen: benoetigteZutaten.filter(z => z.zuKaufen > 0).length,
+                verwendeterLagerbestand: verwendeterLagerbestand
+            };
+        },
+
+        findeImLager(zutatName, lagerbestand) {
+            for (const item of lagerbestand) {
+                if (item.name.toLowerCase() === zutatName.toLowerCase()) {
+                    return item;
+                }
+                if (this.aehnlicheNamen(item.name, zutatName)) {
+                    return item;
+                }
+            }
+            return null;
+        },
+
+        aehnlicheNamen(name1, name2) {
+            const n1 = name1.toLowerCase().replace(/[^a-zäöüß]/g, '');
+            const n2 = name2.toLowerCase().replace(/[^a-zäöüß]/g, '');
+            return n1.includes(n2) || n2.includes(n1);
+        },
+
+        getRezeptAnzeigeName(rezeptName) {
+            const namen = {
+                kartoffelsuppe: "Kartoffelsuppe",
+                gulasch: "Gulasch",
+                chili_con_carne: "Chili con Carne",
+                bolognese: "Spaghetti Bolognese",
+                haehnchencurry: "Hähnchencurry",
+                linseneintopf: "Linseneintopf",
+                erbseneintopf: "Erbseneintopf",
+                kohlrouladen: "Kohlrouladen",
+                jaegerschnitzel: "Jägerschnitzel",
+                hackbraten: "Hackbraten"
+            };
+            return namen[rezeptName] || rezeptName;
+        },
+
+        erstelleEmpfehlungsHTML(empfehlungen, personen) {
+            if (empfehlungen.length === 0) {
+                return '<p>Keine passenden Rezepte gefunden.</p>';
+            }
+
+            const besteEmpfehlung = empfehlungen[0];
+            const allergenBadges = AllergenManager.erstelleAllergenBadges(
+                AllergenManager.getAlleRezeptAllergene(besteEmpfehlung.rezeptName)
+            );
+
+            let html = `
+                <div class="recommendation-card best-choice">
+                    <h3>🏆 Empfohlenes Rezept</h3>
+                    <h4>${besteEmpfehlung.anzeigeName}</h4>
+                    
+                    <div style="margin: 10px 0;">
+                        <strong>Allergene:</strong> ${allergenBadges}
+                    </div>
+                    
+                    <div class="recommendation-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${besteEmpfehlung.gesamtKosten.toFixed(2)} €</div>
+                            <div class="stat-label">Gesamtkosten</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${besteEmpfehlung.kostenProPortion.toFixed(2)} €</div>
+                            <div class="stat-label">pro Portion</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${besteEmpfehlung.zuKaufendePositionen}</div>
+                            <div class="stat-label">zu kaufen</div>
+                        </div>
+                    </div>
+                    
+                    <p class="cost-saving">💡 Das ist die günstigste Option basierend auf Ihrem Lagerbestand!</p>
+                    
+                    <button onclick="waehleRezept('${besteEmpfehlung.rezeptName}')" class="success">
+                        ✅ Dieses Rezept auswählen & anzeigen
+                    </button>
+                </div>
+            `;
+            
+            return html;
+        }
+    };
+
+    // =============================================
+    // LAGERVERWALTUNG
+    // =============================================
+
+    const LagerManager = {
+        lagerbestand: JSON.parse(localStorage.getItem('feldkueche_lager')) || [],
+
+        fuegeHinzu(lebensmittel) {
+            this.lagerbestand.push({
+                id: Date.now() + Math.random(),
+                name: lebensmittel.name,
+                menge: parseFloat(lebensmittel.menge),
+                einheit: lebensmittel.einheit,
+                kategorie: lebensmittel.kategorie,
+                haltbarkeit: lebensmittel.haltbarkeit,
+                notizen: lebensmittel.notizen,
+                hinzugefuegtAm: new Date().toISOString()
+            });
+            this.speichere();
+            this.aktualisiereAnzeige();
+        },
+
+        entferne(id) {
+            this.lagerbestand = this.lagerbestand.filter(item => item.id !== id);
+            this.speichere();
+            this.aktualisiereAnzeige();
+        },
+
+        leeren() {
+            this.lagerbestand = [];
+            this.speichere();
+            this.aktualisiereAnzeige();
+        },
+
+        speichere() {
+            localStorage.setItem('feldkueche_lager', JSON.stringify(this.lagerbestand));
+            CloudStorage.saveToCloud('feldkueche_lager', this.lagerbestand);
+        },
+
+        pruefeHaltbarkeit(datum) {
+            if (!datum) return 'unbekannt';
+            const heute = new Date();
+            const haltbarkeit = new Date(datum);
+            const tage = Math.ceil((haltbarkeit - heute) / (1000 * 60 * 60 * 24));
+            
+            if (tage < 0) return 'abgelaufen';
+            if (tage <= 7) return 'bald_ablaufend';
+            return 'ok';
+        },
+
+        aktualisiereAnzeige() {
+            const container = document.getElementById('lager-bestand');
+            if (this.lagerbestand.length === 0) {
+                container.innerHTML = '<p>Keine Lebensmittel im Lager.</p>';
+                return;
+            }
+
+            let html = '<h3>Lagerbestand</h3>';
+            
+            const kategorien = {};
+            this.lagerbestand.forEach(item => {
+                if (!kategorien[item.kategorie]) {
+                    kategorien[item.kategorie] = [];
+                }
+                kategorien[item.kategorie].push(item);
+            });
+
+            Object.keys(kategorien).sort().forEach(kategorie => {
+                html += `<h4>${kategorie}</h4>`;
+                kategorien[kategorie].forEach(item => {
+                    const haltbarkeit = this.pruefeHaltbarkeit(item.haltbarkeit);
+                    const klasse = haltbarkeit === 'abgelaufen' ? 'expired' : 
+                                  haltbarkeit === 'bald_ablaufend' ? 'expiring-soon' : '';
+                    
+                    const haltbarkeitsText = item.haltbarkeit ? 
+                        new Date(item.haltbarkeit).toLocaleDateString('de-DE') : 'Kein Datum';
+                    
+                    html += `
+                        <div class="lager-item ${klasse}">
+                            <div style="flex: 1;">
+                                <strong>${item.name}</strong><br>
+                                <small>${item.menge} ${item.einheit} • Haltbar bis: ${haltbarkeitsText}</small>
+                                ${item.notizen ? `<br><small>Notiz: ${item.notizen}</small>` : ''}
+                            </div>
+                            <button onclick="LagerManager.entferne(${item.id})" class="secondary">Entfernen</button>
+                        </div>
+                    `;
+                });
+            });
+
+            container.innerHTML = html;
+        }
+    };
+
+    // =============================================
+    // HILFSFUNKTIONEN
+    // =============================================
+
+    function konvertiereEinheit(menge, einheit) {
+        if (einheit === "kg") {
+            if (menge >= 1000) {
+                return { wert: (menge / 1000).toFixed(2), einheit: "t" };
+            } else if (menge < 1) {
+                return { wert: (menge * 1000).toFixed(0), einheit: "g" };
+            }
+        } else if (einheit === "L") {
+            if (menge >= 1000) {
+                return { wert: (menge / 1000).toFixed(2), einheit: "m³" };
+            } else if (menge < 1) {
+                return { wert: (menge * 1000).toFixed(0), einheit: "ml" };
+            }
+        }
+        return { wert: menge.toFixed(2), einheit: einheit };
+    }
+
+    function berechnePackungen(menge, produkt) {
+        if (!wasgauProdukte[produkt]) {
+            return { anzahl: 1, groesse: menge, preis: 0, einheit: "kg" };
+        }
+        
+        const packungsgroessen = [...wasgauProdukte[produkt].packungsgroessen].sort((a, b) => b - a);
+        const preise = wasgauProdukte[produkt].preise;
+        
+        let restMenge = menge;
+        let packungen = [];
+        let gesamtPreis = 0;
+        
+        for (let i = 0; i < packungsgroessen.length && restMenge > 0; i++) {
+            const groesse = packungsgroessen[i];
+            const preis = preise[i];
+            const anzahl = Math.floor(restMenge / groesse);
+            
+            if (anzahl > 0) {
+                packungen.push({ groesse, anzahl, preis });
+                gesamtPreis += anzahl * preis;
+                restMenge -= anzahl * groesse;
+            }
+        }
+        
+        if (restMenge > 0) {
+            const kleinsteGroesse = packungsgroessen[packungsgroessen.length - 1];
+            const preis = preise[preise.length - 1];
+            packungen.push({ groesse: kleinsteGroesse, anzahl: 1, preis });
+            gesamtPreis += preis;
+        }
+        
+        return { packungen, gesamtPreis, restMenge: Math.max(0, restMenge) };
+    }
+
+    // =============================================
+    // PDF EXPORT FUNKTION
+    // =============================================
+
+    function exportAsPDF() {
+        const rezeptName = document.getElementById("rezept").value;
+        const personen = parseFloat(document.getElementById("personen").value);
+        const rezept = rezepte[rezeptName];
+        
+        if (!rezept || !personen) {
+            alert("Bitte zuerst ein Rezept und eine Personenzahl auswählen!");
+            return;
+        }
+
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        const faktor = personen / rezept.basisPortionen;
+        const modus = Einkaufsmodus.getAktuellerModus();
+        
+        doc.setFontSize(16);
+        doc.setTextColor(179, 0, 0);
+        doc.text(`Einkaufsliste - ${RezeptEmpfehlungsEngine.getRezeptAnzeigeName(rezeptName)}`, 14, 15);
+        
+        doc.setFontSize(11);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Für ${personen} Personen • ${new Date().toLocaleDateString('de-DE')}`, 14, 22);
+        doc.text(`Modus: ${modus === 'lager' ? 'Lagerbestand berücksichtigt' : 'Alles neu kaufen'}`, 14, 28);
+        
+        const kopfZeilen = [
+            ['Produkt', 'Benötigt', 'Vorhanden', 'Zu kaufen', 'Packungen', 'Kosten (€)']
+        ];
+        
+        const tabellenDaten = [];
+        let gesamtKosten = 0;
+        
+        rezept.zutaten.forEach(zutat => {
+            const benoetigteMenge = zutat.menge * faktor;
+            const kaufInfo = Einkaufsmodus.berechneZuKaufendeMenge(benoetigteMenge, zutat.name);
+            
+            if (kaufInfo.zuKaufen > 0) {
+                const packungsInfo = berechnePackungen(kaufInfo.zuKaufen, zutat.name);
+                const konvertiertBenoetigt = konvertiereEinheit(benoetigteMenge, zutat.einheit);
+                const konvertiertVorhanden = konvertiereEinheit(kaufInfo.vorhanden, zutat.einheit);
+                const konvertiertZuKaufen = konvertiereEinheit(kaufInfo.zuKaufen, zutat.einheit);
+                
+                let packungenText = "";
+                packungsInfo.packungen.forEach(pack => {
+                    const packKonvertiert = konvertiereEinheit(pack.groesse, wasgauProdukte[zutat.name] ? wasgauProdukte[zutat.name].einheit : zutat.einheit);
+                    packungenText += `${pack.anzahl} × ${packKonvertiert.wert} ${packKonvertiert.einheit}\n`;
+                });
+                
+                tabellenDaten.push([
+                    zutat.name,
+                    `${konvertiertBenoetigt.wert} ${konvertiertBenoetigt.einheit}`,
+                    `${konvertiertVorhanden.wert} ${konvertiertVorhanden.einheit}`,
+                    `${konvertiertZuKaufen.wert} ${konvertiertZuKaufen.einheit}`,
+                    packungenText.trim(),
+                    `${packungsInfo.gesamtPreis.toFixed(2)}`
+                ]);
+                
+                gesamtKosten += packungsInfo.gesamtPreis;
+            } else {
+                const konvertiertBenoetigt = konvertiereEinheit(benoetigteMenge, zutat.einheit);
+                const konvertiertVorhanden = konvertiereEinheit(kaufInfo.vorhanden, zutat.einheit);
+                
+                tabellenDaten.push([
+                    zutat.name,
+                    `${konvertiertBenoetigt.wert} ${konvertiertBenoetigt.einheit}`,
+                    `${konvertiertVorhanden.wert} ${konvertiertVorhanden.einheit}`,
+                    "Aus Lager",
+                    "-",
+                    "0.00"
+                ]);
+            }
+        });
+        
+        doc.autoTable({
+            head: kopfZeilen,
+            body: tabellenDaten,
+            startY: 35,
+            styles: {
+                fontSize: 9,
+                cellPadding: 3,
+            },
+            headStyles: {
+                fillColor: [179, 0, 0],
+                textColor: 255,
+                fontStyle: 'bold'
+            },
+            alternateRowStyles: {
+                fillColor: [245, 245, 245]
+            },
+            columnStyles: {
+                0: { cellWidth: 45 },
+                1: { cellWidth: 25 },
+                2: { cellWidth: 25 },
+                3: { cellWidth: 25 },
+                4: { cellWidth: 40 },
+                5: { cellWidth: 20 }
+            }
+        });
+        
+        const finalY = doc.lastAutoTable.finalY + 10;
+        
+        doc.setFillColor(232, 244, 232);
+        doc.rect(14, finalY, 182, 25, 'F');
+        
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.text('Kostenübersicht', 20, finalY + 8);
+        
+        doc.setFontSize(10);
+        doc.text(`Gesamtkosten: ${gesamtKosten.toFixed(2)} €`, 20, finalY + 15);
+        doc.text(`Kosten pro Portion: ${(gesamtKosten / personen).toFixed(2)} €`, 20, finalY + 21);
+        
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        doc.text('Erstellt mit Feldküche - Intelligente Rezeptempfehlung', 14, 280);
+        doc.text(`Wasgau C+C Einkaufsliste`, 14, 285);
+        
+        const fileName = `Einkaufsliste_${RezeptEmpfehlungsEngine.getRezeptAnzeigeName(rezeptName)}_${personen}Personen.pdf`;
+        doc.save(fileName);
+    }
+
+    // =============================================
+    // EQUIPMENT UI FUNKTIONEN
+    // =============================================
+
+    function switchEquipmentSubTab(subTabName) {
+        document.querySelectorAll('.equipment-subcontent').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelectorAll('.equipment-subtab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.getElementById(subTabName + '-subtab').classList.add('active');
+        document.querySelector(`.equipment-subtab[onclick="switchEquipmentSubTab('${subTabName}')"]`).classList.add('active');
+        
+        if (subTabName === 'gw-beladung') {
+            EquipmentManager.aktualisiereGWAnzeige();
+        } else if (subTabName === 'kv-lager') {
+            EquipmentManager.aktualisiereKVLagerAnzeige();
+        }
+    }
+
+    function fuegeGWEquipmentHinzu() {
+        const name = document.getElementById('gw-name').value.trim();
+        const menge = document.getElementById('gw-menge').value;
+        const kategorie = document.getElementById('gw-kategorie').value;
+        const notizen = document.getElementById('gw-notizen').value.trim();
+
+        if (!name || !menge) {
+            alert('Bitte Bezeichnung und Menge eingeben!');
+            return;
+        }
+
+        EquipmentManager.fuegeGWEquipmentHinzu({
+            name,
+            menge: parseInt(menge),
+            kategorie,
+            notizen
+        });
+
+        document.getElementById('gw-name').value = '';
+        document.getElementById('gw-menge').value = '1';
+        document.getElementById('gw-notizen').value = '';
+    }
+
+    function fuegeKVLagerHinzu() {
+        const name = document.getElementById('kv-lager-name').value.trim();
+        const menge = document.getElementById('kv-lager-menge').value;
+        const kategorie = document.getElementById('kv-lager-kategorie').value;
+        const notizen = document.getElementById('kv-lager-notizen').value.trim();
+
+        if (!name || !menge) {
+            alert('Bitte Bezeichnung und Menge eingeben!');
+            return;
+        }
+
+        EquipmentManager.fuegeKVLagerHinzu({
+            name,
+            menge: parseInt(menge),
+            kategorie,
+            notizen
+        });
+
+        document.getElementById('kv-lager-name').value = '';
+        document.getElementById('kv-lager-menge').value = '1';
+        document.getElementById('kv-lager-notizen').value = '';
+    }
+
+    function berechneEinsatzMaterial() {
+        EquipmentManager.berechneEinsatzMaterial();
+    }
+
+    function druckeEinsatzliste() {
+        window.print();
+    }
+
+    function exportEinsatzPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.setFontSize(16);
+        doc.setTextColor(179, 0, 0);
+        doc.text('Einsatzmaterial-Liste', 14, 15);
+        
+        doc.setFontSize(11);
+        doc.setTextColor(0, 0, 0);
+        doc.text(`Erstellt am: ${new Date().toLocaleDateString('de-DE')}`, 14, 22);
+        
+        doc.text('Einsatzmaterial-Liste wird generiert...', 14, 40);
+        
+        const fileName = `Einsatzmaterial_${new Date().toISOString().split('T')[0]}.pdf`;
+        doc.save(fileName);
+    }
+
+    // =============================================
+    // UI-FUNKTIONEN
+    // =============================================
+
+    function zeigeRezeptEmpfehlungen() {
+        const personen = parseInt(document.getElementById('empfohlen-personen').value);
+        const lagerbestand = LagerManager.lagerbestand;
+        
+        if (!personen || personen <= 0) {
+            alert('Bitte eine gültige Personenzahl eingeben!');
+            return;
+        }
+
+        document.getElementById('rezept-empfehlungen').innerHTML = '<div class="loading">🔍 Analysiere alle Rezepte...</div>';
+        
+        setTimeout(() => {
+            const empfehlungen = RezeptEmpfehlungsEngine.analysiereRezepte(personen, lagerbestand);
+            const html = RezeptEmpfehlungsEngine.erstelleEmpfehlungsHTML(empfehlungen, personen);
+            document.getElementById('rezept-empfehlungen').innerHTML = html;
+        }, 500);
+    }
+
+    function waehleRezept(rezeptName) {
+        document.getElementById('rezept').value = rezeptName;
+        document.getElementById('personen').value = document.getElementById('empfohlen-personen').value;
+        zeigeRezept();
+        alert(`Rezept "${RezeptEmpfehlungsEngine.getRezeptAnzeigeName(rezeptName)}" wurde ausgewählt!`);
+    }
+
+    function zeigeRezept() {
+        const rezeptName = document.getElementById("rezept").value;
+        const personen = parseFloat(document.getElementById("personen").value);
+
+        if (isNaN(personen) || personen <= 0) {
+            alert("Bitte eine gültige Personenzahl eingeben!");
+            return;
+        }
+
+        const rezept = rezepte[rezeptName];
+        if (!rezept) {
+            document.getElementById("ausgabe").innerHTML = "<p style='color:red;'>Rezept nicht gefunden!</p>";
+            return;
+        }
+
+        const faktor = personen / rezept.basisPortionen;
+
+        let html = `<h2>${personen} Portionen – ${RezeptEmpfehlungsEngine.getRezeptAnzeigeName(rezeptName)}</h2>`;
+        html += `<p><strong>Basisrezept für ${rezept.basisPortionen} Portionen</strong></p>`;
+        html += `<table><tr><th>Zutat</th><th>Menge</th><th>Einheit</th><th>Allergene</th></tr>`;
+
+        rezept.zutaten.forEach(zutat => {
+            const neueMenge = zutat.menge * faktor;
+            const konvertiert = konvertiereEinheit(neueMenge, zutat.einheit);
+            const zutatAllergene = produktAllergene[zutat.name] || [];
+            const zutatAllergenBadges = AllergenManager.erstelleAllergenBadges(zutatAllergene);
+            
+            html += `<tr>
+                <td>${zutat.name}</td>
+                <td>${konvertiert.wert}</td>
+                <td>${konvertiert.einheit}</td>
+                <td>${zutatAllergenBadges}</td>
+            </tr>`;
+        });
+
+        html += "</table>";
+        document.getElementById("ausgabe").innerHTML = html;
+
+        AllergenManager.zeigeRezeptAllergene(rezeptName);
+        erstelleEinkaufsliste(rezept, faktor, personen);
+    }
+
+    function erstelleEinkaufsliste(rezept, faktor, personen) {
+        const modus = Einkaufsmodus.getAktuellerModus();
+        const modusText = modus === 'lager' ? ' (Lagerbestand berücksichtigt)' : ' (Alles neu kaufen)';
+        
+        let einkaufslisteHTML = `<h2>Einkaufsliste für ${personen} Portionen – Wasgau C+C${modusText}</h2>`;
+        einkaufslisteHTML += `<table><tr><th>Produkt</th><th>Benötigte Menge</th><th>Vorhanden</th><th>Zu kaufen</th><th>Packungen</th><th>Kosten (€)</th></tr>`;
+        
+        let gesamtKosten = 0;
+
+        rezept.zutaten.forEach(zutat => {
+            const benoetigteMenge = zutat.menge * faktor;
+            const kaufInfo = Einkaufsmodus.berechneZuKaufendeMenge(benoetigteMenge, zutat.name);
+            
+            if (kaufInfo.zuKaufen > 0) {
+                const packungsInfo = berechnePackungen(kaufInfo.zuKaufen, zutat.name);
+                const konvertiertBenoetigt = konvertiereEinheit(benoetigteMenge, zutat.einheit);
+                const konvertiertVorhanden = konvertiereEinheit(kaufInfo.vorhanden, zutat.einheit);
+                const konvertiertZuKaufen = konvertiereEinheit(kaufInfo.zuKaufen, zutat.einheit);
+                
+                let packungenText = "";
+                
+                packungsInfo.packungen.forEach(pack => {
+                    const packKonvertiert = konvertiereEinheit(pack.groesse, wasgauProdukte[zutat.name] ? wasgauProdukte[zutat.name].einheit : zutat.einheit);
+                    const packungsText = pack.anzahl === 1 ? "Packung" : "Packungen";
+                    packungenText += `${pack.anzahl} ${packungsText} à ${packKonvertiert.wert} ${packKonvertiert.einheit}<br>`;
+                });
+                
+                const rowClass = modus === 'lager' ? 'lager-verwendung' : 'komplett-kauf';
+                
+                einkaufslisteHTML += `<tr class="${rowClass}">
+                    <td>${zutat.name}</td>
+                    <td>${konvertiertBenoetigt.wert} ${konvertiertBenoetigt.einheit}</td>
+                    <td>${konvertiertVorhanden.wert} ${konvertiertVorhanden.einheit}</td>
+                    <td>${konvertiertZuKaufen.wert} ${konvertiertZuKaufen.einheit}</td>
+                    <td class="packaging-details">${packungenText}</td>
+                    <td>${packungsInfo.gesamtPreis.toFixed(2)}</td>
+                </tr>`;
+                
+                gesamtKosten += packungsInfo.gesamtPreis;
+            } else {
+                const konvertiertBenoetigt = konvertiereEinheit(benoetigteMenge, zutat.einheit);
+                const konvertiertVorhanden = konvertiereEinheit(kaufInfo.vorhanden, zutat.einheit);
+                
+                einkaufslisteHTML += `<tr class="lager-verwendung">
+                    <td>${zutat.name}</td>
+                    <td>${konvertiertBenoetigt.wert} ${konvertiertBenoetigt.einheit}</td>
+                    <td>${konvertiertVorhanden.wert} ${konvertiertVorhanden.einheit}</td>
+                    <td><em>Aus Lager</em></td>
+                    <td>-</td>
+                    <td>0.00</td>
+                </tr>`;
+            }
+        });
+
+        einkaufslisteHTML += `</table>`;
+        
+        einkaufslisteHTML += `<div class="cost-summary">
+            <h3>Kostenübersicht</h3>
+            <p><strong>Gesamtkosten: ${gesamtKosten.toFixed(2)} €</strong></p>
+            <p>Kosten pro Portion: ${(gesamtKosten / personen).toFixed(2)} €</p>
+            <p class="packaging-info">
+                ${modus === 'lager' 
+                    ? 'Lagerbestand wird berücksichtigt - nur fehlende Mengen werden gekauft' 
+                    : 'Alles wird neu gekauft - Lagerbestand wird ignoriert'
+                }
+            </p>
+        </div>`;
+        
+        document.getElementById("einkaufsliste").innerHTML = einkaufslisteHTML;
+    }
+
+    function aktualisiereEinkaufsliste() {
+        const rezeptName = document.getElementById("rezept").value;
+        const personen = parseFloat(document.getElementById("personen").value);
+        const rezept = rezepte[rezeptName];
+        
+        if (rezept && personen > 0) {
+            const faktor = personen / rezept.basisPortionen;
+            erstelleEinkaufsliste(rezept, faktor, personen);
+        }
+    }
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.getElementById(tabName + '-tab').classList.add('active');
+        document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
+        
+        if (tabName === 'lager') {
+            LagerManager.aktualisiereAnzeige();
+        } else if (tabName === 'equipment') {
+            EquipmentManager.aktualisiereGWAnzeige();
+        }
+    }
+
+    function fuegeLebensmittelHinzu() {
+        const name = document.getElementById('lager-name').value.trim();
+        const menge = document.getElementById('lager-menge').value;
+        const einheit = document.getElementById('lager-einheit').value;
+        const kategorie = document.getElementById('lager-kategorie').value;
+        const haltbarkeit = document.getElementById('lager-haltbarkeit').value;
+        const notizen = document.getElementById('lager-notizen').value.trim();
+
+        if (!name || !menge) {
+            alert('Bitte Name und Menge eingeben!');
+            return;
+        }
+
+        LagerManager.fuegeHinzu({
+            name,
+            menge: parseFloat(menge),
+            einheit,
+            kategorie,
+            haltbarkeit: haltbarkeit || null,
+            notizen
+        });
+
+        document.getElementById('lager-name').value = '';
+        document.getElementById('lager-menge').value = '';
+        document.getElementById('lager-notizen').value = '';
+    }
+
+    function lagerLeeren() {
+        if (confirm('Möchten Sie wirklich den gesamten Lagerbestand löschen?')) {
+            LagerManager.leeren();
+        }
+    }
+
+    function zeigeAbgelaufene() {
+        const abgelaufene = LagerManager.lagerbestand.filter(item => 
+            LagerManager.pruefeHaltbarkeit(item.haltbarkeit) === 'abgelaufen'
+        );
+        
+        if (abgelaufene.length === 0) {
+            alert('Keine abgelaufenen Lebensmittel gefunden.');
+        } else {
+            alert(`Abgelaufene Lebensmittel: ${abgelaufene.map(item => item.name).join(', ')}`);
+        }
+    }
+
+    // Event-Listener
+    document.addEventListener('DOMContentLoaded', function() {
+        EquipmentManager.aktualisiereGWAnzeige();
+        EquipmentManager.aktualisiereKVLagerAnzeige();
+        LagerManager.aktualisiereAnzeige();
+        
+        document.getElementById('personen').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') zeigeRezept();
+        });
+        document.getElementById('rezept').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') zeigeRezept();
+        });
+        document.getElementById('empfohlen-personen').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') zeigeRezeptEmpfehlungen();
+        });
+        
+        zeigeRezept();
+    });
     </script>
 </body>
 </html>
