@@ -3,137 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud App - Datenmanagement</title>
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="/testversion-verpflegung/css/style.css">
-    <link rel="stylesheet" href="/testversion-verpflegung/css/page1.css">
-    <link rel="stylesheet" href="/testversion-verpflegung/css/page2.css">
-    <link rel="stylesheet" href="/testversion-verpflegung/css/page3.css">
-    <link rel="stylesheet" href="/testversion-verpflegung/css/page4.css">
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
+    <title>Cloud App</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="main-nav">
-        <div class="nav-brand">
-            <img src="assets/images/logo.png" alt="Logo" class="logo">
-            <span>Cloud App</span>
-        </div>
-        <div class="nav-links">
-            <button class="nav-link active" data-page="page1">Auswahl</button>
-            <button class="nav-link" data-page="page2">Cloud-Abgleich</button>
-            <button class="nav-link" data-page="page3">Berechnung</button>
-            <button class="nav-link" data-page="page4">Verwaltung</button>
-        </div>
-        <div class="nav-actions">
-            <button id="sync-status" class="sync-btn">Sync: Online</button>
+    <!-- Reitermenü -->
+    <nav class="tab-navigation">
+        <div class="tab-container">
+            <button class="tab-button active" data-tab="page1">
+                <span class="tab-icon">🏠</span>
+                <span class="tab-label">Auswahl</span>
+            </button>
+            <button class="tab-button" data-tab="page2">
+                <span class="tab-icon">🔍</span>
+                <span class="tab-label">Cloud-Abgleich</span>
+            </button>
+            <button class="tab-button" data-tab="page3">
+                <span class="tab-icon">🧮</span>
+                <span class="tab-label">Berechnung</span>
+            </button>
+            <button class="tab-button" data-tab="page4">
+                <span class="tab-icon">☁️</span>
+                <span class="tab-label">Cloud-Verwaltung</span>
+            </button>
         </div>
     </nav>
 
-    <!-- Hauptinhalt -->
-    <main class="main-content">
+    <!-- Seiten-Container -->
+    <main class="page-container">
         <!-- Seite 1 - Auswahl -->
-        <section id="page1" class="page active">
+        <div id="page1" class="page active">
             <div class="page-header">
-                <h1>Datenauswahl</h1>
-                <p>Treffen Sie Ihre Auswahl basierend auf Cloud-Daten</p>
+                <h1>🏠 Auswahl</h1>
+                <p>Treffen Sie Ihre Auswahl für die weitere Verarbeitung</p>
             </div>
             <div class="page-content">
-                <div id="selection-container" class="selection-grid"></div>
-                <div id="selection-progress" class="progress-bar hidden">
-                    <div class="progress-fill"></div>
+                <div id="selection-progress" class="progress-bar" style="display: none;">
+                    Lade Auswahloptionen...
+                </div>
+                <div id="selection-container" class="selection-grid">
+                    <!-- Wird von Page1Controller gefüllt -->
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- Seite 2 - Cloud-Abgleich -->
-        <section id="page2" class="page">
+        <div id="page2" class="page">
             <div class="page-header">
-                <h1>Cloud-Abgleich</h1>
-                <p>Vergleich der Auswahl mit Cloud-Daten</p>
+                <h1>🔍 Cloud-Abgleich</h1>
+                <p>Vergleichen Sie lokale Daten mit Cloud-Inhalten</p>
             </div>
             <div class="page-content">
                 <div id="comparison-result" class="comparison-container">
-                    <div class="loading-spinner">Lade Cloud-Daten...</div>
+                    <!-- Wird von Page2Controller gefüllt -->
                 </div>
             </div>
-        </section>
+        </div>
 
         <!-- Seite 3 - Berechnung -->
-        <section id="page3" class="page">
+        <div id="page3" class="page">
             <div class="page-header">
-                <h1>Berechnung & Eigene Items</h1>
-                <p>Berechnungen und Verwaltung eigener Elemente</p>
+                <h1>🧮 Berechnung & Eigene Items</h1>
+                <p>Führen Sie Berechnungen durch und verwalten Sie eigene Items</p>
             </div>
             <div class="page-content">
                 <div class="two-column-layout">
                     <div class="column">
-                        <h3>Berechnungsergebnisse</h3>
-                        <div id="calculation-result" class="results-container"></div>
+                        <h3>📊 Berechnungsergebnisse</h3>
+                        <div id="calculation-result" class="calculation-container">
+                            <!-- Wird von Page3Controller gefüllt -->
+                        </div>
+                        <div class="calculation-actions">
+                            <button class="btn-primary" onclick="page3Controller.performCalculation()">
+                                🧮 Berechnung starten
+                            </button>
+                        </div>
                     </div>
                     <div class="column">
-                        <h3>Eigene Items
-                            <button id="add-item-btn" class="btn-primary">+ Neues Item</button>
-                        </h3>
-                        <div id="own-items-management" class="items-container"></div>
+                        <h3>📝 Eigene Items</h3>
+                        <div id="own-items-management" class="items-container">
+                            <!-- Wird von Page3Controller gefüllt -->
+                        </div>
+                        <div class="items-actions">
+                            <button class="btn-secondary" onclick="page3Controller.showAddItemForm()">
+                                ➕ Item hinzufügen
+                            </button>
+                            <button class="btn-secondary" onclick="page3Controller.syncItemsToCloud()">
+                                ☁️ Mit Cloud syncen
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- Seite 4 - Verwaltung -->
-        <section id="page4" class="page">
+        <!-- Seite 4 - Cloud-Verwaltung -->
+        <div id="page4" class="page">
             <div class="page-header">
-                <h1>Cloud-Verwaltung</h1>
-                <p>Verwalten Sie Cloud-Elemente und Einstellungen</p>
+                <h1>☁️ Cloud-Verwaltung</h1>
+                <p>Verwalten Sie Cloud-Items und Daten</p>
             </div>
             <div class="page-content">
-                <div class="management-tools">
-                    <div class="toolbar">
-                        <button id="refresh-cloud" class="btn-secondary">Aktualisieren</button>
-                        <button id="add-cloud-item" class="btn-primary">+ Cloud Item</button>
-                        <button id="export-data" class="btn-secondary">Exportieren</button>
-                    </div>
-                    <div id="cloud-items-management" class="cloud-items-grid"></div>
+                <div class="management-toolbar">
+                    <button id="refresh-cloud" class="btn-primary">
+                        🔄 Cloud-Daten aktualisieren
+                    </button>
+                    <button id="add-cloud-item" class="btn-primary">
+                        ➕ Cloud-Item erstellen
+                    </button>
+                    <button id="export-data" class="btn-secondary">
+                        📤 Daten exportieren
+                    </button>
+                </div>
+                <div id="cloud-items-management" class="cloud-items-container">
+                    <!-- Wird von Page4Controller gefüllt -->
                 </div>
             </div>
-        </section>
+        </div>
     </main>
 
-    <!-- Modals -->
-    <div id="item-modal" class="modal hidden">
-        <div class="modal-content">
-            <h3 id="modal-title">Item hinzufügen</h3>
-            <form id="item-form">
-                <input type="hidden" id="item-id">
-                <div class="form-group">
-                    <label for="item-name">Name:</label>
-                    <input type="text" id="item-name" required>
-                </div>
-                <div class="form-group">
-                    <label for="item-description">Beschreibung:</label>
-                    <textarea id="item-description"></textarea>
-                </div>
-                <div class="form-actions">
-                    <button type="button" id="cancel-modal" class="btn-secondary">Abbrechen</button>
-                    <button type="submit" class="btn-primary">Speichern</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- JavaScript -->
-    <script src="/testversion-verpflegung/js/utils/cloud-api.js"></script>
-    <script src="/testversion-verpflegung/js/data-manager.js"></script>
-    <script src="/testversion-verpflegung/js/utils/error-handler.js"></script>
-    <script src="/testversion-verpflegung/js/utils/helpers.js"></script>
-    <script src="/testversion-verpflegung/js/controllers/page1-controller.js"></script>
-    <script src="/testversion-verpflegung/js/controllers/page2-controller.js"></script>
-    <script src="/testversion-verpflegung/js/controllers/page3-controller.js"></script>
-    <script src="/testversion-verpflegung/js/controllers/page4-controller.js"></script>
-    <script src="/testversion-verpflegung/js/app.js"></script>
+    <!-- Scripts -->
+    <script src="cloud-api.js"></script>
+    <script src="page1-controller.js"></script>
+    <script src="page2-controller.js"></script>
+    <script src="page3-controller.js"></script>
+    <script src="page4-controller.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
