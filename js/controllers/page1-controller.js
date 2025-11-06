@@ -128,10 +128,10 @@ window.page1Controller = {
                 <h3>Keine Auswahloptionen verfügbar</h3>
                 <p>Es konnten keine Daten geladen werden. Bitte versuchen Sie es später erneut.</p>
                 <div class="no-data-actions">
-                    <button class="btn-primary" onclick="window.page1Controller.loadInitialData()">
+                    <button class="btn-primary" id="retry-load-btn">
                         🔄 Erneut versuchen
                     </button>
-                    <button class="btn-secondary" onclick="window.page1Controller.useDemoData()">
+                    <button class="btn-secondary" id="demo-data-btn">
                         🎯 Demo-Daten verwenden
                     </button>
                 </div>
@@ -196,10 +196,10 @@ window.page1Controller = {
                 <h4>✅ Auswahl getroffen</h4>
                 <p>Sie haben <strong>${selection.name}</strong> ausgewählt.</p>
                 <div class="confirmation-actions">
-                    <button class="btn-primary" onclick="window.page1Controller.goToPage2()">
+                    <button class="btn-primary" id="go-to-page2-btn">
                         Weiter zu Cloud-Abgleich
                     </button>
-                    <button class="btn-secondary" onclick="this.parentElement.parentElement.remove()">
+                    <button class="btn-secondary" id="close-confirmation-btn">
                         Schließen
                     </button>
                 </div>
@@ -207,20 +207,25 @@ window.page1Controller = {
         `;
         
         document.body.appendChild(confirmation);
+        
+        // ✅ KORREKT: Event Listener NACH dem Einfügen ins DOM setzen
+        document.getElementById('go-to-page2-btn').addEventListener('click', () => {
+            this.goToPage2();
+            confirmation.remove();
+        });
+        
+        document.getElementById('close-confirmation-btn').addEventListener('click', () => {
+            confirmation.remove();
+        });
     },
 
     goToPage2: function() {
+        console.log('🔄 Navigiere zu Seite 2...');
         if (window.app && window.app.navigateTo) {
             window.app.navigateTo('page2');
-        } else if (window.page2Controller) {
-            // Fallback Navigation
-            window.location.hash = '#page2';
-            if (window.page2Controller.onEnter) {
-                setTimeout(() => window.page2Controller.onEnter(), 100);
-            }
         } else {
-            console.log('Navigiere zu Seite 2');
-            window.location.hash = '#page2';
+            console.error('❌ App Controller nicht verfügbar');
+            this.showNotification('❌ Navigation nicht möglich', 'error');
         }
     },
 
@@ -262,6 +267,21 @@ window.page1Controller = {
 
     setupBasicEventListeners: function() {
         console.log('🔧 Setup basic event listeners');
+        
+        // ✅ KORREKT: Event Delegation für dynamische Buttons
+        document.addEventListener('click', (e) => {
+            // Retry Load Button
+            if (e.target.id === 'retry-load-btn' || e.target.closest('#retry-load-btn')) {
+                e.preventDefault();
+                this.loadInitialData();
+            }
+            
+            // Demo Data Button
+            if (e.target.id === 'demo-data-btn' || e.target.closest('#demo-data-btn')) {
+                e.preventDefault();
+                this.useDemoData();
+            }
+        });
         
         // Globale Refresh-Funktion
         window.refreshPage1 = () => {
@@ -340,315 +360,26 @@ window.page1Controller = {
             dataManagerAvailable: !!window.dataManager,
             timestamp: Date.now()
         };
+    },
+
+    // ✅ WICHTIG: Lifecycle Methods für Tab-Navigation
+    onEnter: function() {
+        console.log('➡️ Page1 betreten');
+        // Daten aktualisieren wenn nötig
+        this.loadInitialData();
+    },
+
+    onLeave: function() {
+        console.log('⬅️ Page1 verlassen');
+        // Cleanup falls nötig
     }
 };
-
-// Hauptklasse für volle Funktionalität
-class Page1ControllerFull {
-    constructor() {
-        this.selectedItem = null;
-        this.cloudData = null;
-        this.ready = false;
-        
-        console.log('🔧 Page1ControllerFull Constructor');
-        this.init();
-    }
-
-    async init() {
-        try {
-            console.log('🔄 Page1ControllerFull startet Initialisierung...');
-            
-            // Warte auf Abhängigkeiten
-            await this.waitForDependencies();
-            
-            this.setupEventListeners();
-            await this.loadCloudData();
-            this.renderSelections();
-            
-            this.ready = true;
-            
-            // Ersetze das einfache Objekt
-            this.replaceSimpleController();
-            
-            console.log('✅ Page1ControllerFull vollständig initialisiert');
-            
-        } catch (error) {
-            console.error('❌ Page1ControllerFull Initialisierung fehlgeschlagen:', error);
-        }
-    }
-
-    async waitForDependencies(timeout = 10000) {
-        return new Promise((resolve, reject) => {
-            const start = Date.now();
-            const check = () => {
-                // Wir brauchen nicht unbedingt dataManager, aber cloudAPI wäre gut
-                const depsReady = window.cloudAPI || window.dataManager;
-                
-                if (depsReady) {
-                    console.log('✅ Abhängigkeiten verfügbar');
-                    return resolve();
-                }
-                
-                if (Date.now() - start > timeout) {
-                    console.warn('⏰ Timeout beim Warten auf Abhängigkeiten');
-                    return resolve(); // Wir fahren auch ohne Abhängigkeiten fort
-                }
-                
-                setTimeout(check, 100);
-            };
-            check();
-        });
-    }
-
-    async loadCloudData() {
-        try {
-            this.showLoadingState();
-            
-            if (window.cloudAPI && window.cloudAPI.ready) {
-                this.cloudData = await window.cloudAPI.getInitialData();
-                console.log('✅ Cloud-Daten geladen:', this.cloudData);
-            } else {
-                console.warn('⚠️ CloudAPI nicht verfügbar, verwende Fallback');
-                this.cloudData = this.generateFallbackData();
-            }
-            
-            // Daten speichern
-            if (window.dataManager) {
-                window.dataManager.syncData('cloudData', this.cloudData);
-            }
-            
-            return this.cloudData;
-            
-        } catch (error) {
-            console.error('❌ Fehler beim Laden der Cloud-Daten:', error);
-            this.cloudData = this.generateFallbackData();
-            return this.cloudData;
-        }
-    }
-
-    generateFallbackData() {
-        return {
-            selections: [
-                {
-                    id: 'cloud-1',
-                    name: 'Cloud Auswahl 1',
-                    description: 'Daten von der Cloud-API',
-                    type: 'Cloud',
-                    created: new Date().toISOString(),
-                    value: 'cloud-1'
-                },
-                {
-                    id: 'cloud-2',
-                    name: 'Cloud Auswahl 2',
-                    description: 'Weitere Cloud-basierte Option',
-                    type: 'Cloud', 
-                    created: new Date().toISOString(),
-                    value: 'cloud-2'
-                },
-                {
-                    id: 'cloud-3',
-                    name: 'Premium Auswahl',
-                    description: 'Erweiterte Cloud-Funktionen',
-                    type: 'Premium',
-                    created: new Date().toISOString(),
-                    value: 'premium'
-                }
-            ]
-        };
-    }
-
-    renderSelections() {
-        const container = document.getElementById('selection-container');
-        
-        if (!container) {
-            console.error('❌ Container #selection-container nicht gefunden');
-            return;
-        }
-
-        if (!this.cloudData || !this.cloudData.selections) {
-            container.innerHTML = this.createNoDataHTML();
-            return;
-        }
-
-        const selectionsHTML = this.cloudData.selections.map(item => `
-            <div class="selection-card ${item.id === this.selectedItem?.id ? 'selected' : ''}" 
-                 data-id="${item.id}">
-                <div class="card-header">
-                    <h3>${this.capitalize(item.name)}</h3>
-                    <span class="type-badge">${item.type || 'Standard'}</span>
-                </div>
-                <p class="card-description">${item.description || 'Keine Beschreibung verfügbar'}</p>
-                <div class="card-footer">
-                    <span class="date">Erstellt: ${this.formatDate(item.created)}</span>
-                    <div class="card-indicator">
-                        ${item.id === this.selectedItem?.id ? '✅ Ausgewählt' : '⬜ Auswählen'}
-                    </div>
-                </div>
-            </div>
-        `).join('');
-
-        container.innerHTML = selectionsHTML;
-
-        // Event Listener für Auswahlkarten
-        container.querySelectorAll('.selection-card').forEach(card => {
-            card.addEventListener('click', () => {
-                this.handleSelection(card);
-            });
-        });
-    }
-
-    createNoDataHTML() {
-        return `
-            <div class="no-data">
-                <div class="no-data-icon">📭</div>
-                <h3>Keine Auswahloptionen verfügbar</h3>
-                <p>Es konnten keine Daten geladen werden.</p>
-                <button class="btn-primary" onclick="window.page1Controller.loadInitialData()">
-                    Erneut versuchen
-                </button>
-            </div>
-        `;
-    }
-
-    handleSelection(cardElement) {
-        const itemId = cardElement.getAttribute('data-id');
-        const selectedItem = this.cloudData.selections.find(item => item.id === itemId);
-        
-        if (!selectedItem) return;
-
-        // Auswahl visualisieren
-        document.querySelectorAll('.selection-card').forEach(card => {
-            card.classList.remove('selected');
-        });
-        cardElement.classList.add('selected');
-
-        this.selectedItem = selectedItem;
-        this.saveSelection(selectedItem);
-        
-        console.log('Auswahl getroffen:', selectedItem);
-    }
-
-    async saveSelection(selection) {
-        try {
-            // Lokal speichern
-            if (window.dataManager) {
-                window.dataManager.syncData('userSelection', selection);
-            }
-            
-            // In Cloud speichern
-            if (window.cloudAPI && window.cloudAPI.ready) {
-                await window.cloudAPI.saveUserSelection(selection);
-                this.showNotification('Auswahl erfolgreich gespeichert', 'success');
-            }
-            
-        } catch (error) {
-            console.error('Fehler beim Speichern:', error);
-            this.showNotification('Auswahl nur lokal gespeichert', 'warning');
-        }
-    }
-
-    showLoadingState() {
-        const container = document.getElementById('selection-container');
-        if (!container) return;
-        
-        container.innerHTML = `
-            <div class="loading-state">
-                <div class="spinner">⟳</div>
-                <h3>Lade Auswahloptionen...</h3>
-                <p>Bitte warten Sie, während die Daten geladen werden.</p>
-            </div>
-        `;
-    }
-
-    showNotification(message, type = 'info') {
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
-        notification.innerHTML = `
-            <span>${message}</span>
-            <button onclick="this.parentElement.remove()">×</button>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            if (notification.parentElement) {
-                notification.remove();
-            }
-        }, 4000);
-    }
-
-    setupEventListeners() {
-        // Auf Daten-Updates hören
-        if (window.dataManager && window.dataManager.eventBus) {
-            window.dataManager.eventBus.addEventListener('dataChanged', (e) => {
-                if (e.detail.key === 'cloudData') {
-                    this.cloudData = e.detail.data;
-                    this.renderSelections();
-                }
-            });
-        }
-    }
-
-    capitalize(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    }
-
-    formatDate(dateString) {
-        try {
-            return new Date(dateString).toLocaleDateString('de-DE');
-        } catch (e) {
-            return 'Unbekannt';
-        }
-    }
-
-    replaceSimpleController() {
-        // Ersetze das einfache Objekt durch die volle Implementierung
-        Object.getOwnPropertyNames(Page1ControllerFull.prototype)
-            .filter(name => name !== 'constructor')
-            .forEach(name => {
-                window.page1Controller[name] = this[name].bind(this);
-            });
-        
-        // Kopiere Eigenschaften
-        Object.keys(this).forEach(key => {
-            if (!window.page1Controller.hasOwnProperty(key)) {
-                Object.defineProperty(window.page1Controller, key, {
-                    get: () => this[key],
-                    set: (value) => { this[key] = value; }
-                });
-            }
-        });
-        
-        window.page1Controller.ready = true;
-        console.log('✅ Page1Controller vollständig ersetzt');
-    }
-
-    onEnter() {
-        console.log('Page1 betreten');
-        // Daten aktualisieren wenn nötig
-        this.loadCloudData();
-    }
-
-    onLeave() {
-        console.log('Page1 verlassen');
-    }
-}
 
 // SOFORTIGE INITIALISIERUNG
 console.log('🚀 Initialisiere Page1Controller...');
 
 // Sofort das einfache Objekt initialisieren
 window.page1Controller.init();
-
-// Später die volle Implementierung laden
-setTimeout(() => {
-    try {
-        new Page1ControllerFull();
-        console.log('✅ Page1ControllerFull gestartet');
-    } catch (error) {
-        console.error('❌ Page1ControllerFull konnte nicht gestartet werden:', error);
-    }
-}, 100);
 
 // Test-Funktion
 setTimeout(() => {
