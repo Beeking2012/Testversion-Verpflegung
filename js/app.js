@@ -246,3 +246,182 @@ class App {
 document.addEventListener('DOMContentLoaded', () => {
     window.app = new App();
 });
+/**
+ * Haupt-App Controller für Navigation und Seitenverwaltung
+ */
+class AppController {
+    constructor() {
+        this.currentPage = 'page1';
+        this.init();
+    }
+
+    init() {
+        console.log('🚀 AppController initialisiert');
+        this.setupTabNavigation();
+        this.showPage(this.currentPage);
+        this.setupGlobalEventListeners();
+    }
+
+    setupTabNavigation() {
+        const tabButtons = document.querySelectorAll('.tab-button');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const targetPage = e.currentTarget.getAttribute('data-tab');
+                this.navigateTo(targetPage);
+            });
+        });
+
+        console.log('✅ Tab-Navigation eingerichtet');
+    }
+
+    navigateTo(pageId) {
+        console.log(`🔄 Navigiere zu: ${pageId}`);
+        
+        // Verlasse aktuelle Seite
+        this.leaveCurrentPage();
+        
+        // Wechsle zur neuen Seite
+        this.showPage(pageId);
+        
+        // Aktualisiere aktiven Tab
+        this.updateActiveTab(pageId);
+        
+        this.currentPage = pageId;
+    }
+
+    showPage(pageId) {
+        // Verstecke alle Seiten
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+        });
+        
+        // Zeige gewünschte Seite
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) {
+            targetPage.classList.add('active');
+            console.log(`✅ Seite ${pageId} angezeigt`);
+        } else {
+            console.error(`❌ Seite ${pageId} nicht gefunden`);
+        }
+        
+        // Rufe onEnter des entsprechenden Controllers auf
+        this.callPageControllerMethod(pageId, 'onEnter');
+    }
+
+    leaveCurrentPage() {
+        // Rufe onLeave des aktuellen Controllers auf
+        this.callPageControllerMethod(this.currentPage, 'onLeave');
+    }
+
+    callPageControllerMethod(pageId, methodName) {
+        const controllerMap = {
+            'page1': window.page1Controller,
+            'page2': window.page2Controller, 
+            'page3': window.page3Controller,
+            'page4': window.page4Controller
+        };
+        
+        const controller = controllerMap[pageId];
+        if (controller && typeof controller[methodName] === 'function') {
+            console.log(`📞 Rufe ${methodName} auf für ${pageId}`);
+            controller[methodName]();
+        }
+    }
+
+    updateActiveTab(pageId) {
+        // Entferne active von allen Tabs
+        document.querySelectorAll('.tab-button').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Setze active auf aktuellen Tab
+        const activeTab = document.querySelector(`[data-tab="${pageId}"]`);
+        if (activeTab) {
+            activeTab.classList.add('active');
+        }
+    }
+
+    setupGlobalEventListeners() {
+        // Globale Event Listener für seitenübergreifende Funktionen
+        console.log('🔧 Globale Event Listener eingerichtet');
+        
+        // Tastatur-Shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Strg + Nummer für schnelle Navigation
+            if (e.ctrlKey && e.key >= '1' && e.key <= '4') {
+                e.preventDefault();
+                const pageNumber = parseInt(e.key);
+                this.navigateTo(`page${pageNumber}`);
+            }
+            
+            // F5 für Refresh
+            if (e.key === 'F5') {
+                e.preventDefault();
+                this.refreshCurrentPage();
+            }
+        });
+        
+        // Globale Refresh-Funktion
+        window.refreshApp = () => {
+            this.refreshCurrentPage();
+        };
+    }
+
+    refreshCurrentPage() {
+        console.log(`🔄 Aktualisiere aktuelle Seite: ${this.currentPage}`);
+        this.callPageControllerMethod(this.currentPage, 'onEnter');
+    }
+
+    // Öffentliche API
+    getCurrentPage() {
+        return this.currentPage;
+    }
+
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `notification ${type}`;
+        notification.innerHTML = `
+            <span>${message}</span>
+            <button onclick="this.parentElement.remove()">×</button>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 4000);
+    }
+
+    // Diagnose-Funktion
+    diagnose() {
+        return {
+            currentPage: this.currentPage,
+            page1Controller: !!window.page1Controller,
+            page2Controller: !!window.page2Controller,
+            page3Controller: !!window.page3Controller, 
+            page4Controller: !!window.page4Controller,
+            cloudAPI: !!window.cloudAPI,
+            cloudAPIReady: window.cloudAPI ? window.cloudAPI.ready : false,
+            timestamp: Date.now()
+        };
+    }
+}
+
+// App initialisieren wenn DOM geladen
+document.addEventListener('DOMContentLoaded', function() {
+    window.app = new AppController();
+    
+    // Kurze Verzögerung für Initialisierung aller Controller
+    setTimeout(() => {
+        console.log('🎉 App vollständig geladen');
+        console.table(window.app.diagnose());
+    }, 1000);
+});
+
+// Fallback für manuelle Initialisierung
+if (!window.app) {
+    window.app = new AppController();
+}
