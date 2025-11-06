@@ -1,9 +1,0 @@
-{
-  "name": "meine-website",
-  "version": "1.0.0",
-  "description": "Eine einfache Website mit Tab-Navigation",
-  "scripts": {
-    "dev": "python -m http.server 3000",
-    "build": "echo 'No build step required'"
-  }
-}
