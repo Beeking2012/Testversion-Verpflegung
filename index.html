@@ -3,131 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cloud App</title>
+    <title>Meine Website</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Reitermenü -->
-    <nav class="tab-navigation">
-        <div class="tab-container">
-            <button class="tab-button active" data-tab="page1">
-                <span class="tab-icon">🏠</span>
-                <span class="tab-label">Auswahl</span>
-            </button>
-            <button class="tab-button" data-tab="page2">
-                <span class="tab-icon">🔍</span>
-                <span class="tab-label">Cloud-Abgleich</span>
-            </button>
-            <button class="tab-button" data-tab="page3">
-                <span class="tab-icon">🧮</span>
-                <span class="tab-label">Berechnung</span>
-            </button>
-            <button class="tab-button" data-tab="page4">
-                <span class="tab-icon">☁️</span>
-                <span class="tab-label">Cloud-Verwaltung</span>
-            </button>
-        </div>
-    </nav>
+    <div class="container">
+        <nav class="tabs">
+            <button class="tab-button active" data-tab="page1">Seite 1</button>
+            <button class="tab-button" data-tab="page2">Seite 2</button>
+            <button class="tab-button" data-tab="page3">Seite 3</button>
+            <button class="tab-button" data-tab="page4">Seite 4</button>
+        </nav>
 
-    <!-- Seiten-Container -->
-    <main class="page-container">
-        <!-- Seite 1 - Auswahl -->
-        <div id="page1" class="page active">
-            <div class="page-header">
-                <h1>🏠 Auswahl</h1>
-                <p>Treffen Sie Ihre Auswahl für die weitere Verarbeitung</p>
+        <div class="tab-content">
+            <!-- Seite 1 -->
+            <div id="page1" class="tab-pane active">
+                <h2>Seite 1 - Leere Tabelle</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Spalte 1</th>
+                            <th>Spalte 2</th>
+                            <th>Spalte 3</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Tabelle bleibt leer -->
+                    </tbody>
+                </table>
             </div>
-            <div class="page-content">
-                <div id="selection-progress" class="progress-bar" style="display: none;">
-                    Lade Auswahloptionen...
-                </div>
-                <div id="selection-container" class="selection-grid">
-                    <!-- Wird von Page1Controller gefüllt -->
-                </div>
-            </div>
-        </div>
 
-        <!-- Seite 2 - Cloud-Abgleich -->
-        <div id="page2" class="page">
-            <div class="page-header">
-                <h1>🔍 Cloud-Abgleich</h1>
-                <p>Vergleichen Sie lokale Daten mit Cloud-Inhalten</p>
+            <!-- Seite 2 -->
+            <div id="page2" class="tab-pane">
+                <h2>Seite 2 - Beispieltext und Tabelle</h2>
+                <p class="example-text">Dies ist ein Beispieltext für Seite 2. Hier wird eine Tabelle mit Beispieldaten angezeigt.</p>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Alter</th>
+                            <th>Stadt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Max Mustermann</td>
+                            <td>25</td>
+                            <td>Berlin</td>
+                        </tr>
+                        <tr>
+                            <td>Anna Schmidt</td>
+                            <td>30</td>
+                            <td>Hamburg</td>
+                        </tr>
+                        <tr>
+                            <td>Peter Müller</td>
+                            <td>22</td>
+                            <td>München</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="page-content">
-                <div id="comparison-result" class="comparison-container">
-                    <!-- Wird von Page2Controller gefüllt -->
-                </div>
-            </div>
-        </div>
 
-        <!-- Seite 3 - Berechnung -->
-        <div id="page3" class="page">
-            <div class="page-header">
-                <h1>🧮 Berechnung & Eigene Items</h1>
-                <p>Führen Sie Berechnungen durch und verwalten Sie eigene Items</p>
-            </div>
-            <div class="page-content">
-                <div class="two-column-layout">
-                    <div class="column">
-                        <h3>📊 Berechnungsergebnisse</h3>
-                        <div id="calculation-result" class="calculation-container">
-                            <!-- Wird von Page3Controller gefüllt -->
-                        </div>
-                        <div class="calculation-actions">
-                            <button class="btn-primary" onclick="page3Controller.performCalculation()">
-                                🧮 Berechnung starten
-                            </button>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <h3>📝 Eigene Items</h3>
-                        <div id="own-items-management" class="items-container">
-                            <!-- Wird von Page3Controller gefüllt -->
-                        </div>
-                        <div class="items-actions">
-                            <button class="btn-secondary" onclick="page3Controller.showAddItemForm()">
-                                ➕ Item hinzufügen
-                            </button>
-                            <button class="btn-secondary" onclick="page3Controller.syncItemsToCloud()">
-                                ☁️ Mit Cloud syncen
-                            </button>
-                        </div>
-                    </div>
+            <!-- Seite 3 -->
+            <div id="page3" class="tab-pane">
+                <h2>Seite 3 - Interaktive Elemente</h2>
+                <div class="button-group">
+                    <button id="showTableBtn3" class="action-btn">Tabelle anzeigen</button>
+                    <button id="showTextBtn3" class="action-btn">Text anzeigen</button>
                 </div>
+                <div id="contentArea3" class="content-area"></div>
+            </div>
+
+            <!-- Seite 4 -->
+            <div id="page4" class="tab-pane">
+                <h2>Seite 4 - Weitere Beispiele</h2>
+                <div class="button-group">
+                    <button id="showTableBtn4" class="action-btn">Liste anzeigen</button>
+                    <button id="showTextBtn4" class="action-btn">Info anzeigen</button>
+                </div>
+                <div id="contentArea4" class="content-area"></div>
             </div>
         </div>
+    </div>
 
-        <!-- Seite 4 - Cloud-Verwaltung -->
-        <div id="page4" class="page">
-            <div class="page-header">
-                <h1>☁️ Cloud-Verwaltung</h1>
-                <p>Verwalten Sie Cloud-Items und Daten</p>
-            </div>
-            <div class="page-content">
-                <div class="management-toolbar">
-                    <button id="refresh-cloud" class="btn-primary">
-                        🔄 Cloud-Daten aktualisieren
-                    </button>
-                    <button id="add-cloud-item" class="btn-primary">
-                        ➕ Cloud-Item erstellen
-                    </button>
-                    <button id="export-data" class="btn-secondary">
-                        📤 Daten exportieren
-                    </button>
-                </div>
-                <div id="cloud-items-management" class="cloud-items-container">
-                    <!-- Wird von Page4Controller gefüllt -->
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Scripts -->
-    <script src="cloud-api.js"></script>
-    <script src="page1-controller.js"></script>
-    <script src="page2-controller.js"></script>
-    <script src="page3-controller.js"></script>
-    <script src="page4-controller.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
