@@ -3,90 +3,600 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine Website</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Modulare Website mit Reitern</title>
+    <style>
+        /* === BASIS STYLES === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        /* === TAB NAVIGATION === */
+        .tabs {
+            display: flex;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .tab-button {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            flex: 1;
+        }
+
+        .tab-button:hover {
+            background-color: #e9ecef;
+        }
+
+        .tab-button.active {
+            background-color: white;
+            border-bottom-color: #007bff;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        /* === TAB CONTENT === */
+        .tab-content {
+            padding: 30px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === GEMEINSAME KOMPONENTEN === */
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        .data-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .data-table tr:hover {
+            background-color: #e3f2fd;
+        }
+
+        .button-group {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .action-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .content-area {
+            min-height: 200px;
+            border: 2px dashed #ddd;
+            padding: 25px;
+            border-radius: 8px;
+            background-color: #fafafa;
+            margin-top: 20px;
+        }
+
+        .example-text {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+            margin: 20px 0;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <nav class="tabs">
-            <button class="tab-button active" data-tab="page1">Seite 1</button>
-            <button class="tab-button" data-tab="page2">Seite 2</button>
-            <button class="tab-button" data-tab="page3">Seite 3</button>
-            <button class="tab-button" data-tab="page4">Seite 4</button>
+        <!-- TAB NAVIGATION -->
+        <nav class="tabs" id="tabNavigation">
+            <button class="tab-button active" data-tab="page1">📊 Seite 1</button>
+            <button class="tab-button" data-tab="page2">📝 Seite 2</button>
+            <button class="tab-button" data-tab="page3">🎮 Seite 3</button>
+            <button class="tab-button" data-tab="page4">⚡ Seite 4</button>
         </nav>
 
+        <!-- TAB CONTENT AREA -->
         <div class="tab-content">
-            <!-- Seite 1 -->
+            <!-- ============================================
+                 REITER 1: LEERE TABELLE
+            ============================================ -->
             <div id="page1" class="tab-pane active">
-                <h2>Seite 1 - Leere Tabelle</h2>
+                <h2>📊 Leere Datenübersicht</h2>
+                <div class="info-box">
+                    <strong>Info:</strong> Diese Tabelle ist aktuell leer. Daten können später hinzugefügt werden.
+                </div>
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Spalte 1</th>
-                            <th>Spalte 2</th>
-                            <th>Spalte 3</th>
+                            <th>ID</th>
+                            <th>Bezeichnung</th>
+                            <th>Kategorie</th>
+                            <th>Status</th>
+                            <th>Aktionen</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- Tabelle bleibt leer -->
+                    <tbody id="emptyTableBody">
+                        <!-- Tabelle bleibt bewusst leer -->
                     </tbody>
                 </table>
+                <div class="example-text">
+                    <p>Dies ist ein Platzhalter für zukünftige Daten. Die Tabellenstruktur ist vorbereitet und kann dynamisch mit Inhalten gefüllt werden.</p>
+                </div>
             </div>
 
-            <!-- Seite 2 -->
+            <!-- ============================================
+                 REITER 2: BEISPIELTEXT UND TABELLE
+            ============================================ -->
             <div id="page2" class="tab-pane">
-                <h2>Seite 2 - Beispieltext und Tabelle</h2>
-                <p class="example-text">Dies ist ein Beispieltext für Seite 2. Hier wird eine Tabelle mit Beispieldaten angezeigt.</p>
+                <h2>📝 Beispielinhalt mit Daten</h2>
+                
+                <div class="example-text">
+                    <h3>Willkommen auf Seite 2</h3>
+                    <p>Diese Seite demonstriert die Kombination aus informativem Text und strukturierten Tabellendaten. Die untenstehende Tabelle zeigt beispielhafte Benutzerinformationen.</p>
+                    <p>Die Daten sind statisch eingebunden und dienen Demonstrationszwecken. In einer realen Anwendung würden diese Daten typischerweise aus einer Datenbank oder API bezogen.</p>
+                </div>
+
                 <table class="data-table">
                     <thead>
                         <tr>
                             <th>Name</th>
                             <th>Alter</th>
                             <th>Stadt</th>
+                            <th>Beruf</th>
+                            <th>Erfahrung</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>Max Mustermann</td>
-                            <td>25</td>
+                            <td>28</td>
                             <td>Berlin</td>
+                            <td>Web Developer</td>
+                            <td>5 Jahre</td>
                         </tr>
                         <tr>
                             <td>Anna Schmidt</td>
-                            <td>30</td>
+                            <td>32</td>
                             <td>Hamburg</td>
+                            <td>Designerin</td>
+                            <td>8 Jahre</td>
                         </tr>
                         <tr>
                             <td>Peter Müller</td>
-                            <td>22</td>
+                            <td>25</td>
                             <td>München</td>
+                            <td>Projektmanager</td>
+                            <td>3 Jahre</td>
+                        </tr>
+                        <tr>
+                            <td>Sarah Weber</td>
+                            <td>29</td>
+                            <td>Köln</td>
+                            <td>Data Analyst</td>
+                            <td>4 Jahre</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <!-- Seite 3 -->
+            <!-- ============================================
+                 REITER 3: INTERAKTIVE ELEMENTE
+            ============================================ -->
             <div id="page3" class="tab-pane">
-                <h2>Seite 3 - Interaktive Elemente</h2>
+                <h2>🎮 Interaktive Inhalte</h2>
+                <p>Klicke auf die Buttons unten, um verschiedene Inhalte anzuzeigen. Die Inhalte wechseln sich gegenseitig ab.</p>
+                
                 <div class="button-group">
-                    <button id="showTableBtn3" class="action-btn">Tabelle anzeigen</button>
-                    <button id="showTextBtn3" class="action-btn">Text anzeigen</button>
+                    <button class="action-btn" onclick="page3.showTable()">
+                        📋 Produkttabelle anzeigen
+                    </button>
+                    <button class="action-btn" onclick="page3.showText()">
+                        📖 Produktinformationen anzeigen
+                    </button>
+                    <button class="action-btn" onclick="page3.clearContent()">
+                        🗑️ Inhalt löschen
+                    </button>
                 </div>
-                <div id="contentArea3" class="content-area"></div>
+
+                <div id="page3Content" class="content-area">
+                    <div style="text-align: center; color: #666; padding: 60px 20px;">
+                        <p>👆 Wähle eine Aktion aus den Buttons oben</p>
+                        <p>Hier werden die angeforderten Inhalte erscheinen</p>
+                    </div>
+                </div>
             </div>
 
-            <!-- Seite 4 -->
+            <!-- ============================================
+                 REITER 4: ERWEITERTE BEISPIELE
+            ============================================ -->
             <div id="page4" class="tab-pane">
-                <h2>Seite 4 - Weitere Beispiele</h2>
+                <h2>⚡ Erweiterte Funktionen</h2>
+                <p>Diese Seite bietet erweiterte interaktive Elemente mit unterschiedlichen Inhalten.</p>
+                
                 <div class="button-group">
-                    <button id="showTableBtn4" class="action-btn">Liste anzeigen</button>
-                    <button id="showTextBtn4" class="action-btn">Info anzeigen</button>
+                    <button class="action-btn" onclick="page4.showProjectList()">
+                        📅 Projektliste anzeigen
+                    </button>
+                    <button class="action-btn" onclick="page4.showStatistics()">
+                        📈 Statistiken anzeigen
+                    </button>
+                    <button class="action-btn" onclick="page4.showTeamInfo()">
+                        👥 Teaminformationen
+                    </button>
                 </div>
-                <div id="contentArea4" class="content-area"></div>
+
+                <div id="page4Content" class="content-area">
+                    <div style="text-align: center; color: #666; padding: 60px 20px;">
+                        <p>🚀 Wähle eine Funktion aus den Buttons oben</p>
+                        <p>Entdecke verschiedene Arten von Inhalten und Darstellungen</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script>
+        // ============================================
+        // MODUL: TAB-MANAGEMENT
+        // ============================================
+        const TabManager = {
+            init() {
+                this.setupEventListeners();
+                console.log("Tab-Manager initialisiert");
+            },
+
+            setupEventListeners() {
+                const tabButtons = document.querySelectorAll('.tab-button');
+                
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        this.switchTab(event.target);
+                    });
+                });
+            },
+
+            switchTab(clickedButton) {
+                // Alle Tabs deaktivieren
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('active');
+                });
+
+                // Aktiven Tab aktivieren
+                clickedButton.classList.add('active');
+                const tabId = clickedButton.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+
+                console.log(`Zum Tab gewechselt: ${tabId}`);
+            }
+        };
+
+        // ============================================
+        // MODUL: SEITE 3 - INTERAKTIVE ELEMENTE
+        // ============================================
+        const page3 = {
+            contentElement: null,
+
+            init() {
+                this.contentElement = document.getElementById('page3Content');
+                console.log("Page3 Modul initialisiert");
+            },
+
+            showTable() {
+                const tableHTML = `
+                    <div style="animation: fadeIn 0.5s ease-in;">
+                        <h3 style="color: #007bff; margin-bottom: 20px;">📦 Produktübersicht</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Produkt</th>
+                                    <th>Kategorie</th>
+                                    <th>Preis</th>
+                                    <th>Lager</th>
+                                    <th>Bewertung</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Gaming Laptop</td>
+                                    <td>Elektronik</td>
+                                    <td>€ 1.299</td>
+                                    <td>12 Stück</td>
+                                    <td>⭐️⭐️⭐️⭐️⭐️</td>
+                                </tr>
+                                <tr>
+                                    <td>Mechanische Tastatur</td>
+                                    <td>Zubehör</td>
+                                    <td>€ 89</td>
+                                    <td>45 Stück</td>
+                                    <td>⭐️⭐️⭐️⭐️</td>
+                                </tr>
+                                <tr>
+                                    <td>Wireless Maus</td>
+                                    <td>Zubehör</td>
+                                    <td>€ 35</td>
+                                    <td>78 Stück</td>
+                                    <td>⭐️⭐️⭐️⭐️⭐️</td>
+                                </tr>
+                                <tr>
+                                    <td>27" Monitor</td>
+                                    <td>Elektronik</td>
+                                    <td>€ 249</td>
+                                    <td>23 Stück</td>
+                                    <td>⭐️⭐️⭐️⭐️</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                this.contentElement.innerHTML = tableHTML;
+            },
+
+            showText() {
+                const textHTML = `
+                    <div style="animation: fadeIn 0.5s ease-in;">
+                        <h3 style="color: #28a745; margin-bottom: 15px;">📖 Produktinformationen</h3>
+                        <div class="example-text">
+                            <h4>Unsere Produktphilosophie</h4>
+                            <p>Wir legen größten Wert auf Qualität und Langlebigkeit unserer Produkte. 
+                               Jedes Produkt durchläuft strenge Qualitätskontrollen und wird mit einer 
+                               <strong>3-jährigen Garantie</strong> ausgeliefert.</p>
+                            
+                            <h4>Kundenservice</h4>
+                            <p>Unser Support-Team steht Ihnen montags bis freitags von 8:00 bis 18:00 Uhr 
+                               zur Verfügung. Bei technischen Fragen bieten wir auch remote Support an.</p>
+                            
+                            <h4>Lieferung</h4>
+                            <p>Standardlieferung: 2-3 Werktage | Express: 24 Stunden (zzgl. € 9,90)</p>
+                        </div>
+                    </div>
+                `;
+                this.contentElement.innerHTML = textHTML;
+            },
+
+            clearContent() {
+                this.contentElement.innerHTML = `
+                    <div style="text-align: center; color: #666; padding: 60px 20px;">
+                        <p>🗑️ Inhalt wurde gelöscht</p>
+                        <p>Wähle eine neue Aktion aus den Buttons oben</p>
+                    </div>
+                `;
+            }
+        };
+
+        // ============================================
+        // MODUL: SEITE 4 - ERWEITERTE FUNKTIONEN
+        // ============================================
+        const page4 = {
+            contentElement: null,
+
+            init() {
+                this.contentElement = document.getElementById('page4Content');
+                console.log("Page4 Modul initialisiert");
+            },
+
+            showProjectList() {
+                const projectsHTML = `
+                    <div style="animation: fadeIn 0.5s ease-in;">
+                        <h3 style="color: #dc3545; margin-bottom: 20px;">📋 Aktuelle Projekte</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Projektname</th>
+                                    <th>Startdatum</th>
+                                    <th>Deadline</th>
+                                    <th>Status</th>
+                                    <th>Fortschritt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Website Relaunch</td>
+                                    <td>01.10.2024</td>
+                                    <td>15.12.2024</td>
+                                    <td><span style="color: #ffc107;">● In Bearbeitung</span></td>
+                                    <td>
+                                        <div style="background: #e9ecef; border-radius: 10px; height: 10px;">
+                                            <div style="background: #007bff; width: 65%; height: 100%; border-radius: 10px;"></div>
+                                        </div>
+                                        65%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>App Entwicklung</td>
+                                    <td>15.11.2024</td>
+                                    <td>28.02.2025</td>
+                                    <td><span style="color: #17a2b8;">● Geplant</span></td>
+                                    <td>
+                                        <div style="background: #e9ecef; border-radius: 10px; height: 10px;">
+                                            <div style="background: #17a2b8; width: 15%; height: 100%; border-radius: 10px;"></div>
+                                        </div>
+                                        15%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Datenbank Migration</td>
+                                    <td>01.09.2024</td>
+                                    <td>30.11.2024</td>
+                                    <td><span style="color: #28a745;">● Abgeschlossen</span></td>
+                                    <td>
+                                        <div style="background: #e9ecef; border-radius: 10px; height: 10px;">
+                                            <div style="background: #28a745; width: 100%; height: 100%; border-radius: 10px;"></div>
+                                        </div>
+                                        100%
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                this.contentElement.innerHTML = projectsHTML;
+            },
+
+            showStatistics() {
+                const statsHTML = `
+                    <div style="animation: fadeIn 0.5s ease-in;">
+                        <h3 style="color: #6f42c1; margin-bottom: 20px;">📈 Unternehmensstatistiken</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 2em; font-weight: bold;">1.247</div>
+                                <div>Kunden</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 2em; font-weight: bold;">89%</div>
+                                <div>Zufriedenheit</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 2em; font-weight: bold;">42</div>
+                                <div>Projekte</div>
+                            </div>
+                            <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 2em; font-weight: bold;">15</div>
+                                <div>Mitarbeiter</div>
+                            </div>
+                        </div>
+                        
+                        <div class="example-text">
+                            <h4>Quartalsanalyse Q4/2024</h4>
+                            <p>Das vierte Quartal zeigt ein starkes Wachstum in allen Bereichen. 
+                               Die Kundenzufriedenheit ist im Vergleich zum Vorquartal um 12% gestiegen.</p>
+                            <p><strong>Top-Performer:</strong> Webentwicklungs-Projekte (+23% Umsatz)</p>
+                        </div>
+                    </div>
+                `;
+                this.contentElement.innerHTML = statsHTML;
+            },
+
+            showTeamInfo() {
+                const teamHTML = `
+                    <div style="animation: fadeIn 0.5s ease-in;">
+                        <h3 style="color: #fd7e14; margin-bottom: 20px;">👥 Unser Team</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                            <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 3em; margin-bottom: 10px;">👨‍💼</div>
+                                <h4>Max Mustermann</h4>
+                                <p><strong>Projektleiter</strong></p>
+                                <p>8 Jahre Erfahrung</p>
+                                <p>max@example.com</p>
+                            </div>
+                            <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 3em; margin-bottom: 10px;">👩‍💻</div>
+                                <h4>Anna Schmidt</h4>
+                                <p><strong>Senior Developer</strong></p>
+                                <p>6 Jahre Erfahrung</p>
+                                <p>anna@example.com</p>
+                            </div>
+                            <div style="border: 1px solid #ddd; padding: 20px; border-radius: 10px; text-align: center;">
+                                <div style="font-size: 3em; margin-bottom: 10px;">👨‍🎨</div>
+                                <h4>Peter Müller</h4>
+                                <p><strong>UI/UX Designer</strong></p>
+                                <p>5 Jahre Erfahrung</p>
+                                <p>peter@example.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <strong>Team-Sprechzeiten:</strong> Daily Standup 9:30 Uhr | Team-Meeting Freitags 14:00 Uhr
+                        </div>
+                    </div>
+                `;
+                this.contentElement.innerHTML = teamHTML;
+            }
+        };
+
+        // ============================================
+        // INITIALISIERUNG BEIM LADEN DER SEITE
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab-Manager starten
+            TabManager.init();
+            
+            // Seiten-Module initialisieren
+            page3.init();
+            page4.init();
+            
+            console.log("Alle Module erfolgreich initialisiert");
+        });
+    </script>
 </body>
 </html>
