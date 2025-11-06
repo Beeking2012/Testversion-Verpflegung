@@ -688,6 +688,56 @@
         color: var(--drk-gray);
         font-size: 0.9em;
     }
+
+    /* NEUE STYLES FÜR ZUBEREITUNGSDAUER UND KALORIEN */
+    .recipe-info-cards {
+        display: flex;
+        gap: 20px;
+        margin: 20px 0;
+        flex-wrap: wrap;
+    }
+    
+    .recipe-info-card {
+        flex: 1;
+        min-width: 250px;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        text-align: center;
+        border-top: 4px solid var(--drk-info);
+    }
+    
+    .recipe-info-card.cooking-time {
+        border-top-color: var(--drk-warning);
+    }
+    
+    .recipe-info-card.calories {
+        border-top-color: var(--drk-success);
+    }
+    
+    .recipe-info-card h3 {
+        margin-top: 0;
+        color: #333;
+        font-size: 1.2em;
+    }
+    
+    .recipe-info-card .value {
+        font-size: 2em;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+    
+    .recipe-info-card .unit {
+        font-size: 1em;
+        color: var(--drk-gray);
+    }
+    
+    .recipe-info-card .description {
+        font-size: 0.9em;
+        color: var(--drk-gray);
+        margin-top: 10px;
+    }
     
     /* Responsive Design */
     @media (max-width: 768px) {
@@ -734,6 +784,10 @@
             margin-right: 0;
             margin-bottom: 10px;
             justify-content: center;
+        }
+        
+        .recipe-info-cards {
+            flex-direction: column;
         }
     }
     
@@ -819,6 +873,22 @@
 
         <div id="rezept-tab" class="tab-content active">
             <div id="ausgabe"></div>
+            
+            <!-- NEUE CARDS FÜR ZUBEREITUNGSDAUER UND KALORIEN -->
+            <div id="recipe-info-cards" class="recipe-info-cards" style="display: none;">
+                <div class="recipe-info-card cooking-time">
+                    <h3>⏱️ Zubereitungsdauer</h3>
+                    <div class="value" id="cooking-time-value">-</div>
+                    <div class="unit" id="cooking-time-unit">Minuten</div>
+                    <div class="description" id="cooking-time-description">Geschätzte Zeit für Zubereitung</div>
+                </div>
+                <div class="recipe-info-card calories">
+                    <h3>🔥 Kalorien</h3>
+                    <div class="value" id="calories-value">-</div>
+                    <div class="unit" id="calories-unit">kcal pro Portion</div>
+                    <div class="description" id="calories-description">Energiegehalt pro Person</div>
+                </div>
+            </div>
             
             <!-- ALLERGEN-INFO BOX -->
             <div id="allergene-info-box" class="allergene-info-box" style="display: none;">
@@ -1257,12 +1327,14 @@
     };
 
     // =============================================
-    // REZEPTE DATENBANK
+    // REZEPTE DATENBANK MIT ZUBEREITUNGSZEITEN UND KALORIEN
     // =============================================
 
     const rezepte = {
         kartoffelsuppe: {
             basisPortionen: 250,
+            zubereitungszeit: 45, // in Minuten für basisPortionen
+            kalorienProPortion: 320, // Kalorien pro Portion
             zutaten: [
                 { name: "Kartoffelwürfel", menge: 30, einheit: "kg" },
                 { name: "Rapsöl", menge: 0.08, einheit: "L" },
@@ -1275,6 +1347,8 @@
         },
         gulasch: {
             basisPortionen: 250,
+            zubereitungszeit: 120,
+            kalorienProPortion: 450,
             zutaten: [
                 { name: "Rindergulasch", menge: 30, einheit: "kg" },
                 { name: "Zwiebeln (TK oder frisch)", menge: 10, einheit: "kg" },
@@ -1285,6 +1359,8 @@
         },
         chili_con_carne: {
             basisPortionen: 250,
+            zubereitungszeit: 90,
+            kalorienProPortion: 420,
             zutaten: [
                 { name: "Rinderhackfleisch", menge: 25, einheit: "kg" },
                 { name: "Zwiebeln (TK oder frisch)", menge: 8, einheit: "kg" },
@@ -1295,6 +1371,8 @@
         },
         bolognese: {
             basisPortionen: 250,
+            zubereitungszeit: 75,
+            kalorienProPortion: 380,
             zutaten: [
                 { name: "Rinderhackfleisch", menge: 25, einheit: "kg" },
                 { name: "Zwiebeln (TK oder frisch)", menge: 6, einheit: "kg" },
@@ -1305,6 +1383,8 @@
         },
         haehnchencurry: {
             basisPortionen: 250,
+            zubereitungszeit: 60,
+            kalorienProPortion: 410,
             zutaten: [
                 { name: "Hähnchenbrust", menge: 30, einheit: "kg" },
                 { name: "Zwiebeln (TK oder frisch)", menge: 6, einheit: "kg" },
@@ -1315,6 +1395,8 @@
         },
         linseneintopf: {
             basisPortionen: 250,
+            zubereitungszeit: 60,
+            kalorienProPortion: 350,
             zutaten: [
                 { name: "Linsen", menge: 12, einheit: "kg" },
                 { name: "Zwiebeln (TK oder frisch)", menge: 5, einheit: "kg" },
@@ -1325,6 +1407,8 @@
         },
         erbseneintopf: {
             basisPortionen: 250,
+            zubereitungszeit: 70,
+            kalorienProPortion: 330,
             zutaten: [
                 { name: "Erbsen (getrocknet)", menge: 15, einheit: "kg" },
                 { name: "Zwiebeln (TK oder frisch)", menge: 5, einheit: "kg" },
@@ -1335,6 +1419,8 @@
         },
         kohlrouladen: {
             basisPortionen: 250,
+            zubereitungszeit: 150,
+            kalorienProPortion: 480,
             zutaten: [
                 { name: "Weißkohlköpfe", menge: 12, einheit: "Stück" },
                 { name: "Rinderhackfleisch", menge: 20, einheit: "kg" },
@@ -1345,6 +1431,8 @@
         },
         jaegerschnitzel: {
             basisPortionen: 250,
+            zubereitungszeit: 60,
+            kalorienProPortion: 520,
             zutaten: [
                 { name: "Schweineschnitzel", menge: 35, einheit: "kg" },
                 { name: "Zwiebeln (TK oder frisch)", menge: 6, einheit: "kg" },
@@ -1355,6 +1443,8 @@
         },
         hackbraten: {
             basisPortionen: 250,
+            zubereitungszeit: 90,
+            kalorienProPortion: 470,
             zutaten: [
                 { name: "Rinderhackfleisch", menge: 20, einheit: "kg" },
                 { name: "Schweinehackfleisch", menge: 15, einheit: "kg" },
@@ -1364,6 +1454,71 @@
             ]
         }
     };
+
+    // =============================================
+    // NEUE FUNKTIONEN FÜR ZUBEREITUNGSDAUER UND KALORIEN
+    // =============================================
+
+    function berechneZubereitungsdauer(rezeptName, personen) {
+        const rezept = rezepte[rezeptName];
+        if (!rezept) return null;
+        
+        const basisZeit = rezept.zubereitungszeit;
+        const basisPortionen = rezept.basisPortionen;
+        
+        // Nicht-lineare Skalierung für größere Mengen (Wurzelfunktion)
+        const faktor = personen / basisPortionen;
+        const skalierterFaktor = Math.sqrt(faktor);
+        
+        // Mindestzeit von 75% der Basiszeit, da einige Vorbereitungen unabhängig von der Menge sind
+        const zubereitungsdauer = Math.max(basisZeit * 0.75, basisZeit * skalierterFaktor);
+        
+        // Auf volle 5 Minuten runden
+        return Math.ceil(zubereitungsdauer / 5) * 5;
+    }
+
+    function berechneKalorienProPortion(rezeptName) {
+        const rezept = rezepte[rezeptName];
+        return rezept ? rezept.kalorienProPortion : null;
+    }
+
+    function zeigeRezeptInfoCards(rezeptName, personen) {
+        const zubereitungsdauer = berechneZubereitungsdauer(rezeptName, personen);
+        const kalorien = berechneKalorienProPortion(rezeptName);
+        
+        if (zubereitungsdauer && kalorien) {
+            // Cards anzeigen
+            document.getElementById('recipe-info-cards').style.display = 'flex';
+            
+            // Werte setzen
+            document.getElementById('cooking-time-value').textContent = zubereitungsdauer;
+            document.getElementById('calories-value').textContent = kalorien;
+            
+            // Beschreibungen anpassen
+            let zeitBeschreibung = "Geschätzte Zeit für Zubereitung";
+            if (zubereitungsdauer > 120) {
+                zeitBeschreibung = "Lange Kochzeit - rechtzeitig vorbereiten";
+            } else if (zubereitungsdauer > 60) {
+                zeitBeschreibung = "Mittlere Zubereitungszeit";
+            } else {
+                zeitBeschreibung = "Schnell zubereitet";
+            }
+            
+            let kalorienBeschreibung = "Energiegehalt pro Person";
+            if (kalorien > 500) {
+                kalorienBeschreibung = "Hochkalorische Mahlzeit";
+            } else if (kalorien > 400) {
+                kalorienBeschreibung = "Ausgewogene Kalorienmenge";
+            } else {
+                kalorienBeschreibung = "Leichte Mahlzeit";
+            }
+            
+            document.getElementById('cooking-time-description').textContent = zeitBeschreibung;
+            document.getElementById('calories-description').textContent = kalorienBeschreibung;
+        } else {
+            document.getElementById('recipe-info-cards').style.display = 'none';
+        }
+    }
 
     // =============================================
     // CLOUD STORAGE MANAGEMENT
@@ -2658,6 +2813,9 @@
 
         html += "</table>";
         document.getElementById("ausgabe").innerHTML = html;
+
+        // NEUE CARDS FÜR ZUBEREITUNGSDAUER UND KALORIEN ANZEIGEN
+        zeigeRezeptInfoCards(rezeptName, personen);
 
         AllergenManager.zeigeRezeptAllergene(rezeptName);
         erstelleEinkaufsliste(rezept, faktor, personen);
