@@ -471,7 +471,7 @@
                         <h2>🔄 Cloud-Synchronisation</h2>
                         <div class="form-group">
                             <label for="cloudKey">Cloud-Schlüssel:</label>
-                            <input type="text" id="cloudKey" value="inventory" placeholder="AXjXAAIncDJhNzc0OTViMWEwZGI0MDdlYmRjNWFhOTYxYjRmNjVhYXAyMzA5MzU">
+                            <input type="text" id="cloudKey" value="inventory" placeholder="Schlüsselname für Cloud">
                         </div>
                         
                         <div class="button-group">
@@ -491,6 +491,7 @@
                             <strong>Debug-Info:</strong> 
                             <div>API-URL: <code id="apiUrlDisplay"></code></div>
                             <div>Schlüssel: <code id="keyDisplay"></code></div>
+                            <div>Token: <code id="tokenDisplay"></code></div>
                         </div>
                     </div>
                 </div>
@@ -620,6 +621,7 @@
         const connectionText = document.getElementById('connectionText');
         const apiUrlDisplay = document.getElementById('apiUrlDisplay');
         const keyDisplay = document.getElementById('keyDisplay');
+        const tokenDisplay = document.getElementById('tokenDisplay');
 
         // Globale Variablen
         let currentData = [];
@@ -629,6 +631,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Debug-Info anzeigen
             apiUrlDisplay.textContent = config.apiUrl;
+            tokenDisplay.textContent = config.readOnlyToken.substring(0, 20) + '...';
             
             // Formulare
             itemForm.addEventListener('submit', handleAddItem);
@@ -804,7 +807,7 @@
                 
                 const csvString = csvLines.join('\n');
                 
-                console.log('Sende Daten an Cloud:', csvString);
+                console.log('Sende Daten an Cloud:', { key: keyName, data: csvString });
                 
                 const response = await fetch(`${config.apiUrl}/set/${keyName}`, {
                     method: 'POST',
@@ -815,7 +818,7 @@
                     body: JSON.stringify([csvString]),
                 });
                 
-                console.log('Cloud Response:', response);
+                console.log('Cloud Response Status:', response.status);
                 
                 if (!response.ok) {
                     const errorText = await response.text();
@@ -838,7 +841,7 @@
             }
         }
 
-        // Aus Cloud laden
+        // Aus Cloud laden - KORRIGIERTE VERSION
         async function loadFromCloud() {
             const keyName = document.getElementById('cloudKey').value.trim();
             
@@ -854,24 +857,47 @@
                 console.log('Lade Daten von Cloud mit Schlüssel:', keyName);
                 
                 const response = await fetch(`${config.apiUrl}/get/${keyName}`, {
+                    method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${config.readOnlyToken}`,
                     },
                 });
                 
-                console.log('Cloud Response:', response);
+                console.log('Cloud Response Status:', response.status);
                 
                 if (!response.ok) {
                     const errorText = await response.text();
                     throw new Error(`HTTP-Fehler! Status: ${response.status}, Antwort: ${errorText}`);
                 }
                 
-                const result = await response.json();
-                console.log('Cloud Result:', result);
+                // Zuerst als Text lesen, um zu sehen was zurückkommt
+                const responseText = await response.text();
+                console.log('Rohe Antwort:', responseText);
                 
-                if (result.result !== null && result.result !== undefined) {
-                    const csvString = result.result;
-                    currentData = parseCSV(csvString);
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('JSON Parse Fehler:', parseError);
+                    throw new Error(`Ungültige JSON-Antwort: ${responseText}`);
+                }
+                
+                console.log('Parsed Result:', result);
+                
+                // Verschiedene Antwortformate behandeln
+                let csvData;
+                if (typeof result === 'string') {
+                    csvData = result;
+                } else if (result && typeof result === 'object') {
+                    // Upstash gibt normalerweise { result: "data" } zurück
+                    csvData = result.result;
+                } else {
+                    throw new Error('Unerwartetes Antwortformat: ' + JSON.stringify(result));
+                }
+                
+                if (csvData && csvData !== 'null' && csvData.trim() !== '') {
+                    console.log('CSV Daten gefunden:', csvData);
+                    currentData = parseCSV(csvData);
                     
                     // Nächste ID berechnen
                     nextId = currentData.length > 0 
@@ -883,6 +909,7 @@
                     showStatus(cloudStatus, `Daten erfolgreich geladen (${currentData.length} Items).`, 'success');
                 } else {
                     // Keine Daten gefunden - leeres Inventory erstellen
+                    console.log('Keine Daten in der Cloud gefunden');
                     currentData = [];
                     nextId = 1;
                     renderInventory();
