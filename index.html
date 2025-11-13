@@ -1060,16 +1060,16 @@
             },
             {
                 id: 2,
-                titel: "Nudelpfanne mit Gemüse und Tofu",
-                beschreibung: "Vegetarische Pfanne für schnelle Verpflegung",
+                titel: "Nudelpfanne mit Gemüse und Hähnchen",
+                beschreibung: "Schnelle Nudelpfanne für den Einsatz",
                 verpflegungsart: "warm",
                 verpflegungstyp: "voll",
-                vegetarisch: true,
+                vegetarisch: false,
                 kalorien: 580,
                 basisZeit: 35,
                 zutaten: [
                     { menge: 5000, einheit: "g", name: "Nudeln (Spiralnudeln)" },
-                    { menge: 3000, einheit: "g", name: "Tofu, gewürfelt" },
+                    { menge: 4000, einheit: "g", name: "Hähnchenbrust, gewürfelt" },
                     { menge: 2000, einheit: "g", name: "Zucchini, in Scheiben" },
                     { menge: 1500, einheit: "g", name: "Paprika, gewürfelt" },
                     { menge: 1000, einheit: "g", name: "Zwiebeln, gewürfelt" },
@@ -1083,90 +1083,423 @@
                 ],
                 zubereitung: [
                     "Nudeln in großen Töpfen bissfest kochen, abgießen",
-                    "Tofu in Bratpfannen goldbraun anbraten",
+                    "Hähnchen in Bratpfannen goldbraun anbraten",
                     "Zwiebeln und Knoblauch in Öl anschwitzen",
                     "Paprika und Zucchini zugeben, 5 Minuten braten",
                     "Tomatenmark und Gewürze zugeben, kurz mitrösten",
-                    "Gekochte Nudeln und Tofu unterheben",
+                    "Gekochte Nudeln und Hähnchen unterheben",
                     "Mit Sojasauce abschmecken, alles gut vermengen"
                 ],
-                portionierung: "In wärmeisolierten Behältern portionieren. Pro Person ca. 400g Nudelpfanne. Dazu 1 Liter Getränke pro Person (Wasser, Tee). Mit Sojajoghurt oder geriebenem Käse servieren."
+                portionierung: "In wärmeisolierten Behältern portionieren. Pro Person ca. 400g Nudelpfanne. Dazu 1 Liter Getränke pro Person (Wasser, Tee)."
             },
             {
                 id: 3,
-                titel: "Lunchpakete für Außeneinsatz",
-                beschreibung: "Praktische Lunchpakete für mobile Einsatzkräfte",
-                verpflegungsart: "kalt",
-                verpflegungstyp: "lunch",
-                vegetarisch: true,
-                kalorien: 720,
-                basisZeit: 25,
-                zutaten: [
-                    { menge: 50, einheit: "Stück", name: "Vollkornbrötchen" },
-                    { menge: 1250, einheit: "g", name: "Käse, in Scheiben" },
-                    { menge: 1000, einheit: "g", name: "Vegetarischer Aufschnitt" },
-                    { menge: 1500, einheit: "g", name: "Tomaten, in Scheiben" },
-                    { menge: 1000, einheit: "g", name: "Gurken, in Scheiben" },
-                    { menge: 50, einheit: "Stück", name: "Äpfel" },
-                    { menge: 50, einheit: "Stück", name: "Müsliriegel" },
-                    { menge: 50, einheit: "Stück", name: "Trinkpäckchen (Apfelsaft)" },
-                    { menge: 50, einheit: "Stück", name: "Schokoriegel" }
-                ],
-                zubereitung: [
-                    "Brötchen aufschneiden und mit Käse und Aufschnitt belegen",
-                    "Tomaten- und Gurkenscheiben separat verpacken",
-                    "Äpfel waschen und trocknen",
-                    "Alle Komponenten in Lunchpakete portionieren",
-                    "Jedes Paket enthält: 1 belegtes Brötchen, Gemüsebeilage, 1 Apfel, 1 Müsliriegel, 1 Schokoriegel, 1 Trinkpäckchen"
-                ],
-                portionierung: "In einzelnen Lunchpaketen verpacken. Pro Person 1 komplettes Paket. Zusätzlich Wasser für den gesamten Einsatz bereitstellen."
-            },
-            {
-                id: 4,
-                titel: "Gemüseeintopf mit Bockwürsten",
-                beschreibung: "Leichter, vielseitiger Gemüseeintopf",
+                titel: "Kartoffel-Gemüse-Pfanne mit Würstchen",
+                beschreibung: "Sättigende Pfanne mit Kartoffeln und Gemüse",
                 verpflegungsart: "warm",
                 verpflegungstyp: "voll",
                 vegetarisch: false,
-                kalorien: 520,
+                kalorien: 620,
                 basisZeit: 45,
                 zutaten: [
-                    { menge: 2500, einheit: "g", name: "Kohlrabi, gewürfelt" },
-                    { menge: 3000, einheit: "g", name: "Blumenkohl" },
-                    { menge: 3000, einheit: "g", name: "Brokkoli" },
-                    { menge: 2000, einheit: "g", name: "Karotten, in Scheiben" },
-                    { menge: 1500, einheit: "g", name: "Porree, in Ringen" },
-                    { menge: 1000, einheit: "g", name: "Sellerie, gewürfelt" },
-                    { menge: 1000, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                    { menge: 500, einheit: "g", name: "Lauchzwiebeln, in Ringen" },
-                    { menge: 500, einheit: "g", name: "Staudensellerie, gewürfelt" },
-                    { menge: 200, einheit: "g", name: "Petersilie, frisch, gehackt" },
-                    { menge: 80, einheit: "g", name: "Salz" },
-                    { menge: 20, einheit: "g", name: "Pfeffer" },
-                    { menge: 150, einheit: "ml", name: "Sonnenblumenöl" },
-                    { menge: 20, einheit: "g", name: "Muskat" },
-                    { menge: 100, einheit: "g", name: "Basilikum, frisch" },
-                    { menge: 100, einheit: "g", name: "Estragon, frisch" },
-                    { menge: 12, einheit: "l", name: "Wasser" },
-                    { menge: 200, einheit: "g", name: "Gemüsebrühe" },
                     { menge: 6000, einheit: "g", name: "Kartoffeln, gewürfelt" },
-                    { menge: 50, einheit: "Stück", name: "Bockwürste" }
+                    { menge: 3000, einheit: "g", name: "Wiener Würstchen, in Scheiben" },
+                    { menge: 2000, einheit: "g", name: "Zwiebeln, gewürfelt" },
+                    { menge: 1500, einheit: "g", name: "Paprika, gewürfelt" },
+                    { menge: 1000, einheit: "g", name: "Zucchini, gewürfelt" },
+                    { menge: 500, einheit: "g", name: "Tomatenmark" },
+                    { menge: 200, einheit: "ml", name: "Öl" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 30, einheit: "g", name: "Pfeffer" },
+                    { menge: 40, einheit: "g", name: "Paprikapulver" },
+                    { menge: 20, einheit: "g", name: "Majoran" }
                 ],
                 zubereitung: [
-                    "Sonnenblumenöl in großen Töpfen erhitzen",
-                    "Zwiebeln, Porree und Staudensellerie darin glasig dünsten",
-                    "Hartes Gemüse (Kartoffeln, Karotten, Kohlrabi) zugeben und kurz mitdünsten",
-                    "Mit Wasser und Gemüsebrühe ablöschen, aufkochen lassen",
-                    "Bei mittlerer Hitze 20 Minuten köcheln lassen",
-                    "Zartes Gemüse (Blumenkohl, Brokkoli) zugeben und weitere 10 Minuten garen",
-                    "Kräuter (Petersilie, Basilikum, Estragon) und Gewürze (Salz, Pfeffer, Muskat) unterrühren",
-                    "Bockwürste in Scheiben schneiden, im Eintopf erwärmen (nicht kochen)",
-                    "Abschmecken und nach Belieben mit Maggi-Würze verfeinern"
+                    "Kartoffeln vorkochen, abkühlen lassen und würfeln",
+                    "Zwiebeln in Öl glasig dünsten",
+                    "Kartoffelwürfel zugeben und goldbraun braten",
+                    "Würstchenscheiben zugeben und mitbraten",
+                    "Gemüse zugeben und 10 Minuten mitdünsten",
+                    "Tomatenmark und Gewürze unterrühren",
+                    "Bei mittlerer Hitze 15 Minuten garen lassen"
                 ],
-                portionierung: "In Feldküchen-Schüsseln portionieren. Pro Person ca. 500ml Eintopf. Dazu Brötchen servieren."
+                portionierung: "Pro Person ca. 450g Pfanne. Dazu Senf und Ketchup bereitstellen. Getränke: Wasser und Tee."
+            },
+            {
+                id: 4,
+                titel: "Linseneintopf mit Räuchertofu",
+                beschreibung: "Vegetarischer Eintopf mit würzigem Räuchertofu",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 520,
+                basisZeit: 50,
+                zutaten: [
+                    { menge: 3000, einheit: "g", name: "Räuchertofu, gewürfelt" },
+                    { menge: 2000, einheit: "g", name: "Rote Linsen" },
+                    { menge: 3000, einheit: "g", name: "Kartoffeln, gewürfelt" },
+                    { menge: 1500, einheit: "g", name: "Karotten, in Scheiben" },
+                    { menge: 1000, einheit: "g", name: "Zwiebeln, gewürfelt" },
+                    { menge: 500, einheit: "g", name: "Sellerie, gewürfelt" },
+                    { menge: 12, einheit: "l", name: "Gemüsebrühe" },
+                    { menge: 150, einheit: "ml", name: "Öl" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 25, einheit: "g", name: "Pfeffer" },
+                    { menge: 30, einheit: "g", name: "Kümmel" },
+                    { menge: 20, einheit: "g", name: "Majoran" }
+                ],
+                zubereitung: [
+                    "Räuchertofu in Öl knusprig anbraten",
+                    "Zwiebeln und Sellerie zugeben und glasig dünsten",
+                    "Linsen waschen und zugeben",
+                    "Mit Gemüsebrühe ablöschen",
+                    "Kartoffeln und Karotten zugeben",
+                    "30 Minuten köcheln lassen",
+                    "Gewürze zugeben und abschmecken"
+                ],
+                portionierung: "Pro Person ca. 500ml Eintopf. Dazu Brot und 1 Liter Getränke pro Person."
             },
             {
                 id: 5,
+                titel: "Chili con Carne",
+                beschreibung: "Würziges Chili mit Rindfleisch und Bohnen",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 680,
+                basisZeit: 60,
+                zutaten: [
+                    { menge: 4000, einheit: "g", name: "Rinderhackfleisch" },
+                    { menge: 4000, einheit: "g", name: "Kidneybohnen, Dose" },
+                    { menge: 2000, einheit: "g", name: "Mais, Dose" },
+                    { menge: 2000, einheit: "g", name: "Zwiebeln, gewürfelt" },
+                    { menge: 1000, einheit: "g", name: "Paprika, gewürfelt" },
+                    { menge: 800, einheit: "g", name: "Tomatenmark" },
+                    { menge: 4, einheit: "Dosen", name: "Stücktomaten" },
+                    { menge: 100, einheit: "g", name: "Chilipulver" },
+                    { menge: 50, einheit: "g", name: "Kreuzkümmel" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 200, einheit: "ml", name: "Öl" }
+                ],
+                zubereitung: [
+                    "Hackfleisch in Öl krümelig anbraten",
+                    "Zwiebeln und Paprika zugeben und mitdünsten",
+                    "Tomatenmark zugeben und kurz anrösten",
+                    "Stücktomaten zugeben, zerdrücken",
+                    "Gewürze zugeben, 30 Minuten köcheln",
+                    "Bohnen und Mais zugeben, weitere 15 Minuten garen"
+                ],
+                portionierung: "Pro Person ca. 450g Chili. Dazu Reis oder Brot. Getränke: Wasser und Apfelschorle."
+            },
+            {
+                id: 6,
+                titel: "Gemüsecurry mit Reis",
+                beschreibung: "Mildes Gemüsecurry nach asiatischer Art",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 550,
+                basisZeit: 40,
+                zutaten: [
+                    { menge: 4000, einheit: "g", name: "Reis" },
+                    { menge: 3000, einheit: "g", name: "Brokkoli" },
+                    { menge: 2000, einheit: "g", name: "Karotten, in Streifen" },
+                    { menge: 1500, einheit: "g", name: "Paprika, in Streifen" },
+                    { menge: 1000, einheit: "g", name: "Zucchini, in Scheiben" },
+                    { menge: 1000, einheit: "g", name: "Zwiebeln, gewürfelt" },
+                    { menge: 400, einheit: "ml", name: "Kokosmilch" },
+                    { menge: 200, einheit: "g", name: "Currypaste (mild)" },
+                    { menge: 150, einheit: "ml", name: "Öl" },
+                    { menge: 60, einheit: "g", name: "Salz" },
+                    { menge: 20, einheit: "g", name: "Pfeffer" }
+                ],
+                zubereitung: [
+                    "Reis nach Packungsanleitung kochen",
+                    "Zwiebeln in Öl glasig dünsten",
+                    "Currypaste zugeben und kurz anrösten",
+                    "Hartes Gemüse zugeben und 5 Minuten dünsten",
+                    "Weiches Gemüse zugeben, mit Kokosmilch ablöschen",
+                    "15 Minuten köcheln lassen, mit Salz und Pfeffer abschmecken"
+                ],
+                portionierung: "Pro Person 200g Reis und 300g Curry. Getränke: Wasser und Tee."
+            },
+            {
+                id: 7,
+                titel: "Gulaschsuppe nach ungarischer Art",
+                beschreibung: "Würzige, kräftige Gulaschsuppe",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 620,
+                basisZeit: 75,
+                zutaten: [
+                    { menge: 5000, einheit: "g", name: "Rindfleisch für Gulasch" },
+                    { menge: 4000, einheit: "g", name: "Kartoffeln, gewürfelt" },
+                    { menge: 2000, einheit: "g", name: "Zwiebeln, gewürfelt" },
+                    { menge: 1500, einheit: "g", name: "Paprika, in Streifen" },
+                    { menge: 300, einheit: "g", name: "Tomatenmark" },
+                    { menge: 12, einheit: "l", name: "Rinderbrühe" },
+                    { menge: 100, einheit: "g", name: "Paprikapulver" },
+                    { menge: 30, einheit: "g", name: "Kümmel" },
+                    { menge: 200, einheit: "ml", name: "Öl" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 25, einheit: "g", name: "Pfeffer" }
+                ],
+                zubereitung: [
+                    "Zwiebeln in Öl glasig dünsten",
+                    "Rindfleisch zugeben und kräftig anbraten",
+                    "Paprikapulver zugeben, kurz mitrösten",
+                    "Mit Brühe ablöschen, 45 Minuten köcheln",
+                    "Kartoffeln und Paprika zugeben, weitere 20 Minuten garen",
+                    "Mit Gewürzen abschmecken"
+                ],
+                portionierung: "Pro Person ca. 500ml Suppe. Dazu frisches Brot servieren."
+            },
+            {
+                id: 8,
+                titel: "Käsespätzle mit Röstzwiebeln",
+                beschreibung: "Schwäbische Spezialität für die Feldküche",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 720,
+                basisZeit: 35,
+                zutaten: [
+                    { menge: 6000, einheit: "g", name: "Spätzle, fertig" },
+                    { menge: 2000, einheit: "g", name: "Bergkäse, gerieben" },
+                    { menge: 500, einheit: "g", name: "Butter" },
+                    { menge: 300, einheit: "g", name: "Röstzwiebeln" },
+                    { menge: 500, einheit: "ml", name: "Sahne" },
+                    { menge: 60, einheit: "g", name: "Salz" },
+                    { menge: 20, einheit: "g", name: "Muskat" },
+                    { menge: 30, einheit: "g", name: "Pfeffer" }
+                ],
+                zubereitung: [
+                    "Spätzle in Salzwasser bissfest kochen, abgießen",
+                    "Butter in großen Pfannen schmelzen",
+                    "Spätzle darin goldgelb braten",
+                    "Sahne und Käse zugeben, schmelzen lassen",
+                    "Mit Muskat, Salz und Pfeffer würzen",
+                    "Mit Röstzwiebeln bestreuen"
+                ],
+                portionierung: "Pro Person ca. 250g Käsespätzle. Dazu Apfelmus oder Salat servieren."
+            },
+                        {
+                id: 9,
+                titel: "Bolognese mit Spaghetti",
+                beschreibung: "Klassische Fleischsauce zu Spaghetti",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 650,
+                basisZeit: 50,
+                zutaten: [
+                    { menge: 5000, einheit: "g", name: "Spaghetti" },
+                    { menge: 4000, einheit: "g", name: "Rinderhackfleisch" },
+                    { menge: 2000, einheit: "g", name: "Zwiebeln, gewürfelt" },
+                    { menge: 1500, einheit: "g", name: "Karotten, gerieben" },
+                    { menge: 1000, einheit: "g", name: "Sellerie, gewürfelt" },
+                    { menge: 800, einheit: "g", name: "Tomatenmark" },
+                    { menge: 4, einheit: "Dosen", name: "Stücktomaten" },
+                    { menge: 200, einheit: "ml", name: "Rotwein" },
+                    { menge: 200, einheit: "ml", name: "Öl" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 30, einheit: "g", name: "Oregano" },
+                    { menge: 25, einheit: "g", name: "Basilikum" }
+                ],
+                zubereitung: [
+                    "Spaghetti in Salzwasser bissfest kochen",
+                    "Hackfleisch in Öl krümelig braten",
+                    "Zwiebeln, Karotten, Sellerie zugeben und mitdünsten",
+                    "Tomatenmark zugeben, kurz anrösten",
+                    "Mit Rotwein ablöschen, Stücktomaten zugeben",
+                    "30 Minuten köcheln lassen, mit Kräutern abschmecken"
+                ],
+                portionierung: "Pro Person 100g Spaghetti und 200g Sauce. Dazu Parmesan und Brot."
+            },
+                        {
+                id: 10,
+                titel: "Kürbis-Ingwer-Suppe",
+                beschreibung: "Cremige Suppe mit würziger Note",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 480,
+                basisZeit: 40,
+                zutaten: [
+                    { menge: 8000, einheit: "g", name: "Hokkaido-Kürbis, gewürfelt" },
+                    { menge: 2000, einheit: "g", name: "Kartoffeln, gewürfelt" },
+                    { menge: 1000, einheit: "g", name: "Zwiebeln, gewürfelt" },
+                    { menge: 100, einheit: "g", name: "Ingwer, frisch gerieben" },
+                    { menge: 10, einheit: "l", name: "Gemüsebrühe" },
+                    { menge: 400, einheit: "ml", name: "Kokosmilch" },
+                    { menge: 150, einheit: "ml", name: "Öl" },
+                    { menge: 60, einheit: "g", name: "Salz" },
+                    { menge: 20, einheit: "g", name: "Pfeffer" },
+                    { menge: 10, einheit: "g", name: "Muskat" }
+                ],
+                zubereitung: [
+                    "Zwiebeln und Ingwer in Öl anschwitzen",
+                    "Kürbis und Kartoffeln zugeben, kurz mitdünsten",
+                    "Mit Brühe ablöschen, 25 Minuten köcheln",
+                    "Pürieren bis cremig",
+                    "Kokosmilch unterrühren, mit Gewürzen abschmecken"
+                ],
+                portionierung: "Pro Person ca. 400ml Suppe. Dazu Brot und Kürbiskerne."
+            },
+                        {
+                id: 11,
+                titel: "Rahmgulasch mit Pilzen",
+                beschreibung: "Zartes Gulasch in Rahmsauce",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 680,
+                basisZeit: 70,
+                zutaten: [
+                    { menge: 5000, einheit: "g", name: "Schweinegulasch" },
+                    { menge: 3000, einheit: "g", name: "Champignons, geviertelt" },
+                    { menge: 2000, einheit: "g", name: "Zwiebeln, gewürfelt" },
+                    { menge: 500, einheit: "ml", name: "Sahne" },
+                    { menge: 200, einheit: "ml", name: "Weißwein" },
+                    { menge: 300, einheit: "g", name: "Tomatenmark" },
+                    { menge: 200, einheit: "ml", name: "Öl" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 30, einheit: "g", name: "Pfeffer" },
+                    { menge: 20, einheit: "g", name: "Majoran" },
+                    { menge: 40, einheit: "g", name: "Paprikapulver" }
+                ],
+                zubereitung: [
+                    "Fleisch in Öl scharf anbraten",
+                    "Zwiebeln zugeben und glasig dünsten",
+                    "Tomatenmark zugeben, kurz anrösten",
+                    "Mit Wein ablöschen, 45 Minuten köcheln",
+                    "Pilze zugeben, weitere 15 Minuten garen",
+                    "Sahne zugeben, nicht mehr kochen lassen"
+                ],
+                portionierung: "Pro Person ca. 400g Gulasch. Dazu Nudeln oder Kartoffeln."
+            }
+                        {
+                id: 12,
+                titel: "Gemüsepfanne Asia-Style",
+                beschreibung: "Wok-Gemüse mit Hähnchen und Reis",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 580,
+                basisZeit: 35,
+                zutaten: [
+                    { menge: 4000, einheit: "g", name: "Reis" },
+                    { menge: 3000, einheit: "g", name: "Hähnchenbrust, in Streifen" },
+                    { menge: 2000, einheit: "g", name: "Pak Choi, grob geschnitten" },
+                    { menge: 1500, einheit: "g", name: "Möhren, in Streifen" },
+                    { menge: 1000, einheit: "g", name: "Paprika, in Streifen" },
+                    { menge: 500, einheit: "g", name: "Frühlingszwiebeln, in Ringen" },
+                    { menge: 200, einheit: "ml", name: "Sojasauce" },
+                    { menge: 100, einheit: "ml", name: "Sesamöl" },
+                    { menge: 50, einheit: "g", name: "Ingwer, gerieben" },
+                    { menge: 4, einheit: "Zehen", name: "Knoblauch, gehackt" }
+                ],
+                zubereitung: [
+                    "Reis kochen",
+                    "Hähnchenstreifen in Sesamöl anbraten",
+                    "Ingwer und Knoblauch zugeben",
+                    "Hartes Gemüse zugeben, kurz anbraten",
+                    "Weiches Gemüse zugeben, mit Sojasauce ablöschen",
+                    "5 Minuten dünsten, mit Reis servieren"
+                ],
+                portionierung: "Pro Person 150g Reis und 300g Gemüsepfanne."
+            
+                        {
+                id: 13,
+                titel: "Erbseneintopf mit Kasseler",
+                beschreibung: "Traditioneller Eintopf mit Kasseler und Erbsen",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 590,
+                basisZeit: 55,
+                zutaten: [
+                    { menge: 4000, einheit: "g", name: "Kasseler, gewürfelt" },
+                    { menge: 3000, einheit: "g", name: "Gelbe Erbsen, getrocknet" },
+                    { menge: 4000, einheit: "g", name: "Kartoffeln, gewürfelt" },
+                    { menge: 2000, einheit: "g", name: "Möhren, in Scheiben" },
+                    { menge: 1000, einheit: "g", name: "Sellerie, gewürfelt" },
+                    { menge: 12, einheit: "l", name: "Gemüsebrühe" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 30, einheit: "g", name: "Majoran" },
+                    { menge: 20, einheit: "g", name: "Pfeffer" }
+                ],
+                zubereitung: [
+                    "Erbsen über Nacht einweichen, abgießen",
+                    "Kasseler in Brühe 20 Minuten kochen",
+                    "Erbsen zugeben, 20 Minuten köcheln",
+                    "Kartoffeln und Gemüse zugeben, weitere 20 Minuten garen",
+                    "Mit Gewürzen abschmecken"
+                ],
+                portionierung: "Pro Person ca. 500ml Eintopf. Dazu Brot und Senf."
+            }
+                        {
+                id: 14,
+                titel: "Paprikagemüse mit Reis",
+                beschreibung: "Ungarisches Paprikagemüse",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 520,
+                basisZeit: 45,
+                zutaten: [
+                    { menge: 4000, einheit: "g", name: "Reis" },
+                    { menge: 6000, einheit: "g", name: "Paprika, gemischt" },
+                    { menge: 3000, einheit: "g", name: "Zwiebeln, gewürfelt" },
+                    { menge: 2000, einheit: "g", name: "Tomaten, gewürfelt" },
+                    { menge: 400, einheit: "g", name: "Tomatenmark" },
+                    { menge: 100, einheit: "g", name: "Paprikapulver" },
+                    { menge: 200, einheit: "ml", name: "Öl" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 25, einheit: "g", name: "Pfeffer" }
+                ],
+                zubereitung: [
+                    "Reis kochen",
+                    "Zwiebeln in Öl glasig dünsten",
+                    "Paprikapulver zugeben, kurz anrösten",
+                    "Paprika und Tomaten zugeben, 20 Minuten dünsten",
+                    "Tomatenmark unterrühren, mit Gewürzen abschmecken"
+                ],
+                portionierung: "Pro Person 150g Reis und 300g Paprikagemüse."
+            }
+                        {
+                id: 15,
+                titel: "Kartoffelsuppe mit Wienern",
+                beschreibung: "Cremige Kartoffelsuppe mit Würstchen",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 540,
+                basisZeit: 40,
+                zutaten: [
+                    { menge: 6000, einheit: "g", name: "Kartoffeln, gewürfelt" },
+                    { menge: 2000, einheit: "g", name: "Möhren, in Scheiben" },
+                    { menge: 1500, einheit: "g", name: "Lauch, in Ringen" },
+                    { menge: 1000, einheit: "g", name: "Sellerie, gewürfelt" },
+                    { menge: 50, einheit: "Stück", name: "Wiener Würstchen" },
+                    { menge: 10, einheit: "l", name: "Gemüsebrühe" },
+                    { menge: 400, einheit: "ml", name: "Sahne" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 30, einheit: "g", name: "Pfeffer" },
+                    { menge: 20, einheit: "g", name: "Muskat" }
+                ],
+                zubereitung: [
+                    "Gemüse in Brühe 25 Minuten kochen",
+                    "Pürieren bis zur gewünschten Konsistenz",
+                    "Sahne unterrühren, nicht kochen",
+                    "Würstchen in Scheiben schneiden, in der Suppe erwärmen",
+                    "Mit Gewürzen abschmecken"
+                ],
+                portionierung: "Pro Person ca. 400ml Suppe mit 1 Würstchen. Dazu Brot."
+            }
+                        {
+                id: 16,
                 titel: "Kalte Platte mit Aufschnitt und Salaten",
                 beschreibung: "Abwechslungsreiche Kalte Platte für den Einsatz",
                 verpflegungsart: "kalt",
@@ -1202,79 +1535,545 @@
                 portionierung: "Als Buffet anrichten. Pro Person ca. 150g Aufschnitt, 100g Käse, 200g Salate und 2 Brötchen."
             },
             {
-                id: 6,
-                titel: "Budapester Gulaschsuppe",
-                beschreibung: "Würzige, kräftige Gulaschsuppe nach ungarischer Art",
-                verpflegungsart: "warm",
+                id: 17,
+                titel: "Nudelsalat-Buffet",
+                beschreibung: "Verschiedene Nudelsalate zur Auswahl",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 620,
+                basisZeit: 60,
+                zutaten: [
+                    { menge: 5000, einheit: "g", name: "Nudeln (verschiedene Sorten)" },
+                    { menge: 2000, einheit: "g", name: "Kirschtomaten, geviertelt" },
+                    { menge: 1500, einheit: "g", name: "Gurken, gewürfelt" },
+                    { menge: 1000, einheit: "g", name: "Paprika, gewürfelt" },
+                    { menge: 800, einheit: "g", name: "Karotten, geraspelt" },
+                    { menge: 500, einheit: "g", name: "Zwiebeln, gewürfelt" },
+                    { menge: 1000, einheit: "ml", name: "Joghurt-Dressing" },
+                    { menge: 500, einheit: "ml", name: "Vinaigrette" },
+                    { menge: 300, einheit: "g", name: "Kräuter, frisch gehackt" },
+                    { menge: 100, einheit: "Stück", name: "Brötchen" },
+                    { menge: 2000, einheit: "g", name: "Käse, gewürfelt" }
+                ],
+                zubereitung: [
+                    "Nudeln bissfest kochen, abkühlen lassen",
+                    "Gemüse waschen, schneiden und vorbereiten",
+                    "Nudeln auf verschiedene Schüsseln verteilen",
+                    "Mit unterschiedlichen Dressings und Gemüse mischen",
+                    "Mit Kräutern bestreuen, kühl stellen"
+                ],
+                portionierung: "Pro Person 300g Nudelsalat und 2 Brötchen. Verschiedene Dressings zur Auswahl."
+            },
+            {
+                id: 18,
+                titel: "Wrap-Bar mit verschiedenen Füllungen",
+                beschreibung: "Selbstgemachte Wraps zur Zusammenstellung",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 650,
+                basisZeit: 75,
+                zutaten: [
+                    { menge: 100, einheit: "Stück", name: "Wrap-Tortillas" },
+                    { menge: 3000, einheit: "g", name: "Hähnchenbrust, gekocht" },
+                    { menge: 2000, einheit: "g", name: "Schinken, gekocht" },
+                    { menge: 1500, einheit: "g", name: "Thunfisch aus der Dose" },
+                    { menge: 3000, einheit: "g", name: "Gemischter Salat" },
+                    { menge: 2000, einheit: "g", name: "Tomaten, gewürfelt" },
+                    { menge: 1500, einheit: "g", name: "Gurken, gewürfelt" },
+                    { menge: 1000, einheit: "g", name: "Paprika, gewürfelt" },
+                    { menge: 1500, einheit: "g", name: "Käse, gerieben" },
+                    { menge: 800, einheit: "g", name: "Joghurt-Dip" },
+                    { menge: 800, einheit: "g", name: "Knoblauch-Dip" },
+                    { menge: 500, einheit: "g", name: "Salsa" }
+                ],
+                zubereitung: [
+                    "Alle Füllungen in separaten Schüsseln anrichten",
+                    "Fleisch und Fisch zerpflücken/schneiden",
+                    "Gemüse waschen und schneiden",
+                    "Dips und Saucen vorbereiten",
+                    "Tortillas getrennt anbieten"
+                ],
+                portionierung: "Als Bar anrichten. Pro Person 2-3 Wraps je nach Größe. Verschiedene Füllungen zur Auswahl."
+            },
+            {
+                id: 19,
+                titel: "Brotzeitteller mit regionalen Spezialitäten",
+                beschreibung: "Bayerische Brotzeit für den Einsatz",
+                verpflegungsart: "kalt",
                 verpflegungstyp: "voll",
                 vegetarisch: false,
                 kalorien: 720,
-                basisZeit: 75,
+                basisZeit: 45,
                 zutaten: [
-                    { menge: 5000, einheit: "g", name: "Rindfleisch für Gulasch, gewürfelt" },
-                    { menge: 2000, einheit: "g", name: "Zwiebeln, geschnitten" },
-                    { menge: 300, einheit: "g", name: "Schweineschmalz" },
-                    { menge: 4000, einheit: "g", name: "Kartoffeln, gewürfelt" },
-                    { menge: 3000, einheit: "g", name: "Paprika, rot und grün, in Streifen" },
-                    { menge: 12, einheit: "l", name: "Fleischbrühe" },
-                    { menge: 4, einheit: "Dosen", name: "Tomaten, gestückelt" },
-                    { menge: 1000, einheit: "ml", name: "Rotwein" },
-                    { menge: 20, einheit: "g", name: "Kümmel, ganz" },
-                    { menge: 30, einheit: "g", name: "Majoran" },
-                    { menge: 60, einheit: "g", name: "Paprikapulver, rosenscharf" },
-                    { menge: 2, einheit: "Stück", name: "Zitronen, Schale unbehandelt" },
-                    { menge: 80, einheit: "g", name: "Salz" },
-                    { menge: 6, einheit: "Zehen", name: "Knoblauch, gepresst" },
-                    { menge: 20, einheit: "g", name: "Pfeffer" }
+                    { menge: 80, einheit: "Stück", name: "Brezeln" },
+                    { menge: 100, einheit: "Stück", name: "Radi" },
+                    { menge: 3000, einheit: "g", name: "Obazda" },
+                    { menge: 2000, einheit: "g", name: "Leberkäse, gekocht" },
+                    { menge: 1500, einheit: "g", name: "Weißwurst" },
+                    { menge: 2000, einheit: "g", name: "Bierkäse" },
+                    { menge: 1500, einheit: "g", name: "Räucherkäse" },
+                    { menge: 1000, einheit: "g", name: "Butter" },
+                    { menge: 2000, einheit: "g", name: "Gurken, eingelegt" },
+                    { menge: 1500, einheit: "g", name: "Zwiebeln, in Ringen" }
                 ],
                 zubereitung: [
-                    "Zwiebeln im Schweineschmalz glasig anbraten",
-                    "Rindfleisch zugeben und kräftig anbraten",
-                    "Mit Salz, Pfeffer, Kümmel, Majoran, Paprikapulver und Zitronenschale würzen, kurz mitbraten",
-                    "Mit Tomaten und Rotwein ablöschen",
-                    "Mit Fleischbrühe auffüllen und ca. 15 Minuten kochen lassen",
-                    "Kartoffeln und Paprikaschoten zufügen",
-                    "Alles weitere 30 Minuten garen lassen, bis Fleisch und Kartoffeln weich sind",
-                    "Mit Knoblauch und Gewürzen abschmecken"
+                    "Brezeln auf Tellern anrichten",
+                    "Obazda in Schüsseln portionieren",
+                    "Käse und Wurst auf Schneidebrettern anrichten",
+                    "Gemüse in Schälchen vorbereiten",
+                    "Butter separat anbieten"
                 ],
-                portionierung: "In Feldküchen-Schüsseln portionieren. Pro Person ca. 500ml Suppe. Dazu frisches Brot servieren."
+                portionierung: "Pro Person 1 Brezel, 150g Käse/Wurst, 100g Obazda und Beilagen."
             },
             {
-                id: 7,
-                titel: "Chilli sin Carne",
-                beschreibung: "Sättigende vegetarische Suppe mit roten Linsen und Kartoffeln",
-                verpflegungsart: "warm",
+                id: 20,
+                titel: "Antipasti-Platte mediterran",
+                beschreibung: "Mediterrane Vorspeisen als Hauptmahlzeit",
+                verpflegungsart: "kalt",
                 verpflegungstyp: "voll",
                 vegetarisch: true,
+                kalorien: 580,
+                basisZeit: 60,
+                zutaten: [
+                    { menge: 100, einheit: "Stück", name: "Ciabatta-Brote" },
+                    { menge: 4000, einheit: "g", name: "Mozzarella" },
+                    { menge: 3000, einheit: "g", name: "Tomaten, in Scheiben" },
+                    { menge: 2000, einheit: "g", name: "Auberginen, gegrillt" },
+                    { menge: 2000, einheit: "g", name: "Zucchini, gegrillt" },
+                    { menge: 1500, einheit: "g", name: "Paprika, gegrillt" },
+                    { menge: 1000, einheit: "g", name: "Oliven, gemischt" },
+                    { menge: 800, einheit: "g", name: "Artischockenherzen" },
+                    { menge: 500, einheit: "ml", name: "Olivenöl" },
+                    { menge: 300, einheit: "g", name: "Basilikum, frisch" },
+                    { menge: 200, einheit: "g", name: "Pinienkerne" }
+                ],
+                zubereitung: [
+                    "Gemüse waschen und grillen/vorbereiten",
+                    "Mozzarella abtropfen lassen und portionieren",
+                    "Ciabatta in Scheiben schneiden",
+                    "Alles auf großen Platten anrichten",
+                    "Mit Olivenöl beträufeln, mit Basilikum bestreuen"
+                ],
+                portionierung: "Pro Person 200g Antipasti, 2-3 Ciabatta-Scheiben. Verschiedene Komponenten zur Auswahl."
+            }
+                    {
+                id: 21,
+                titel: "Klassische Lunchpakete",
+                beschreibung: "Praktische Lunchpakete für mobile Einsatzkräfte",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "lunch",
+                vegetarisch: false,
+                kalorien: 720,
+                basisZeit: 25,
+                zutaten: [
+                    { menge: 50, einheit: "Stück", name: "Vollkornbrötchen" },
+                    { menge: 1250, einheit: "g", name: "Käse, in Scheiben" },
+                    { menge: 1000, einheit: "g", name: "Aufschnitt" },
+                    { menge: 1500, einheit: "g", name: "Tomaten, in Scheiben" },
+                    { menge: 1000, einheit: "g", name: "Gurken, in Scheiben" },
+                    { menge: 50, einheit: "Stück", name: "Äpfel" },
+                    { menge: 50, einheit: "Stück", name: "Müsliriegel" },
+                    { menge: 50, einheit: "Stück", name: "Trinkpäckchen (Apfelsaft)" },
+                    { menge: 50, einheit: "Stück", name: "Schokoriegel" }
+                ],
+                zubereitung: [
+                    "Brötchen aufschneiden und mit Käse und Aufschnitt belegen",
+                    "Tomaten- und Gurkenscheiben separat verpacken",
+                    "Äpfel waschen und trocknen",
+                    "Alle Komponenten in Lunchpakete portionieren",
+                    "Jedes Paket enthält: 1 belegtes Brötchen, Gemüsebeilage, 1 Apfel, 1 Müsliriegel, 1 Schokoriegel, 1 Trinkpäckchen"
+                ],
+                portionierung: "In einzelnen Lunchpaketen verpacken. Pro Person 1 komplettes Paket. Zusätzlich Wasser für den gesamten Einsatz bereitstellen."
+            },
+            {
+                id: 22,
+                titel: "Energie-Lunchpakete Sport",
+                beschreibung: "Energiereiche Pakete für körperlich anstrengende Einsätze",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "lunch",
+                vegetarisch: false,
+                kalorien: 850,
+                basisZeit: 30,
+                zutaten: [
+                    { menge: 50, einheit: "Stück", name: "Mehrkornbrötchen" },
+                    { menge: 1500, einheit: "g", name: "Putenbrust" },
+                    { menge: 1000, einheit: "g", name: "Käse, in Scheiben" },
+                    { menge: 1000, einheit: "g", name: "Studentenfutter" },
+                    { menge: 50, einheit: "Stück", name: "Energieriegel" },
+                    { menge: 50, einheit: "Stück", name: "Bananen" },
+                    { menge: 50, einheit: "Stück", name: "Isotonische Getränke" },
+                    { menge: 2500, einheit: "g", name: "Möhren, Baby" },
+                    { menge: 50, einheit: "Stück", name: "Müsliriegel" }
+                ],
+                zubereitung: [
+                    "Brötchen mit Putenbrust und Käse belegen",
+                    "Bananen und Möhren waschen",
+                    "Studentenfutter in kleine Beutel portionieren",
+                    "Alle Komponenten in stabile Lunchpakete packen",
+                    "Isotonische Getränke gekühlt bereitstellen"
+                ],
+                portionierung: "Pro Person 1 Brötchen, 1 Banane, 50g Studentenfutter, 1 Energieriegel, 1 isotonisches Getränk."
+            },
+            {
+                id: 23,
+                titel: "Vegetarische Lunchpakete",
+                beschreibung: "Ausgewogene vegetarische Lunchpakete",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "lunch",
+                vegetarisch: true,
+                kalorien: 680,
+                basisZeit: 35,
+                zutaten: [
+                    { menge: 50, einheit: "Stück", name: "Vollkorntoast" },
+                    { menge: 1500, einheit: "g", name: "Frischkäse" },
+                    { menge: 1000, einheit: "g", name: "Avocado" },
+                    { menge: 1500, einheit: "g", name: "Paprika, in Streifen" },
+                    { menge: 1000, einheit: "g", name: "Gurken, in Stiften" },
+                    { menge: 50, einheit: "Stück", name: "Birnen" },
+                    { menge: 50, einheit: "Stück", name: "Nussmischung" },
+                    { menge: 50, einheit: "Stück", name: "Fruchtsaft" },
+                    { menge: 50, einheit: "Stück", name: "Joghurt" }
+                ],
+                zubereitung: [
+                    "Toast mit Frischkäse bestreichen",
+                    "Avocado schälen, entkernen und in Scheiben schneiden",
+                    "Gemüse waschen und schneiden",
+                    "Birnen waschen",
+                    "Joghurt und Nüsse portionieren"
+                ],
+                portionierung: "Pro Person 2 Toasts, 1/4 Avocado, Gemüsesticks, 1 Birne, 1 Joghurt, 1 Nussmischung, 1 Saft."
+            },
+            {
+                id: 24,
+                titel: "Wrap-Lunchpakete",
+                beschreibung: "Praktische Wraps für unterwegs",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "lunch",
+                vegetarisch: false,
+                kalorien: 750,
+                basisZeit: 40,
+                zutaten: [
+                    { menge: 100, einheit: "Stück", name: "Wrap-Tortillas" },
+                    { menge: 2000, einheit: "g", name: "Hähnchenbrust, gekocht" },
+                    { menge: 1500, einheit: "g", name: "Salatblätter" },
+                    { menge: 1000, einheit: "g", name: "Tomaten, gewürfelt" },
+                    { menge: 1000, einheit: "g", name: "Gurken, gewürfelt" },
+                    { menge: 800, einheit: "g", name: "Joghurt-Dressing" },
+                    { menge: 50, einheit: "Stück", name: "Äpfel" },
+                    { menge: 50, einheit: "Stück", name: "Müsliriegel" },
+                    { menge: 50, einheit: "Stück", name: "Wasserflaschen 0,5l" }
+                ],
+                zubereitung: [
+                    "Tortillas mit Dressing bestreichen",
+                    "Hähnchenbrust in Streifen schneiden",
+                    "Salat und Gemüse vorbereiten",
+                    "Wraps zusammenrollen und in Folie wickeln",
+                    "Äpfel waschen, Müsliriegel verpacken"
+                ],
+                portionierung: "Pro Person 2 Wraps, 1 Apfel, 1 Müsliriegel, 1 Wasserflasche."
+            },
+            {
+                id: 25,
+                titel: "Kraftpakete für Langzeiteinsatz",
+                beschreibung: "Besonders nahrhafte Pakete für 24h-Einsätze",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "lunch",
+                vegetarisch: false,
+                kalorien: 1200,
+                basisZeit: 45,
+                zutaten: [
+                    { menge: 50, einheit: "Stück", name: "Schinken-Käse-Toast" },
+                    { menge: 50, einheit: "Stück", name: "Fertigsalate in Bechern" },
+                    { menge: 50, einheit: "Stück", name: "Proteinriegel" },
+                    { menge: 50, einheit: "Stück", name: "Nussmischungen" },
+                    { menge: 50, einheit: "Stück", name: "Trockenfrüchte" },
+                    { menge: 50, einheit: "Stück", name: "Energydrinks" },
+                    { menge: 50, einheit: "Stück", name: "Wasserflaschen 1l" },
+                    { menge: 50, einheit: "Stück", name: "Fruchtquetschies" },
+                    { menge: 50, einheit: "Stück", name: "Müsliriegel" }
+                ],
+                zubereitung: [
+                    "Toasts vorbereiten und verpacken",
+                    "Fertigsalate kühl lagern",
+                    "Nüsse und Trockenfrüchte portionieren",
+                    "Getränke bereitstellen",
+                    "Alles in stabile Transportboxen packen"
+                ],
+                portionierung: "Pro Person 2 Toasts, 1 Salat, 2 Riegel, 1 Nussmischung, 1 Trockenfrucht, 1 Energydrink, 1 Wasser."
+            }
+                    {
+                id: 26,
+                titel: "Würstchen im Schlafrock",
+                beschreibung: "Wiener Würstchen in Blätterteig für unterwegs",
+                verpflegungsart: "warm",
+                verpflegungstyp: "hand",
+                vegetarisch: false,
+                kalorien: 420,
+                basisZeit: 30,
+                zutaten: [
+                    { menge: 100, einheit: "Stück", name: "Wiener Würstchen" },
+                    { menge: 100, einheit: "Stück", name: "Blätterteigplatten" },
+                    { menge: 200, einheit: "g", name: "Senf" },
+                    { menge: 200, einheit: "g", name: "Ketchup" },
+                    { menge: 2, einheit: "Stück", name: "Eier zum Bestreichen" }
+                ],
+                zubereitung: [
+                    "Blätterteig ausrollen und in Rechtecke schneiden",
+                    "Je 1 Würstchen auf jedes Teigstück legen",
+                    "Mit Senf bestreichen",
+                    "Teig um das Würstchen wickeln, Enden festdrücken",
+                    "Mit Ei bestreichen, im Ofen backen bis goldbraun"
+                ],
+                portionierung: "Pro Person 2 Stück. Mit Senf und Ketchup servieren. In Alufolie warm halten."
+            },
+            {
+                id: 27,
+                titel: "Mini-Frikadellen im Brötchen",
+                beschreibung: "Kleine Frikadellen im Brötchen zum Mitnehmen",
+                verpflegungsart: "warm",
+                verpflegungstyp: "hand",
+                vegetarisch: false,
                 kalorien: 480,
                 basisZeit: 40,
                 zutaten: [
-                    { menge: 1000, einheit: "g", name: "Rote Linsen" },
-                    { menge: 2000, einheit: "g", name: "Kidneybohnen, aus der Dose" },
-                    { menge: 1500, einheit: "g", name: "Mais, aus der Dose" },
+                    { menge: 4000, einheit: "g", name: "Hackfleischmischung" },
+                    { menge: 100, einheit: "Stück", name: "Mini-Brötchen" },
                     { menge: 500, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                    { menge: 3000, einheit: "g", name: "Kartoffeln, gewürfelt" },
-                    { menge: 200, einheit: "g", name: "Butter" },
-                    { menge: 500, einheit: "g", name: "Passierte Tomaten" },
-                    { menge: 8, einheit: "Zehen", name: "Knoblauch, gehackt" },
-                    { menge: 10, einheit: "l", name: "Gemüsebrühe" },
-                    { menge: 50, einheit: "g", name: "Paprikapulver" },
-                    { menge: 40, einheit: "g", name: "Currypulver" },
-                    { menge: 60, einheit: "g", name: "Salz" },
-                    { menge: 20, einheit: "g", name: "Pfeffer" },
-                    { menge: 10, einheit: "g", name: "Chilipulver (nach Geschmack)" }
+                    { menge: 4, einheit: "Stück", name: "Eier" },
+                    { menge: 200, einheit: "g", name: "Semmelbrösel" },
+                    { menge: 200, einheit: "ml", name: "Öl" },
+                    { menge: 300, einheit: "g", name: "Senf" },
+                    { menge: 300, einheit: "g", name: "Ketchup" }
                 ],
                 zubereitung: [
-                    "Zwiebeln und Knoblauch in Butter anschwitzen",
-                    "Kartoffelwürfel zugeben und kurz mitdünsten",
-                    "Rote Linsen abbrausen, zugeben und mit Gemüsebrühe ablöschen",
-                    "20-25 Minuten köcheln lassen, bis Linsen und Kartoffeln weich sind",
-                    "Kidneybohnen und Mais abtropfen lassen, unterrühren",
-                    "Mit passierten Tomaten nach Belieben die Konsistenz anpassen",
-                    "Kräftig mit Salz, Pfeffer, Curry, Paprika und Chilipulver abschmecken"
+                    "Hackfleisch mit Zwiebeln, Eiern und Semmelbröseln mischen",
+                    "Kleine Frikadellen formen",
+                    "In Öl von beiden Seiten goldbraun braten",
+                    "Brötchen aufschneiden und mit Senf bestreichen",
+                    "Frikadellen in Brötchen legen"
                 ],
-                portionierung: "In Suppenterrinen portionieren. Pro Person ca. 400ml Suppe. Dazu Brot servieren."
+                portionierung: "Pro Person 2 Mini-Frikadellenbrötchen. Mit Ketchup servieren."
+            },
+            {
+                id: 28,
+                titel: "Kartoffelecken mit Dip",
+                beschreibung: "Würzige Ofenkartoffeln zum Mitnehmen",
+                verpflegungsart: "warm",
+                verpflegungstyp: "hand",
+                vegetarisch: true,
+                kalorien: 380,
+                basisZeit: 45,
+                zutaten: [
+                    { menge: 8000, einheit: "g", name: "Kartoffeln, festkochend" },
+                    { menge: 200, einheit: "ml", name: "Olivenöl" },
+                    { menge: 100, einheit: "g", name: "Paprikapulver" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 40, einheit: "g", name: "Knoblauchpulver" },
+                    { menge: 2000, einheit: "g", name: "Joghurt-Dip" },
+                    { menge: 2000, einheit: "g", name: "Kräuterquark" }
+                ],
+                zubereitung: [
+                    "Kartoffeln waschen und in Spalten schneiden",
+                    "Mit Öl und Gewürzen vermengen",
+                    "Im Ofen goldbraun backen",
+                    "Dips vorbereiten",
+                    "Kartoffelecken in Papiertüten portionieren"
+                ],
+                portionierung: "Pro Person 200g Kartoffelecken mit 2 Dip-Behältnissen."
+            },
+            {
+                id: 29,
+                titel: "Gemüse-Frittata-Stücke",
+                beschreibung: "Italienische Eierspeise in handlichen Portionen",
+                verpflegungsart: "warm",
+                verpflegungstyp: "hand",
+                vegetarisch: true,
+                kalorien: 350,
+                basisZeit: 35,
+                zutaten: [
+                    { menge: 60, einheit: "Stück", name: "Eier" },
+                    { menge: 2000, einheit: "g", name: "Gemüse, gewürfelt (Paprika, Zucchini, Zwiebeln)" },
+                    { menge: 1000, einheit: "g", name: "Käse, gerieben" },
+                    { menge: 200, einheit: "ml", name: "Milch" },
+                    { menge: 100, einheit: "ml", name: "Öl" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 30, einheit: "g", name: "Pfeffer" },
+                    { menge: 50, einheit: "g", name: "Kräuter, frisch" }
+                ],
+                zubereitung: [
+                    "Gemüse in Öl anbraten",
+                    "Eier mit Milch verquirlen, würzen",
+                    "Gemüse in Backformen geben, Eimischung darüber",
+                    "Mit Käse bestreuen, backen bis goldbraun",
+                    "In handliche Stücke schneiden"
+                ],
+                portionierung: "Pro Person 2 Frittata-Stücke. In Backpapier gewickelt servieren."
+            },
+            {
+                id: 30,
+                titel: "Pikante Pfannkuchen mit Schinken-Käse-Füllung",
+                beschreibung: "Gefüllte Pfannkuchen für die Hand",
+                verpflegungsart: "warm",
+                verpflegungstyp: "hand",
+                vegetarisch: false,
+                kalorien: 450,
+                basisZeit: 50,
+                zutaten: [
+                    { menge: 4000, einheit: "g", name: "Pfannkuchenteig (fertig)" },
+                    { menge: 2000, einheit: "g", name: "Schinken, gekocht" },
+                    { menge: 2000, einheit: "g", name: "Käse, gerieben" },
+                    { menge: 1000, einheit: "g", name: "Crème fraîche" },
+                    { menge: 200, einheit: "ml", name: "Öl" },
+                    { menge: 500, einheit: "g", name: "Zwiebeln, gewürfelt" }
+                ],
+                zubereitung: [
+                    "Pfannkuchen backen",
+                    "Zwiebeln glasig dünsten, mit Schinken und Crème fraîche mischen",
+                    "Pfannkuchen mit Füllung bestreichen, zusammenrollen",
+                    "Mit Käse bestreuen, überbacken",
+                    "In handliche Stücke schneiden"
+                ],
+                portionierung: "Pro Person 2 Pfannkuchenstücke. In Alufolie warm halten."
             }
+                   {
+                id: 31,
+                titel: "Energiebällchen Power-Mix",
+                beschreibung: "Kohlenhydrat- und proteinreiche Energiebällchen",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "hand",
+                vegetarisch: true,
+                kalorien: 280,
+                basisZeit: 25,
+                zutaten: [
+                    { menge: 2000, einheit: "g", name: "Haferflocken" },
+                    { menge: 1000, einheit: "g", name: "Datteln, entsteint" },
+                    { menge: 500, einheit: "g", name: "Mandelmus" },
+                    { menge: 500, einheit: "g", name: "Kokosraspel" },
+                    { menge: 500, einheit: "g", name: "Leinsamen" },
+                    { menge: 500, einheit: "g", name: "Kakaopulver" },
+                    { menge: 200, einheit: "ml", name: "Ahornsirup" },
+                    { menge: 100, einheit: "ml", name: "Wasser" }
+                ],
+                zubereitung: [
+                    "Datteln mit Wasser pürieren",
+                    "Alle Zutaten vermengen",
+                    "Zu kleinen Bällchen formen",
+                    "In Kokosraspel wälzen",
+                    "Kühl stellen"
+                ],
+                portionierung: "Pro Person 3 Energiebällchen. In Papier eingewickelt servieren."
+            },
+            {
+                id: 32,
+                titel: "Protein-Power-Sandwiches",
+                beschreibung: "Sandwiches mit hohem Proteingehalt",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "hand",
+                vegetarisch: false,
+                kalorien: 520,
+                basisZeit: 30,
+                zutaten: [
+                    { menge: 100, einheit: "Stück", name: "Vollkorntoast" },
+                    { menge: 3000, einheit: "g", name: "Putenbrust" },
+                    { menge: 1500, einheit: "g", name: "Käse, in Scheiben" },
+                    { menge: 1000, einheit: "g", name: "Salatblätter" },
+                    { menge: 800, einheit: "g", name: "Tomaten, in Scheiben" },
+                    { menge: 500, einheit: "g", name: "Gurken, in Scheiben" },
+                    { menge: 500, einheit: "g", name: "Senf" },
+                    { menge: 500, einheit: "g", name: "Remoulade" }
+                ],
+                zubereitung: [
+                    "Toastscheiben mit Senf oder Remoulade bestreichen",
+                    "Mit Putenbrust, Käse und Gemüse belegen",
+                    "Zusammendrücken und diagonal durchschneiden",
+                    "In Frischhaltefolie wickeln"
+                ],
+                portionierung: "Pro Person 2 Sandwichhälften. Gekühlt bereitstellen."
+            },
+            {
+                id: 33,
+                titel: "Frischkäse-Baguette mit Kräutern",
+                beschreibung: "Französische Baguettes mit Frischkäsefüllung",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "hand",
+                vegetarisch: true,
+                kalorien: 380,
+                basisZeit: 20,
+                zutaten: [
+                    { menge: 50, einheit: "Stück", name: "Mini-Baguettes" },
+                    { menge: 3000, einheit: "g", name: "Frischkäse" },
+                    { menge: 500, einheit: "g", name: "Kräuter, frisch gehackt" },
+                    { menge: 500, einheit: "g", name: "Paprika, gewürfelt" },
+                    { menge: 300, einheit: "g", name: "Frühlingszwiebeln, in Ringen" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 30, einheit: "g", name: "Pfeffer" }
+                ],
+                zubereitung: [
+                    "Baguettes aufschneiden, aber nicht durchtrennen",
+                    "Frischkäse mit Kräutern und Gewürzen vermengen",
+                    "Gemüse unterheben",
+                    "Baguettes mit Frischkäsecreme füllen",
+                    "Zusammendrücken"
+                ],
+                portionierung: "Pro Person 1 Mini-Baguette. In Folie gewickelt servieren."
+            },
+            {
+                id: 34,
+                titel: "Obst- und Gemüse-Snackbox",
+                beschreibung: "Gesunde Snackbox mit frischem Obst und Gemüse",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "hand",
+                vegetarisch: true,
+                kalorien: 320,
+                basisZeit: 35,
+                zutaten: [
+                    { menge: 50, einheit: "Stück", name: "Äpfel" },
+                    { menge: 50, einheit: "Stück", name: "Bananen" },
+                    { menge: 2500, einheit: "g", name: "Möhren, Baby" },
+                    { menge: 2000, einheit: "g", name: "Paprika, in Streifen" },
+                    { menge: 1500, einheit: "g", name: "Gurken, in Stiften" },
+                    { menge: 1000, einheit: "g", name: "Kirschtomaten" },
+                    { menge: 1000, einheit: "g", name: "Studentenfutter" },
+                    { menge: 1000, einheit: "g", name: "Joghurt-Dip" }
+                ],
+                zubereitung: [
+                    "Obst und Gemüse waschen",
+                    "Gemüse in handliche Stücke schneiden",
+                    "Studentenfutter portionieren",
+                    "Dip in kleine Behälter füllen",
+                    "Alles in Snackboxen anrichten"
+                ],
+                portionierung: "Pro Person 1 Apfel, 1 Banane, Gemüsesticks, 20g Studentenfutter, 1 Dip."
+            },
+            {
+                id: 35,
+                titel: "Müsliriegel selbstgemacht",
+                beschreibung: "Energiereiche Müsliriegel ohne Backen",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "hand",
+                vegetarisch: true,
+                kalorien: 250,
+                basisZeit: 40,
+                zutaten: [
+                    { menge: 2000, einheit: "g", name: "Haferflocken" },
+                    { menge: 1000, einheit: "g", name: "Nussmischung" },
+                    { menge: 1000, einheit: "g", name: "Trockenfrüchte" },
+                    { menge: 500, einheit: "g", name: "Kokosöl" },
+                    { menge: 500, einheit: "g", name: "Honig" },
+                    { menge: 500, einheit: "g", name: "Erdnussbutter" },
+                    { menge: 200, einheit: "g", name: "Kakaopulver" }
+                ],
+                zubereitung: [
+                    "Nüsse und Trockenfrüchte hacken",
+                    "Kokosöl, Honig und Erdnussbutter erwärmen",
+                    "Alle Zutaten vermengen",
+                    "In Backform pressen",
+                    "Kühl stellen, in Riegel schneiden"
+                ],
+                portionierung: "Pro Person 2 Müsliriegel. In Backpapier gewickelt servieren."
+            } 
         ];
 
         // Globale Variablen
