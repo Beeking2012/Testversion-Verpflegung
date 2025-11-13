@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feldküche - Militärische Verpflegung</title>
+    <title>Feldküche - SEG Verpflegung</title>
     <style>
         * {
             margin: 0;
@@ -472,13 +472,50 @@
                 gap: 0.5rem;
             }
         }
+        
+        /* Mobile First Optimierungen */
+        @media (max-width: 480px) {
+            .nav-title {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .nav-link {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            .container {
+                padding: 0.5rem;
+            }
+            
+            .rezept-karte {
+                padding: 1rem;
+            }
+            
+            .rezept-details {
+                padding: 1rem;
+            }
+            
+            .rezept-content {
+                gap: 1.5rem;
+            }
+            
+            button {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Kopfleiste -->
     <nav class="navbar">
         <div class="nav-container">
-            <h1 class="nav-title">Feldküche</h1>
+            <h1 class="nav-title">SEG Feldküche</h1>
             <div class="nav-links">
                 <a href="#rezepte" class="nav-link active" data-page="rezepte">Rezepte</a>
                 <a href="#einkaufsliste" class="nav-link" data-page="einkaufsliste">Einkaufsliste</a>
@@ -490,7 +527,7 @@
         <!-- Rezept-Seite -->
         <div id="rezepte" class="page active">
             <div class="container">
-                <h2>Rezeptauswahl</h2>
+                <h2>Rezeptauswahl SEG Verpflegung</h2>
                 
                 <!-- Filter-Optionen -->
                 <div class="filter-section">
@@ -508,6 +545,7 @@
                         <select id="verpflegungstyp">
                             <option value="">Alle</option>
                             <option value="voll">Vollverpflegung</option>
+                            <option value="lunch">Lunchpakete</option>
                             <option value="hand">Handverpflegung</option>
                         </select>
                     </div>
@@ -523,8 +561,8 @@
                 <!-- Personenanzahl -->
                 <div class="personen-input">
                     <label for="personen">Personenanzahl:</label>
-                    <input type="number" id="personen" min="1" max="400" value="100">
-                    <small>Basis: 100 Personen für Feldküche</small>
+                    <input type="number" id="personen" min="1" max="400" value="50">
+                    <small>Basis: 50 Personen für SEG-Einsatz</small>
                 </div>
 
                 <!-- Rezepte Grid -->
@@ -545,7 +583,7 @@
                     
                     <div class="rezept-content">
                         <div class="zutaten-section">
-                            <h4>Zutaten für <span id="zutaten-personen">100</span> Personen</h4>
+                            <h4>Zutaten für <span id="zutaten-personen">50</span> Personen</h4>
                             <ul id="rezept-zutaten"></ul>
                         </div>
                         
@@ -555,7 +593,7 @@
                         </div>
                         
                         <div class="portionierung-section">
-                            <h4>Portionierung</h4>
+                            <h4>Portionierung & Getränke</h4>
                             <p id="rezept-portionierung"></p>
                         </div>
                     </div>
@@ -574,7 +612,7 @@
                 <h2>Einkaufsliste</h2>
                 
                 <div class="einkaufsliste-info">
-                    <p>Für <span id="einkauf-personen">100</span> Personen | 
+                    <p>Für <span id="einkauf-personen">50</span> Personen | 
                        <strong id="einkauf-rezept-titel">Kein Rezept ausgewählt</strong>
                     </p>
                     <div>
@@ -595,205 +633,214 @@
     <div id="druck-einkaufsliste-container" class="druck-container" style="display: none;"></div>
 
     <script>
-        // Rezepte Daten - OHNE TL/EL, nur g/ml/kg/l - MIT BASISZEITEN
+        // Rezepte Daten - SEG-optimiert mit Getränken und ohne Backen
         const rezepteDaten = [
             {
                 id: 1,
-                titel: "Feldküchen-Eintopf",
-                beschreibung: "Herzhafter Eintopf mit Gemüse und Tofu",
+                titel: "SEG-Eintopf mit Rindfleisch",
+                beschreibung: "Kraftvoller Eintopf für kalte Einsatztage",
                 verpflegungsart: "warm",
                 verpflegungstyp: "voll",
-                vegetarisch: true,
-                kalorien: 450,
-                basisZeit: 45, // Zeit für 100 Personen
+                vegetarisch: false,
+                kalorien: 650,
+                basisZeit: 60, // Zeit für 50 Personen
                 zutaten: [
-                    { menge: 12500, einheit: "g", name: "Tofu, gewürfelt" },
-                    { menge: 100, einheit: "", name: "Kartoffeln, gewürfelt" },
-                    { menge: 50, einheit: "", name: "Karotten, in Scheiben" },
-                    { menge: 25, einheit: "", name: "Zwiebel, gewürfelt" },
-                    { menge: 300, einheit: "g", name: "Tomatenmark" },
-                    { menge: 37.5, einheit: "l", name: "Gemüsebrühe" },
+                    { menge: 7500, einheit: "g", name: "Rindfleisch, gewürfelt" },
+                    { menge: 50, einheit: "", name: "Kartoffeln, gewürfelt" },
+                    { menge: 30, einheit: "", name: "Karotten, in Scheiben" },
+                    { menge: 20, einheit: "", name: "Zwiebeln, gewürfelt" },
+                    { menge: 10, einheit: "", name: "Sellerie, gewürfelt" },
+                    { menge: 200, einheit: "g", name: "Tomatenmark" },
+                    { menge: 25, einheit: "l", name: "Rinderbrühe" },
                     { menge: 100, einheit: "g", name: "Paprikapulver" },
-                    { menge: 25, einheit: "Bund", name: "Petersilie, gehackt" },
-                    { menge: 450, einheit: "ml", name: "Öl" },
-                    { menge: 150, einheit: "g", name: "Salz" },
-                    { menge: 75, einheit: "g", name: "Pfeffer" }
+                    { menge: 50, einheit: "g", name: "Majoran" },
+                    { menge: 300, einheit: "ml", name: "Öl" },
+                    { menge: 100, einheit: "g", name: "Salz" },
+                    { menge: 50, einheit: "g", name: "Pfeffer" }
                 ],
                 zubereitung: [
-                    "Zwiebel in einem großen Topf mit Öl glasig anschwitzen",
-                    "Tomatenmark zugeben und kurz mitrösten bis es duftet",
-                    "Kartoffeln und Karotten hinzufügen, 5 Minuten unter Rühren mitdünsten",
-                    "Mit Gemüsebrühe ablöschen und kräftig aufkochen lassen",
-                    "Hitze reduzieren und bei mittlerer Hitze 20 Minuten köcheln lassen",
-                    "Tofu in Würfeln schneiden und zusammen mit den Gewürzen zugeben",
-                    "Weitere 10 Minuten köcheln lassen bis die Kartoffeln weich sind",
-                    "Mit frisch gehackter Petersilie bestreuen und heiß servieren"
+                    "Rindfleisch in großen Bratentöpfen portionsweise scharf anbraten",
+                    "Zwiebeln und Sellerie im Bratfond glasig dünsten",
+                    "Tomatenmark zugeben und kurz mitrösten",
+                    "Fleisch zurück in den Topf geben, mit Brühe ablöschen",
+                    "Kartoffeln und Karotten hinzufügen, aufkochen lassen",
+                    "Bei mittlerer Hitze 45 Minuten köcheln lassen",
+                    "Gewürze zugeben und weitere 15 Minuten garen",
+                    "Mit Salz und Pfeffer abschmecken"
                 ],
-                portionierung: "In feste Feldküchen-Schüsseln portionieren. Pro Person ca. 1,5 Liter Eintopf berechnen. Mit frischem Brot oder Knäckebrot servieren. Für Feldverhältnisse in Thermosbehälter abfüllen."
+                portionierung: "In Feldküchen-Schüsseln portionieren. Pro Person ca. 500ml Eintopf. Dazu 1 Liter Getränke pro Person (Wasser, Apfelschorle im Verhältnis 1:3). Mit frischem Brot servieren."
             },
             {
                 id: 2,
-                titel: "Militärischer Nudelauflauf",
-                beschreibung: "Nährhafter Auflauf mit Käse und Gemüse",
+                titel: "Nudelpfanne mit Gemüse und Tofu",
+                beschreibung: "Vegetarische Pfanne für schnelle Verpflegung",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 580,
+                basisZeit: 35, // Zeit für 50 Personen
+                zutaten: [
+                    { menge: 5000, einheit: "g", name: "Nudeln (Spiralnudeln)" },
+                    { menge: 4000, einheit: "g", name: "Tofu, gewürfelt" },
+                    { menge: 30, einheit: "", name: "Zucchini, in Scheiben" },
+                    { menge: 25, einheit: "", name: "Paprika, gewürfelt" },
+                    { menge: 20, einheit: "", name: "Zwiebeln, gewürfelt" },
+                    { menge: 400, einheit: "g", name: "Tomatenmark" },
+                    { menge: 300, einheit: "ml", name: "Sojasauce" },
+                    { menge: 200, einheit: "ml", name: "Öl" },
+                    { menge: 100, einheit: "g", name: "Knoblauch, gehackt" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 40, einheit: "g", name: "Pfeffer" },
+                    { menge: 50, einheit: "g", name: "Paprikapulver" }
+                ],
+                zubereitung: [
+                    "Nudeln in großen Töpfen bissfest kochen, abgießen",
+                    "Tofu in Bratpfannen goldbraun anbraten",
+                    "Zwiebeln und Knoblauch in Öl anschwitzen",
+                    "Paprika und Zucchini zugeben, 5 Minuten braten",
+                    "Tomatenmark und Gewürze zugeben, kurz mitrösten",
+                    "Gekochte Nudeln und Tofu unterheben",
+                    "Mit Sojasauce abschmecken, alles gut vermengen"
+                ],
+                portionierung: "In wärmeisolierten Behältern portionieren. Pro Person ca. 400g Nudelpfanne. Dazu 1 Liter Getränke pro Person (Wasser, Tee). Mit Sojajoghurt oder geriebenem Käse servieren."
+            },
+            {
+                id: 3,
+                titel: "SEG-Lunchpaket Standard",
+                beschreibung: "Komplettes Lunchpaket für Tageseinsätze",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "lunch",
+                vegetarisch: true,
+                kalorien: 850,
+                basisZeit: 20, // Zeit für 50 Personen
+                zutaten: [
+                    { menge: 100, einheit: "", name: "Vollkornbrötchen" },
+                    { menge: 2500, einheit: "g", name: "Käse, in Scheiben" },
+                    { menge: 2500, einheit: "g", name: "Frischkäse" },
+                    { menge: 1500, einheit: "g", name: "Vegetarischer Aufstrich" },
+                    { menge: 50, einheit: "", name: "Äpfel" },
+                    { menge: 50, einheit: "", name: "Bananen" },
+                    { menge: 2500, einheit: "g", name: "Müsliriegel" },
+                    { menge: 2500, einheit: "g", name: "Nüsse, gemischt" },
+                    { menge: 100, einheit: "", name: "Schokoriegel" },
+                    { menge: 50, einheit: "Päckchen", name: "Feuchttücher" }
+                ],
+                zubereitung: [
+                    "Brötchen mit Frischkäse bestreichen",
+                    "Käsescheiben und Aufstrich gleichmäßig verteilen",
+                    "Jedes Lunchpaket mit 1 Brötchen, 1 Apfel, 1 Banane befüllen",
+                    "Pro Paket 1 Müsliriegel, 1 Schokoriegel und 1 Nuss-Portion hinzufügen",
+                    "Feuchttücher separat beipacken",
+                    "Pakete in Papiertüten oder Frischhalteboxen verpacken"
+                ],
+                portionierung: "Pro Person 1 Lunchpaket. Zusätzlich 1 Liter Getränke pro Person (Mineralwasser, Saftschorle). Pakete beschriften und nach Einheit/Einsatzbereich sortieren."
+            },
+            {
+                id: 4,
+                titel: "Energie-Handverpflegung",
+                beschreibung: "Kompakte Verpflegung für kurze Einsätze",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "hand",
+                vegetarisch: true,
+                kalorien: 450,
+                basisZeit: 10, // Zeit für 50 Personen
+                zutaten: [
+                    { menge: 5000, einheit: "g", name: "Müsliriegel" },
+                    { menge: 5000, einheit: "g", name: "Studentenfutter" },
+                    { menge: 2500, einheit: "g", name: "Trockenfrüchte" },
+                    { menge: 2500, einheit: "g", name: "Kekse" },
+                    { menge: 100, einheit: "", name: "Energieriegel" },
+                    { menge: 50, einheit: "Päckchen", name: "Kaugummi" }
+                ],
+                zubereitung: [
+                    "Alle Komponenten nach Arten sortieren",
+                    "Pro Person 2 Müsliriegel, 1 Handvoll Studentenfutter portionieren",
+                    "Trockenfrüchte und Kekse gleichmäßig aufteilen",
+                    "Energieriegel und Kaugummi hinzufügen",
+                    "In wiederverschließbare Beutel abfüllen",
+                    "Beutel beschriften und stapeln"
+                ],
+                portionierung: "Pro Person 1 Handverpflegungsbeutel. Zusätzlich 1 Liter Getränke pro Person (Isotonische Getränke, Wasser). Für Einsätze unter 4 Stunden geeignet."
+            },
+            {
+                id: 5,
+                titel: "Kartoffel-Gemüse-Pfanne",
+                beschreibung: "Einfache, nahrhafte Pfanne aus Feldküche",
                 verpflegungsart: "warm",
                 verpflegungstyp: "voll",
                 vegetarisch: true,
                 kalorien: 520,
-                basisZeit: 35, // Zeit für 100 Personen
+                basisZeit: 40, // Zeit für 50 Personen
                 zutaten: [
-                    { menge: 10000, einheit: "g", name: "Nudeln (Fusilli oder Penne)" },
-                    { menge: 5000, einheit: "g", name: "Gouda, gerieben" },
-                    { menge: 25, einheit: "", name: "Brokkoli, in kleinen Röschen" },
-                    { menge: 25, einheit: "", name: "Paprika, gewürfelt" },
-                    { menge: 50, einheit: "", name: "Eier" },
-                    { menge: 5000, einheit: "ml", name: "Sahne" },
-                    { menge: 2500, einheit: "ml", name: "Milch" },
-                    { menge: 25, einheit: "g", name: "Muskatnuss, frisch gerieben" },
-                    { menge: 2500, einheit: "g", name: "Parmesan, gerieben" },
-                    { menge: 300, einheit: "g", name: "Butter" },
-                    { menge: 150, einheit: "g", name: "Salz" },
-                    { menge: 75, einheit: "g", name: "Pfeffer" }
-                ],
-                zubereitung: [
-                    "Nudeln in reichlich Salzwasser bissfest kochen, abgießen und abtropfen lassen",
-                    "Brokkoli waschen, in Röschen teilen und 3 Minuten blanchieren",
-                    "Ofen auf 200°C Umluft vorheizen",
-                    "Eier mit Sahne, Milch und Gewürzen verquirlen",
-                    "Butter in einer Auflaufform schmelzen, Nudeln und Gemüse einfüllen",
-                    "Geriebenen Gouda unterheben und gleichmäßig verteilen",
-                    "Eiermischung darüber gießen, alles gut durchmischen",
-                    "Mit Parmesan bestreuen und im vorgeheizten Ofen 25-30 Minuten backen bis die Oberfläche goldbraun ist"
-                ],
-                portionierung: "In Auflaufformen portionieren. Pro Person 1/8 der Form. Mit frischem Feldsalat oder eingelegtem Gemüse servieren. Für Außeneinsätze in Aluschalen abfüllen."
-            },
-            {
-                id: 3,
-                titel: "Feld-Sandwiches",
-                beschreibung: "Praktische Handverpflegung mit Gemüse",
-                verpflegungsart: "kalt",
-                verpflegungstyp: "hand",
-                vegetarisch: true,
-                kalorien: 380,
-                basisZeit: 15, // Zeit für 100 Personen
-                zutaten: [
-                    { menge: 200, einheit: "Scheiben", name: "Vollkornbrot" },
-                    { menge: 5000, einheit: "g", name: "Frischkäse, natur" },
-                    { menge: 25, einheit: "", name: "Gurke, in dünnen Scheiben" },
-                    { menge: 25, einheit: "", name: "Tomate, in dünnen Scheiben" },
-                    { menge: 100, einheit: "Blätter", name: "Eisbergsalat" },
-                    { menge: 25, einheit: "", name: "Avocado, reif" },
-                    { menge: 300, einheit: "ml", name: "Zitronensaft" },
-                    { menge: 25, einheit: "", name: "Rote Zwiebel, in dünnen Ringen" },
-                    { menge: 75, einheit: "g", name: "Salz" },
-                    { menge: 40, einheit: "g", name: "Pfeffer" },
-                    { menge: 50, einheit: "g", name: "getrockneter Dill" }
-                ],
-                zubereitung: [
-                    "Brot scheibenweise mit Frischkäse bestreichen",
-                    "Avocado halbieren, Stein entfernen, Fruchtfleisch herauslöffeln",
-                    "Avocado mit Zitronensaft, Salz und Pfeffer zerdrücken",
-                    "Auf 4 Brotscheiben Salatblätter legen",
-                    "Gurken- und Tomatenscheiben gleichmäßig darauf anordnen",
-                    "Rote Zwiebelringe darüber verteilen",
-                    "Avocadocreme gleichmäßig auf den belegten Scheiben verteilen",
-                    "Mit getrocknetem Dill bestreuen",
-                    "Mit restlichen Brotscheiben bedecken und leicht andrücken",
-                    "Sandwiches diagonal durchschneiden für bessere Handhabung"
-                ],
-                portionierung: "Jedes Sandwich einzeln in Frischhaltefolie oder Butterbrotpapier wickeln. Pro Person 1 Sandwich (2 Dreiecke). Für längere Touren kühl transportieren. Mit Apfel oder Müsliriegel ergänzen."
-            },
-            {
-                id: 4,
-                titel: "Energie-Müsli",
-                beschreibung: "Kaltes Müsli mit Nüssen und Trockenfrüchten",
-                verpflegungsart: "kalt",
-                verpflegungstyp: "hand",
-                vegetarisch: true,
-                kalorien: 420,
-                basisZeit: 10, // Zeit für 100 Personen
-                zutaten: [
-                    { menge: 10000, einheit: "g", name: "Haferflocken, zart" },
-                    { menge: 2500, einheit: "g", name: "Nüsse, gemischt (Walnüsse, Haselnüsse)" },
-                    { menge: 2500, einheit: "g", name: "Trockenfrüchte (Rosinen, Aprikosen)" },
-                    { menge: 1250, einheit: "g", name: "Sonnenblumenkerne" },
-                    { menge: 1250, einheit: "g", name: "Kürbiskerne" },
-                    { menge: 600, einheit: "g", name: "Honig" },
-                    { menge: 100, einheit: "g", name: "Zimt" },
-                    { menge: 75, einheit: "g", name: "Salz" },
-                    { menge: 25, einheit: "l", name: "Milch oder Pflanzenmilch" }
-                ],
-                zubereitung: [
-                    "Haferflocken in eine große Schüssel geben",
-                    "Nüsse grob hacken und zu den Haferflocken geben",
-                    "Trockenfrüchte klein schneiden und untermischen",
-                    "Sonnenblumenkerne und Kürbiskerne hinzufügen",
-                    "Honig, Zimt und eine Prise Salz unterrühren",
-                    "Alles gut vermengen bis eine gleichmäßige Mischung entsteht",
-                    "In verschließbare Behälter oder Beutel abfüllen"
-                ],
-                portionierung: "In wiederverschließbare Beutel oder Dosen portionieren. Pro Person 150g Müsli mit 250ml Milch. Trocken portioniert für Feldverpflegung geeignet. Mit frischen Beeren oder Bananen ergänzbar."
-            },
-            {
-                id: 5,
-                titel: "Gulasch mit Fleisch",
-                beschreibung: "Klassisches Gulasch nach Feldküchenart",
-                verpflegungsart: "warm",
-                verpflegungstyp: "voll",
-                vegetarisch: false,
-                kalorien: 580,
-                basisZeit: 90, // Zeit für 100 Personen
-                zutaten: [
-                    { menge: 20000, einheit: "g", name: "Rindergulasch" },
-                    { menge: 75, einheit: "", name: "Zwiebeln, gewürfelt" },
-                    { menge: 50, einheit: "", name: "Paprika, in Streifen" },
-                    { menge: 450, einheit: "g", name: "Tomatenmark" },
-                    { menge: 50, einheit: "l", name: "Rinderbrühe" },
-                    { menge: 300, einheit: "g", name: "Paprikapulver, edelsüß" },
-                    { menge: 150, einheit: "g", name: "Majoran" },
+                    { menge: 60, einheit: "", name: "Kartoffeln, gewürfelt" },
+                    { menge: 30, einheit: "", name: "Karotten, in Scheiben" },
+                    { menge: 20, einheit: "", name: "Zwiebeln, gewürfelt" },
+                    { menge: 15, einheit: "", name: "Lauch, in Ringen" },
+                    { menge: 4000, einheit: "g", name: "Tiefkühl-Erbsen" },
                     { menge: 300, einheit: "ml", name: "Öl" },
-                    { menge: 150, einheit: "g", name: "Mehl" },
-                    { menge: 50, einheit: "", name: "Lorbeerblätter" },
-                    { menge: 75, einheit: "g", name: "Kümmel" },
-                    { menge: 150, einheit: "g", name: "Salz" },
-                    { menge: 75, einheit: "g", name: "Pfeffer" }
+                    { menge: 150, einheit: "g", name: "Senf" },
+                    { menge: 100, einheit: "g", name: "Salz" },
+                    { menge: 50, einheit: "g", name: "Pfeffer" },
+                    { menge: 30, einheit: "g", name: "Kümmel" },
+                    { menge: 20, einheit: "g", name: "Paprikapulver" }
                 ],
                 zubereitung: [
-                    "Fleisch trocken tupfen und in einem großen Gusseisentopf portionsweise scharf anbraten",
-                    "Fleisch herausnehmen, Zwiebeln im Bratfond glasig dünsten",
-                    "Tomatenmark einrühren und kurz mitrösten bis es dunkler wird",
-                    "Paprikapulver zugeben und kurz mitdünsten (nicht verbrennen lassen!)",
-                    "Fleisch zurück in den Topf geben, mit Mehl bestäuben und kurz mitrösten",
-                    "Mit Rinderbrühe ablöschen, kräftig aufkochen lassen",
-                    "Majoran, Lorbeerblätter und Kümmel zugeben",
-                    "Bei kleiner Hitze 60 Minuten köcheln lassen, gelegentlich umrühren",
-                    "Paprika in Streifen schneiden und zugeben, weitere 20 Minuten garen",
-                    "Mit Salz und Pfeffer abschmecken, Lorbeerblätter entfernen"
+                    "Kartoffeln und Karotten in Salzwasser 15 Minuten vorkochen",
+                    "Zwiebeln und Lauch in großen Pfannen anschwitzen",
+                    "Vorgekochte Kartoffeln und Karotten zugeben",
+                    "Bei mittlerer Hitze 10 Minuten braten bis goldbraun",
+                    "Tiefkühlerbsen zugeben, 5 Minuten mitgaren",
+                    "Senf und Gewürze unterrühren, abschmecken"
                 ],
-                portionierung: "Mit Salzkartoffeln oder frischem Brot servieren. Pro Person 300g Gulasch mit Beilage. In Feldküchen-Töpfen warm halten. Für mobile Einsätze in Thermosbehältern transportieren."
+                portionierung: "In wärmeisolierten Behältern portionieren. Pro Person ca. 400g Pfannengericht. Dazu 1 Liter Getränke pro Person (Wasser, Tee). Mit Senf oder Ketchup servieren."
+            },
+            {
+                id: 6,
+                titel: "Notfall-Handverpflegung",
+                beschreibung: "Minimalistische Verpflegung für Akuteinsätze",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "hand",
+                vegetarisch: true,
+                kalorien: 300,
+                basisZeit: 5, // Zeit für 50 Personen
+                zutaten: [
+                    { menge: 100, einheit: "", name: "Energieriegel" },
+                    { menge: 5000, einheit: "g", name: "Traubenzucker" },
+                    { menge: 50, einheit: "Päckchen", name: "Salzstangen" },
+                    { menge: 50, einheit: "Päckchen", name: "Kekse" }
+                ],
+                zubereitung: [
+                    "Energieriegel und Traubenzucker sortieren",
+                    "Pro Person 2 Energieriegel, 1 Päckchen Salzstangen portionieren",
+                    "Traubenzucker und Kekse gleichmäßig verteilen",
+                    "In kleine Beutel oder Tüten abfüllen",
+                    "Für schnelle Verteilung bereitstellen"
+                ],
+                portionierung: "Pro Person 1 Notfallpaket. Zusätzlich 0,5 Liter Wasser pro Person. Nur für Einsätze unter 2 Stunden oder als Überbrückung bis zur Hauptverpflegung."
             }
         ];
 
         // Globale Variablen
         let aktuellesRezept = null;
-        let personenAnzahl = 100; // BASIS: 100 Personen
+        let personenAnzahl = 50; // BASIS: 50 Personen für SEG
 
         // NEUE FUNKTION: Berechnet skalierte Zubereitungszeit
         function berechneZubereitungszeit(basisZeit, personenAnzahl) {
-            // Basis: Zeit für 100 Personen
-            const basisFaktor = 1.0; // 100 Personen = 100%
+            // Basis: Zeit für 50 Personen
+            const basisFaktor = 1.0; // 50 Personen = 100%
             
             // Nicht-lineare Skalierung für realistischere Zeiten:
-            if (personenAnzahl <= 100) {
-                // Bis 100 Personen: annähernd linear
-                return Math.round(basisZeit * (personenAnzahl / 100));
-            } else if (personenAnzahl <= 200) {
-                // 100-200 Personen: reduzierte Skalierung
+            if (personenAnzahl <= 50) {
+                // Bis 50 Personen: annähernd linear
+                return Math.round(basisZeit * (personenAnzahl / 50));
+            } else if (personenAnzahl <= 100) {
+                // 50-100 Personen: reduzierte Skalierung
                 const zusatzFaktor = 0.7; // Jede weitere Person nur 70% mehr Zeit
-                return Math.round(basisZeit * (1 + ((personenAnzahl - 100) / 100) * zusatzFaktor));
+                return Math.round(basisZeit * (1 + ((personenAnzahl - 50) / 50) * zusatzFaktor));
             } else {
-                // Über 200 Personen: weitere Reduzierung
+                // Über 100 Personen: weitere Reduzierung
                 const zusatzFaktor = 0.5; // Jede weitere Person nur 50% mehr Zeit
-                return Math.round(basisZeit * (2 + ((personenAnzahl - 200) / 100) * zusatzFaktor));
+                return Math.round(basisZeit * (2 + ((personenAnzahl - 100) / 50) * zusatzFaktor));
             }
         }
 
@@ -912,7 +959,7 @@
                     <h4>${rezept.titel}</h4>
                     <div class="rezept-info">
                         <span>${rezept.kalorien} kcal/Person</span>
-                        <span>${rezept.basisZeit} min (100 Pers.)</span>
+                        <span>${rezept.basisZeit} min (50 Pers.)</span>
                         <span>${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}</span>
                     </div>
                     <p class="rezept-beschreibung">${rezept.beschreibung}</p>
@@ -954,14 +1001,14 @@
 
             // Details anzeigen
             document.getElementById('rezept-titel').textContent = rezept.titel;
-            document.getElementById('rezept-kalorien').textContent = `${rezept.kalorien} kcal pro Portion`;
+            document.getElementById('rezept-kalorien').textContent = `${rezept.kalorien * personenAnzahl} kcal gesamt`;
             document.getElementById('rezept-zubereitungszeit').textContent = `${skalierteZeit} min Zubereitung`;
-            document.getElementById('rezept-art').textContent = `${rezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${rezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}`;
+            document.getElementById('rezept-art').textContent = `${rezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${getVerpflegungstypText(rezept.verpflegungstyp)} • ${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}`;
 
             // Zutaten anzeigen (skaliert mit Feldküchen-Umrechnung)
             const zutatenListe = document.getElementById('rezept-zutaten');
             zutatenListe.innerHTML = rezept.zutaten.map(zutat => {
-                const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
+                const skalierteMenge = (zutat.menge / 50) * personenAnzahl;
                 const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
                 
                 return `<li>${menge} ${einheit} ${zutat.name}</li>`;
@@ -978,6 +1025,16 @@
 
             // Details einblenden
             document.getElementById('rezept-details').style.display = 'block';
+        }
+
+        // Hilfsfunktion für Verpflegungstyp-Text
+        function getVerpflegungstypText(typ) {
+            switch(typ) {
+                case 'voll': return 'Vollverpflegung';
+                case 'lunch': return 'Lunchpakete';
+                case 'hand': return 'Handverpflegung';
+                default: return typ;
+            }
         }
 
         // Zur Einkaufsliste navigieren
@@ -1012,12 +1069,12 @@
                 return;
             }
             
-            // Einfache Liste ohne Kategorien
+            // Einfache Liste ohne Kategorien + Getränke
             container.innerHTML = `
                 <div class="einkaufsliste-container">
                     <h3>Alle Zutaten</h3>
                     ${aktuellesRezept.zutaten.map(zutat => {
-                        const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
+                        const skalierteMenge = (zutat.menge / 50) * personenAnzahl;
                         const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
                         
                         return `
@@ -1027,6 +1084,11 @@
                             </div>
                         `;
                     }).join('')}
+                    <!-- Getränke hinzufügen -->
+                    <div class="einkaufsliste-item" style="background-color: #e8f4f8; margin-top: 10px; padding: 10px; border-radius: 4px;">
+                        <span><strong>Getränke (Wasser, Saftschorle)</strong></span>
+                        <span><strong>${personenAnzahl} l</strong></span>
+                    </div>
                 </div>
             `;
         }
@@ -1047,7 +1109,8 @@
             if (einheit === "" || einheit === "Stück") {
                 if (name.includes('kartoffel') || name.includes('karotte') || name.includes('zwiebel') || 
                     name.includes('tomate') || name.includes('gurke') || name.includes('brokkoli') ||
-                    name.includes('paprika') || name.includes('avocado')) {
+                    name.includes('paprika') || name.includes('avocado') || name.includes('apfel') ||
+                    name.includes('banane')) {
                     if (menge >= 10) {
                         return { menge: Math.round(menge), einheit: "kg" };
                     }
@@ -1082,7 +1145,7 @@
             
             // Zutaten als Tabellenzeilen erstellen
             const zutatenTabelle = aktuellesRezept.zutaten.map(zutat => {
-                const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
+                const skalierteMenge = (zutat.menge / 50) * personenAnzahl;
                 const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
                 return `
                     <tr>
@@ -1106,7 +1169,7 @@
                         <div style="display: flex; justify-content: center; gap: 15px; font-size: 9pt; color: #666; flex-wrap: wrap;">
                             <span><strong>${aktuellesRezept.kalorien * personenAnzahl} kcal</strong> gesamt</span>
                             <span><strong>${skalierteZeit} min</strong> Zubereitung</span>
-                            <span>${aktuellesRezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${aktuellesRezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${aktuellesRezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}</span>
+                            <span>${aktuellesRezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${getVerpflegungstypText(aktuellesRezept.verpflegungstyp)} • ${aktuellesRezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}</span>
                         </div>
                     </div>
                     
@@ -1138,15 +1201,16 @@
                         </ol>
                     </div>
                     
-                    <!-- Portionierung -->
+                    <!-- Portionierung & Getränke -->
                     <div style="background: #f8f9fa; padding: 10px; border-radius: 3px; margin-top: 15px; border-left: 3px solid #3498db;">
-                        <h3 style="color: #2c3e50; font-size: 11pt; margin-bottom: 5px;">Portionierung</h3>
+                        <h3 style="color: #2c3e50; font-size: 11pt; margin-bottom: 5px;">Portionierung & Getränke</h3>
                         <p style="line-height: 1.3; margin: 0; font-size: 9pt;">${aktuellesRezept.portionierung}</p>
+                        <p style="line-height: 1.3; margin: 10px 0 0 0; font-size: 9pt; font-weight: bold;">Getränke: ${personenAnzahl} Liter (Wasser, Saftschorle) - 1 Liter pro Person</p>
                     </div>
         
                     <!-- Footer -->
                     <div style="margin-top: 20px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 8pt; color: #666; text-align: center;">
-                        <p>Erstellt am: ${new Date().toLocaleString('de-DE')} | Quelle: Feldküche - Militärische Verpflegung</p>
+                        <p>Erstellt am: ${new Date().toLocaleString('de-DE')} | Quelle: SEG Feldküche - Katastrophenschutz</p>
                     </div>
                 </div>
             `;
@@ -1188,7 +1252,7 @@
                     <div style="background: white; padding: 15px; margin-bottom: 12px; border-radius: 3px; border: 1px solid #eee;">
                         <h3 style="color: #2c3e50; font-size: 12pt; margin-bottom: 10px; border-bottom: 1px solid #ecf0f1; padding-bottom: 3px;">Alle Zutaten</h3>
                         ${aktuellesRezept.zutaten.map(zutat => {
-                            const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
+                            const skalierteMenge = (zutat.menge / 50) * personenAnzahl;
                             const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
                             
                             return `
@@ -1198,10 +1262,15 @@
                                 </div>
                             `;
                         }).join('')}
+                        <!-- Getränke hinzufügen -->
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt; background: #e8f4f8; margin-top: 10px; padding: 10px; border-radius: 4px;">
+                            <span style="font-weight: bold;">Getränke (Wasser, Saftschorle)</span>
+                            <span style="color: #3498db; font-weight: bold;">${personenAnzahl} l</span>
+                        </div>
                     </div>
 
                     <div style="margin-top: 20px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 8pt; color: #666; text-align: center;">
-                        <p>Erstellt am: ${new Date().toLocaleString('de-DE')} | Quelle: Feldküche - Militärische Verpflegung</p>
+                        <p>Erstellt am: ${new Date().toLocaleString('de-DE')} | Quelle: SEG Feldküche - Katastrophenschutz</p>
                     </div>
                 </div>
             `;
