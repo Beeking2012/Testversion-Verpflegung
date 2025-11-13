@@ -1488,7 +1488,7 @@
             }
         }
 
-        // LAGER-FUNKTIONEN
+        // LAGER-FUNKTIONEN - KORRIGIERTE UPLOAD-FUNKTION
         async function lagerDatenLaden() {
             try {
                 console.log('Lade Lagerdaten von Upstash...');
@@ -1551,33 +1551,37 @@
             }
         }
 
+        // KORRIGIERTE UPLOAD-FUNKTION - ohne doppelte JSON-Stringifizierung
         async function lagerDatenSpeichern() {
             try {
+                // Korrektur: Nur einmal JSON.stringify verwenden
                 const response = await fetch(`${UPSTASH_CONFIG.URL}/set/lager`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${UPSTASH_CONFIG.TOKEN}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(JSON.stringify(lagerDaten))
+                    body: JSON.stringify(lagerDaten) // Nur einmal stringify!
                 });
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 
-                await response.json();
+                const result = await response.json();
+                console.log('Upstash Antwort:', result);
                 
                 // Sync-Zeitpunkt speichern
                 localStorage.setItem('lastCloudSync', new Date().toISOString());
                 console.log('Daten erfolgreich in Cloud gespeichert');
+                return true;
                 
             } catch (error) {
                 console.error('Fehler beim Speichern der Lagerdaten in Cloud:', error);
                 // Fallback zu localStorage
                 localStorage.setItem('lagerDaten', JSON.stringify(lagerDaten));
                 localStorage.setItem('lastCloudSync', new Date().toISOString());
-                throw error; // Fehler weiterwerfen für Cloud-Button Feedback
+                throw error;
             }
         }
 
