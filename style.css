@@ -61,10 +61,12 @@ body {
     min-height: calc(100vh - 80px);
 }
 
+/* Seiten werden standardmäßig ausgeblendet */
 .page {
     display: none;
 }
 
+/* Nur die aktive Seite wird angezeigt */
 .page.active {
     display: block;
 }
