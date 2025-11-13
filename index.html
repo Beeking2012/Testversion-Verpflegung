@@ -3,74 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine Vercel Website</title>
+    <title>Feldküche - Militärische Verpflegung</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
+    <!-- Kopfleiste -->
     <nav class="navbar">
-        <a href="#home" class="nav-link active" data-page="home">Startseite</a>
-        <a href="#anschaulich" class="nav-link" data-page="anschaulich">Unterseite 1</a>
-        <a href="#about" class="nav-link" data-page="about">Unterseite 2</a>
-        <a href="#contact" class="nav-link" data-page="contact">Unterseite 3</a>
+        <div class="nav-container">
+            <h1 class="nav-title">Feldküche</h1>
+            <div class="nav-links">
+                <a href="#rezepte" class="nav-link active" data-page="rezepte">Rezepte</a>
+                <a href="#einkaufsliste" class="nav-link" data-page="einkaufsliste">Einkaufsliste</a>
+            </div>
+        </div>
     </nav>
 
     <main class="content">
-        <!-- Startseite -->
-        <div id="home" class="page active">
-            <h1>Willkommen auf der Startseite</h1>
-            <div class="data-display">
-                <p>Gemeinsame Daten: <span id="shared-data">Noch keine Daten</span></p>
-                <button onclick="updateSharedData('Daten von Startseite')">Daten setzen</button>
+        <!-- Rezept-Seite -->
+        <div id="rezepte" class="page active">
+            <div class="container">
+                <h2>Rezeptauswahl</h2>
+                
+                <!-- Filter-Optionen -->
+                <div class="filter-section">
+                    <div class="filter-group">
+                        <label>Verpflegungsart:</label>
+                        <select id="verpflegungsart">
+                            <option value="">Alle</option>
+                            <option value="warm">Warmverpflegung</option>
+                            <option value="kalt">Kaltverpflegung</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>Verpflegungstyp:</label>
+                        <select id="verpflegungstyp">
+                            <option value="">Alle</option>
+                            <option value="voll">Vollverpflegung</option>
+                            <option value="hand">Handverpflegung</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>
+                            <input type="checkbox" id="vegetarisch" checked>
+                            Nur vegetarische Rezepte
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Personenanzahl -->
+                <div class="personen-input">
+                    <label for="personen">Personenanzahl:</label>
+                    <input type="number" id="personen" min="1" max="100" value="4">
+                </div>
+
+                <!-- Rezept-Auswahl -->
+                <div class="rezepte-grid" id="rezepte-liste">
+                    <!-- Rezepte werden hier dynamisch eingefügt -->
+                </div>
+
+                <!-- Ausgewähltes Rezept -->
+                <div id="rezept-details" class="rezept-details" style="display: none;">
+                    <div class="rezept-header">
+                        <h3 id="rezept-titel"></h3>
+                        <div class="rezept-meta">
+                            <span id="rezept-kalorien"></span>
+                            <span id="rezept-zubereitungszeit"></span>
+                            <span id="rezept-art"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="rezept-content">
+                        <div class="zutaten-section">
+                            <h4>Zutaten</h4>
+                            <ul id="rezept-zutaten"></ul>
+                        </div>
+                        
+                        <div class="zubereitung-section">
+                            <h4>Zubereitung</h4>
+                            <ol id="rezept-zubereitung"></ol>
+                        </div>
+                        
+                        <div class="portionierung-section">
+                            <h4>Portionierung</h4>
+                            <p id="rezept-portionierung"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="rezept-actions">
+                        <button onclick="exportRezeptPDF()">Rezept als PDF exportieren</button>
+                        <button onclick="zurEinkaufsliste()">Zur Einkaufsliste</button>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Unterseite 1 -->
-        <div id="anschaulich" class="page">
-            <h1>Unterseite 1</h1>
-            <div class="data-display">
-                <p>Gemeinsame Daten: <span id="shared-data-1">Noch keine Daten</span></p>
-                <button onclick="updateSharedData('Daten von Unterseite 1')">Daten setzen</button>
-            </div>
-            <div class="interaction">
-                <input type="text" id="input-1" placeholder="Text eingeben...">
-                <button onclick="shareTextToOtherPages()">An andere Seiten senden</button>
-            </div>
-        </div>
-
-        <!-- Unterseite 2 -->
-        <div id="about" class="page">
-            <h1>Unterseite 2</h1>
-            <div class="data-display">
-                <p>Gemeinsame Daten: <span id="shared-data-2">Noch keine Daten</span></p>
-                <button onclick="updateSharedData('Daten von Unterseite 2')">Daten setzen</button>
-            </div>
-            <div class="received-data">
-                <h3>Empfangene Daten:</h3>
-                <p id="received-text-2">Keine Daten empfangen</p>
-            </div>
-        </div>
-
-        <!-- Unterseite 3 -->
-        <div id="contact" class="page">
-            <h1>Unterseite 3</h1>
-            <div class="data-display">
-                <p>Gemeinsame Daten: <span id="shared-data-3">Noch keine Daten</span></p>
-                <button onclick="updateSharedData('Daten von Unterseite 3')">Daten setzen</button>
-            </div>
-            <div class="received-data">
-                <h3>Empfangene Daten:</h3>
-                <p id="received-text-3">Keine Daten empfangen</p>
-            </div>
-            <div class="user-prefs">
-                <h3>Benutzereinstellungen (werden gespeichert):</h3>
-                <select id="theme-select" onchange="saveUserPreference('theme', this.value)">
-                    <option value="light">Hell</option>
-                    <option value="dark">Dunkel</option>
-                </select>
+        <!-- Einkaufsliste-Seite -->
+        <div id="einkaufsliste" class="page">
+            <div class="container">
+                <h2>Einkaufsliste</h2>
+                
+                <div class="einkaufsliste-info">
+                    <p>Für <span id="einkauf-personen">4</span> Personen</p>
+                    <button onclick="exportEinkaufslistePDF()">Einkaufsliste als PDF exportieren</button>
+                    <button onclick="showPage('rezepte')">Zurück zu Rezepten</button>
+                </div>
+                
+                <div id="einkaufsliste-content">
+                    <!-- Einkaufsliste wird hier dynamisch eingefügt -->
+                </div>
             </div>
         </div>
     </main>
 
+    <script src="data/rezepte.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
