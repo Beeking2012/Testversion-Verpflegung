@@ -162,11 +162,13 @@ select, input[type="number"] {
     font-size: 0.9rem;
     color: #666;
     margin-bottom: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .rezept-beschreibung {
     font-size: 0.9rem;
     color: #555;
+    margin-bottom: 0.5rem;
 }
 
 /* Rezept Details */
@@ -195,6 +197,7 @@ select, input[type="number"] {
     gap: 2rem;
     font-size: 0.9rem;
     color: #7f8c8d;
+    flex-wrap: wrap;
 }
 
 .rezept-content {
@@ -300,6 +303,14 @@ button:hover {
     border-bottom: none;
 }
 
+.keine-rezepte {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    color: #666;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .nav-container {
@@ -331,5 +342,10 @@ button:hover {
     
     .rezept-actions {
         flex-direction: column;
+    }
+    
+    .rezept-meta {
+        flex-direction: column;
+        gap: 0.5rem;
     }
 }
