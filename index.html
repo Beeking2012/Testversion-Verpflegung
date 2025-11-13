@@ -273,7 +273,7 @@
         // Globale Variablen
         let aktuellesRezept = null;
         let personenAnzahl = 4;
-
+    
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM geladen - starte Initialisierung');
@@ -288,9 +288,9 @@
                 if (aktuellesRezept) {
                     zeigeRezeptDetails(aktuellesRezept);
                 }
-                aktualisiereEinkaufsliste();
+                // Einkaufsliste wird erst aktualisiert wenn man auf der Seite ist
             });
-
+    
             // Navigation
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -299,21 +299,21 @@
                     showPage(pageId);
                 });
             });
-
+    
             // Startseite anzeigen
-            filterRezepte();
+            showPage('rezepte');
             
             // Browser Navigation behandeln
             window.addEventListener('popstate', function() {
                 const hash = window.location.hash.replace('#', '') || 'rezepte';
                 showPage(hash);
             });
-
+    
             const initialPage = window.location.hash.replace('#', '') || 'rezepte';
             showPage(initialPage);
         });
-
-        // Seitenwechsel
+    
+        // Seitenwechsel - KORRIGIERT
         function showPage(pageId) {
             console.log('Wechsle zu Seite:', pageId);
             
@@ -324,43 +324,53 @@
                     link.classList.add('active');
                 }
             });
-
-            // Seiten anzeigen/verstecken
+    
+            // Alle Seiten ausblenden
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
+                page.style.display = 'none';
             });
             
-            document.getElementById(pageId).classList.add('active');
-
+            // Nur die gewünschte Seite anzeigen
+            const aktiveSeite = document.getElementById(pageId);
+            if (aktiveSeite) {
+                aktiveSeite.classList.add('active');
+                aktiveSeite.style.display = 'block';
+            }
+    
             // URL aktualisieren
             window.history.pushState(null, null, `#${pageId}`);
-
-            // Einkaufsliste aktualisieren falls nötig
-            if (pageId === 'einkaufsliste') {
+    
+            // Spezielle Aktionen pro Seite
+            if (pageId === 'rezepte') {
+                // Rezepte neu laden
+                filterRezepte();
+            } else if (pageId === 'einkaufsliste') {
+                // Einkaufsliste aktualisieren
                 aktualisiereEinkaufsliste();
             }
         }
-
+    
         // Rezepte filtern und anzeigen
         function filterRezepte() {
             console.log('Filtere Rezepte...');
             const verpflegungsart = document.getElementById('verpflegungsart').value;
             const verpflegungstyp = document.getElementById('verpflegungstyp').value;
             const nurVegetarisch = document.getElementById('vegetarisch').checked;
-
+    
             console.log('Filter:', { verpflegungsart, verpflegungstyp, nurVegetarisch });
-
+    
             const gefilterteRezepte = rezepteDaten.filter(rezept => {
                 if (verpflegungsart && rezept.verpflegungsart !== verpflegungsart) return false;
                 if (verpflegungstyp && rezept.verpflegungstyp !== verpflegungstyp) return false;
                 if (nurVegetarisch && !rezept.vegetarisch) return false;
                 return true;
             });
-
+    
             console.log('Gefilterte Rezepte:', gefilterteRezepte);
             zeigeRezepte(gefilterteRezepte);
         }
-
+    
         // Rezepte in der Grid anzeigen
         function zeigeRezepte(rezepte) {
             const container = document.getElementById('rezepte-liste');
@@ -371,7 +381,7 @@
                 document.getElementById('rezept-details').style.display = 'none';
                 return;
             }
-
+    
             container.innerHTML = rezepte.map(rezept => `
                 <div class="rezept-karte" onclick="zeigeRezeptDetails(${rezept.id})">
                     <h4>${rezept.titel}</h4>
@@ -387,55 +397,55 @@
                     </div>
                 </div>
             `).join('');
-
+    
             // Rezept Details ausblenden
             document.getElementById('rezept-details').style.display = 'none';
             aktuellesRezept = null;
         }
-
+    
         // Rezept Details anzeigen
         function zeigeRezeptDetails(rezeptId) {
             console.log('Zeige Rezept Details:', rezeptId);
             const rezept = rezepteDaten.find(r => r.id === rezeptId);
             aktuellesRezept = rezept;
-
+    
             if (!rezept) {
                 console.error('Rezept nicht gefunden:', rezeptId);
                 return;
             }
-
+    
             // Karten Auswahl aktualisieren
             document.querySelectorAll('.rezept-karte').forEach(karte => {
                 karte.classList.remove('ausgewaehlt');
             });
             event.currentTarget.classList.add('ausgewaehlt');
-
+    
             // Details anzeigen
             document.getElementById('rezept-titel').textContent = rezept.titel;
             document.getElementById('rezept-kalorien').textContent = `${rezept.kalorien * personenAnzahl} kcal gesamt`;
             document.getElementById('rezept-zubereitungszeit').textContent = `${rezept.zubereitungszeit} min Zubereitung`;
             document.getElementById('rezept-art').textContent = `${rezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${rezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}`;
-
+    
             // Zutaten anzeigen (skaliert)
             const zutatenListe = document.getElementById('rezept-zutaten');
             zutatenListe.innerHTML = rezept.zutaten.map(zutat => {
                 const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
                 return `<li>${skalierteMenge.toFixed(1)} ${zutat.einheit} ${zutat.name}</li>`;
             }).join('');
-
+    
             // Zubereitung anzeigen
             const zubereitungListe = document.getElementById('rezept-zubereitung');
             zubereitungListe.innerHTML = rezept.zubereitung.map(schritt => 
                 `<li>${schritt}</li>`
             ).join('');
-
+    
             // Portionierung anzeigen
             document.getElementById('rezept-portionierung').textContent = rezept.portionierung;
-
+    
             // Details einblenden
             document.getElementById('rezept-details').style.display = 'block';
         }
-
+    
         // Zur Einkaufsliste navigieren
         function zurEinkaufsliste() {
             if (aktuellesRezept) {
@@ -444,7 +454,7 @@
                 alert('Bitte wähle zuerst ein Rezept aus!');
             }
         }
-
+    
         // Einkaufsliste aktualisieren
         function aktualisiereEinkaufsliste() {
             console.log('Aktualisiere Einkaufsliste');
@@ -452,7 +462,7 @@
                 document.getElementById('einkaufsliste-content').innerHTML = '<p>Bitte wähle zuerst ein Rezept aus der Rezept-Seite aus.</p>';
                 return;
             }
-
+    
             document.getElementById('einkauf-personen').textContent = personenAnzahl;
             
             const container = document.getElementById('einkaufsliste-content');
@@ -471,7 +481,7 @@
                 </div>
             `).join('');
         }
-
+    
         // Zutaten nach Kategorien gruppieren
         function gruppiereZutaten(zutaten) {
             const gruppiert = {
@@ -481,14 +491,14 @@
                 'Milchprodukte': [],
                 'Gewürze & Öle': []
             };
-
+    
             zutaten.forEach(zutat => {
                 const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
                 const zutatMitMenge = {
                     ...zutat,
                     menge: skalierteMenge.toFixed(1)
                 };
-
+    
                 // Einfache Kategorisierung basierend auf Zutatenname
                 const name = zutat.name.toLowerCase();
                 if (name.includes('kartoffel') || name.includes('karotte') || name.includes('zwiebel') || 
@@ -507,17 +517,17 @@
                     gruppiert['Gewürze & Öle'].push(zutatMitMenge);
                 }
             });
-
+    
             // Leere Kategorien entfernen
             Object.keys(gruppiert).forEach(kategorie => {
                 if (gruppiert[kategorie].length === 0) {
                     delete gruppiert[kategorie];
                 }
             });
-
+    
             return gruppiert;
         }
-
+    
         // PDF Export für Rezept (vereinfacht - öffnet Druckdialog)
         function exportRezeptPDF() {
             if (!aktuellesRezept) {
@@ -526,7 +536,7 @@
             }
             window.print();
         }
-
+    
         // PDF Export für Einkaufsliste (vereinfacht - öffnet Druckdialog)
         function exportEinkaufslistePDF() {
             if (!aktuellesRezept) {
