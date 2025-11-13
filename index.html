@@ -1487,8 +1487,7 @@
                 `;
             }
         }
-
-        // LAGER-FUNKTIONEN - KORRIGIERTE UPLOAD-FUNKTION
+        // KORRIGIERTE LAGER-DATEN LADEN FUNKTION
         async function lagerDatenLaden() {
             try {
                 console.log('Lade Lagerdaten von Upstash...');
@@ -1504,64 +1503,83 @@
                 }
                 
                 const data = await response.json();
+                console.log('Upstash GET Response:', data);
                 
-                if (data.result) {
-                    lagerDaten = JSON.parse(data.result);
-                    console.log('Lagerdaten erfolgreich geladen:', lagerDaten);
+                if (data && data.result) {
+                    // WICHTIG: Prüfen ob data.result bereits ein String ist oder schon ein Objekt
+                    let geladeneDaten;
+                    if (typeof data.result === 'string') {
+                        geladeneDaten = JSON.parse(data.result);
+                    } else {
+                        geladeneDaten = data.result;
+                    }
+                    
+                    if (geladeneDaten && (geladeneDaten.lebensmittel || geladeneDaten.material)) {
+                        lagerDaten = geladeneDaten;
+                        console.log('Lagerdaten erfolgreich aus Cloud geladen:', lagerDaten);
+                        
+                        // Sync-Zeitpunkt speichern
+                        localStorage.setItem('lastCloudSync', new Date().toISOString());
+                        localStorage.setItem('lagerDaten', JSON.stringify(lagerDaten));
+                    } else {
+                        throw new Error('Ungültiges Datenformat aus Cloud');
+                    }
                 } else {
-                    // Fallback: Standard-Lagerdaten
-                    lagerDaten = {
-                        lebensmittel: [
-                            { name: "Kartoffeln", kategorie: "Gemüse", einheit: "kg", menge: 100, mindestmenge: 50, haltbarkeit: "2024-12-31", lagerort: "Trockenlager" },
-                            { name: "Nudeln", kategorie: "Getreide", einheit: "kg", menge: 50, mindestmenge: 25, haltbarkeit: "2025-06-30", lagerort: "Trockenlager" },
-                            { name: "Öl", kategorie: "Gewürze", einheit: "l", menge: 20, mindestmenge: 10, haltbarkeit: "2025-03-15", lagerort: "Trockenlager" }
-                        ],
-                        material: [
-                            { name: "Gaskartuschen", kategorie: "Küchenausstattung", einheit: "Stück", menge: 10, mindestmenge: 5, lagerort: "Feldküchen-Anhänger" },
-                            { name: "Einweggeschirr", kategorie: "Verbrauchsmaterial", einheit: "Packungen", menge: 20, mindestmenge: 10, lagerort: "Lagerraum A" },
-                            { name: "Desinfektionsmittel", kategorie: "Reinigung", einheit: "Flaschen", menge: 15, mindestmenge: 8, lagerort: "Lagerraum B" }
-                        ]
-                    };
+                    throw new Error('Keine Daten in Cloud gefunden');
                 }
                 
-                lagerFormularAktualisieren();
-                lagerAnzeigen();
-                
             } catch (error) {
-                console.error('Fehler beim Laden der Lagerdaten:', error);
+                console.error('Fehler beim Laden der Lagerdaten aus Cloud:', error);
+                
                 // Fallback zu localStorage
                 const localData = localStorage.getItem('lagerDaten');
                 if (localData) {
-                    lagerDaten = JSON.parse(localData);
+                    try {
+                        lagerDaten = JSON.parse(localData);
+                        console.log('Lagerdaten aus lokalem Storage geladen');
+                    } catch (parseError) {
+                        console.error('Fehler beim Parsen der lokalen Daten:', parseError);
+                        lagerStandardDatenLaden();
+                    }
                 } else {
-                    // Standard-Lagerdaten
-                    lagerDaten = {
-                        lebensmittel: [
-                            { name: "Kartoffeln", kategorie: "Gemüse", einheit: "kg", menge: 100, mindestmenge: 50, haltbarkeit: "2024-12-31", lagerort: "Trockenlager" },
-                            { name: "Nudeln", kategorie: "Getreide", einheit: "kg", menge: 50, mindestmenge: 25, haltbarkeit: "2025-06-30", lagerort: "Trockenlager" }
-                        ],
-                        material: [
-                            { name: "Gaskartuschen", kategorie: "Küchenausstattung", einheit: "Stück", menge: 10, mindestmenge: 5, lagerort: "Feldküchen-Anhänger" },
-                            { name: "Einweggeschirr", kategorie: "Verbrauchsmaterial", einheit: "Packungen", menge: 20, mindestmenge: 10, lagerort: "Lagerraum A" }
-                        ]
-                    };
+                    lagerStandardDatenLaden();
                 }
-                lagerFormularAktualisieren();
-                lagerAnzeigen();
             }
+            
+            lagerFormularAktualisieren();
+            lagerAnzeigen();
+        }
+        
+        // Hilfsfunktion für Standard-Lagerdaten
+        function lagerStandardDatenLaden() {
+            console.log('Lade Standard-Lagerdaten');
+            lagerDaten = {
+                lebensmittel: [
+                    { name: "Kartoffeln", kategorie: "Gemüse", einheit: "kg", menge: 100, mindestmenge: 50, haltbarkeit: "2024-12-31", lagerort: "Trockenlager" },
+                    { name: "Nudeln", kategorie: "Getreide", einheit: "kg", menge: 50, mindestmenge: 25, haltbarkeit: "2025-06-30", lagerort: "Trockenlager" },
+                    { name: "Öl", kategorie: "Gewürze", einheit: "l", menge: 20, mindestmenge: 10, haltbarkeit: "2025-03-15", lagerort: "Trockenlager" }
+                ],
+                material: [
+                    { name: "Gaskartuschen", kategorie: "Küchenausstattung", einheit: "Stück", menge: 10, mindestmenge: 5, lagerort: "Feldküchen-Anhänger" },
+                    { name: "Einweggeschirr", kategorie: "Verbrauchsmaterial", einheit: "Packungen", menge: 20, mindestmenge: 10, lagerort: "Lagerraum A" },
+                    { name: "Desinfektionsmittel", kategorie: "Reinigung", einheit: "Flaschen", menge: 15, mindestmenge: 8, lagerort: "Lagerraum B" }
+                ]
+            };
+            localStorage.setItem('lagerDaten', JSON.stringify(lagerDaten));
         }
 
-        // KORRIGIERTE UPLOAD-FUNKTION - ohne doppelte JSON-Stringifizierung
+        // VERBESSERTE LAGER-DATEN SPEICHERN FUNKTION
         async function lagerDatenSpeichern() {
             try {
-                // Korrektur: Nur einmal JSON.stringify verwenden
+                console.log('Speichere Lagerdaten in Upstash...', lagerDaten);
+                
                 const response = await fetch(`${UPSTASH_CONFIG.URL}/set/lager`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${UPSTASH_CONFIG.TOKEN}`,
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(lagerDaten) // Nur einmal stringify!
+                    body: JSON.stringify(lagerDaten)
                 });
                 
                 if (!response.ok) {
@@ -1569,19 +1587,23 @@
                 }
                 
                 const result = await response.json();
-                console.log('Upstash Antwort:', result);
+                console.log('Upstash SET Response:', result);
                 
-                // Sync-Zeitpunkt speichern
+                // Immer auch lokal speichern als Backup
+                localStorage.setItem('lagerDaten', JSON.stringify(lagerDaten));
                 localStorage.setItem('lastCloudSync', new Date().toISOString());
-                console.log('Daten erfolgreich in Cloud gespeichert');
+                
+                console.log('Daten erfolgreich in Cloud und lokal gespeichert');
                 return true;
                 
             } catch (error) {
                 console.error('Fehler beim Speichern der Lagerdaten in Cloud:', error);
-                // Fallback zu localStorage
+                
+                // Fallback: Nur lokal speichern
                 localStorage.setItem('lagerDaten', JSON.stringify(lagerDaten));
                 localStorage.setItem('lastCloudSync', new Date().toISOString());
-                throw error;
+                
+                throw new Error(`Cloud-Speichern fehlgeschlagen: ${error.message}. Daten wurden lokal gesichert.`);
             }
         }
 
