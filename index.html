@@ -985,6 +985,23 @@
                     <button class="secondary" onclick="lagerImportieren()">Lager importieren</button>
                     <button class="warning" onclick="lagerLeeren()">Aktuelles Lager zurücksetzen</button>
                 </div>
+
+                <!-- Cloud-Synchronisation -->
+                <div class="cloud-actions" style="margin-top: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border: 2px solid #3498db;">
+                    <h3 style="color: #2c3e50; margin-bottom: 1rem;">☁️ Cloud-Synchronisation</h3>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button onclick="cloudSpeichern()" style="background: #3498db; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem;">
+                            📱 In Cloud speichern
+                        </button>
+                        <button onclick="cloudLaden()" style="background: #27ae60; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem;">
+                            ⬇️ Aus Cloud laden
+                        </button>
+                        <button onclick="cloudStatusPrüfen()" style="background: #f39c12; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem;">
+                            🔄 Sync-Status prüfen
+                        </button>
+                    </div>
+                    <div id="cloud-status" style="margin-top: 1rem; font-size: 0.9rem; color: #666;"></div>
+                </div>
             </div>
         </div>
     </main>
@@ -1004,7 +1021,7 @@
             READ_ONLY_TOKEN: "AnjXAAIgcDKLfeRS33kEwLSXH-5rwwYziTlTxrIHmmAT-n9rbo_Elg"
         };
 
-        // Rezepte Daten (gekürzt für bessere Übersicht)
+        // Rezepte Daten (3 Rezepte als Demo)
         const rezepteDaten = [
             {
                 id: 1,
@@ -1074,6 +1091,35 @@
                     "Mit Sojasauce abschmecken, alles gut vermengen"
                 ],
                 portionierung: "In wärmeisolierten Behältern portionieren. Pro Person ca. 400g Nudelpfanne. Dazu 1 Liter Getränke pro Person (Wasser, Tee). Mit Sojajoghurt oder geriebenem Käse servieren."
+            },
+            {
+                id: 3,
+                titel: "Lunchpakete für Außeneinsatz",
+                beschreibung: "Praktische Lunchpakete für mobile Einsatzkräfte",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "lunch",
+                vegetarisch: true,
+                kalorien: 720,
+                basisZeit: 25,
+                zutaten: [
+                    { menge: 50, einheit: "", name: "Vollkornbrötchen" },
+                    { menge: 150, einheit: "g", name: "Käse, in Scheiben" },
+                    { menge: 100, einheit: "g", name: "Vegetarischer Aufschnitt" },
+                    { menge: 25, einheit: "", name: "Tomaten, in Scheiben" },
+                    { menge: 25, einheit: "", name: "Gurken, in Scheiben" },
+                    { menge: 50, einheit: "", name: "Äpfel" },
+                    { menge: 50, einheit: "", name: "Müsliriegel" },
+                    { menge: 50, einheit: "", name: "Trinkpäckchen (Apfelsaft)" },
+                    { menge: 25, einheit: "", name: "Schokoriegel" }
+                ],
+                zubereitung: [
+                    "Brötchen aufschneiden und mit Käse und Aufschnitt belegen",
+                    "Tomaten- und Gurkenscheiben separat verpacken",
+                    "Äpfel waschen und trocknen",
+                    "Alle Komponenten in Lunchpakete portionieren",
+                    "Jedes Paket enthält: 1 belegtes Brötchen, Gemüsebeilage, 1 Apfel, 1 Müsliriegel, 1 Schokoriegel, 1 Trinkpäckchen"
+                ],
+                portionierung: "In einzelnen Lunchpaketen verpacken. Pro Person 1 komplettes Paket. Zusätzlich Wasser für den gesamten Einsatz bereitstellen."
             }
         ];
 
@@ -1522,10 +1568,16 @@
                 
                 await response.json();
                 
+                // Sync-Zeitpunkt speichern
+                localStorage.setItem('lastCloudSync', new Date().toISOString());
+                console.log('Daten erfolgreich in Cloud gespeichert');
+                
             } catch (error) {
-                console.error('Fehler beim Speichern der Lagerdaten:', error);
+                console.error('Fehler beim Speichern der Lagerdaten in Cloud:', error);
                 // Fallback zu localStorage
                 localStorage.setItem('lagerDaten', JSON.stringify(lagerDaten));
+                localStorage.setItem('lastCloudSync', new Date().toISOString());
+                throw error; // Fehler weiterwerfen für Cloud-Button Feedback
             }
         }
 
@@ -1831,6 +1883,73 @@
             event.target.value = '';
         });
 
+        // CLOUD-FUNKTIONEN
+        async function cloudSpeichern() {
+            const status = document.getElementById('cloud-status');
+            status.innerHTML = '<span style="color: #f39c12;">🔄 Speichere in Cloud...</span>';
+            
+            try {
+                await lagerDatenSpeichern();
+                status.innerHTML = '<span style="color: #27ae60;">✅ Erfolgreich in Cloud gespeichert</span>';
+                
+                // Status automatisch nach 5 Sekunden zurücksetzen
+                setTimeout(() => {
+                    if (status.innerHTML.includes('Erfolgreich')) {
+                        status.innerHTML = 'Bereit für nächste Synchronisation';
+                    }
+                }, 5000);
+                
+            } catch (error) {
+                console.error('Cloud-Speichern Fehler:', error);
+                status.innerHTML = '<span style="color: #e74c3c;">❌ Fehler beim Speichern: ' + error.message + '</span>';
+            }
+        }
+
+        async function cloudLaden() {
+            const status = document.getElementById('cloud-status');
+            status.innerHTML = '<span style="color: #f39c12;">🔄 Lade aus Cloud...</span>';
+            
+            try {
+                await lagerDatenLaden();
+                lagerAnzeigen();
+                status.innerHTML = '<span style="color: #27ae60;">✅ Daten erfolgreich aus Cloud geladen</span>';
+                
+                // Status automatisch nach 5 Sekunden zurücksetzen
+                setTimeout(() => {
+                    if (status.innerHTML.includes('erfolgreich')) {
+                        status.innerHTML = 'Bereit für nächste Synchronisation';
+                    }
+                }, 5000);
+                
+            } catch (error) {
+                console.error('Cloud-Laden Fehler:', error);
+                status.innerHTML = '<span style="color: #e74c3c;">❌ Fehler beim Laden: ' + error.message + '</span>';
+            }
+        }
+
+        function cloudStatusPrüfen() {
+            const status = document.getElementById('cloud-status');
+            const lastSync = localStorage.getItem('lastCloudSync');
+            
+            if (lastSync) {
+                const syncDate = new Date(lastSync);
+                const now = new Date();
+                const diffMinutes = Math.floor((now - syncDate) / (1000 * 60));
+                
+                let statusText = `<span style="color: #3498db;">📅 Letzte Synchronisation: ${syncDate.toLocaleString('de-DE')}</span>`;
+                
+                if (diffMinutes > 60) {
+                    statusText += `<br><span style="color: #e67e22;">⚠️ Letzte Synchronisation vor ${diffMinutes} Minuten</span>`;
+                } else {
+                    statusText += `<br><span style="color: #27ae60;">✅ Synchronisation aktuell (vor ${diffMinutes} Minuten)</span>`;
+                }
+                
+                status.innerHTML = statusText;
+            } else {
+                status.innerHTML = '<span style="color: #e67e22;">⚠️ Noch keine Synchronisation durchgeführt</span>';
+            }
+        }
+
         // VERBESSERTE PDF-EXPORT FUNKTION FÜR EINKAUFSLISTE
         function exportEinkaufslistePDF() {
             if (!aktuellesRezept) {
@@ -1974,7 +2093,14 @@
             filterRezepte();
             
             // Lager initial laden
-            lagerDatenLaden();
+            lagerDatenLaden().then(() => {
+                // Automatisch Cloud-Status prüfen wenn auf Lager-Seite
+                if (window.location.hash === '#lager' || !window.location.hash) {
+                    setTimeout(cloudStatusPrüfen, 1000);
+                }
+            }).catch(error => {
+                console.log('Automatisches Laden fehlgeschlagen, aber lokale Daten verfügbar');
+            });
         });
 
         function showPage(pageId) {
