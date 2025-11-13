@@ -40,7 +40,7 @@
                         <select id="verpflegungstyp">
                             <option value="">Alle</option>
                             <option value="voll">Vollverpflegung</option>
-                            <option value="hand">Handverpflegation</option>
+                            <option value="hand">Handverpflegung</option>
                         </select>
                     </div>
                     
@@ -58,9 +58,12 @@
                     <input type="number" id="personen" min="1" max="100" value="4">
                 </div>
 
-                <!-- Rezept-Auswahl -->
-                <div class="rezepte-grid" id="rezepte-liste">
-                    <!-- Rezepte werden hier dynamisch eingefügt -->
+                <!-- Rezept-Dropdown -->
+                <div class="rezept-dropdown-section">
+                    <label for="rezept-auswahl">Rezept auswählen:</label>
+                    <select id="rezept-auswahl" onchange="zeigeAusgewaehltesRezept()">
+                        <option value="">-- Bitte Rezept auswählen --</option>
+                    </select>
                 </div>
 
                 <!-- Ausgewähltes Rezept -->
@@ -76,7 +79,7 @@
                     
                     <div class="rezept-content">
                         <div class="zutaten-section">
-                            <h4>Zutaten</h4>
+                            <h4>Zutaten für <span id="zutaten-personen">4</span> Personen</h4>
                             <ul id="rezept-zutaten"></ul>
                         </div>
                         
@@ -105,7 +108,9 @@
                 <h2>Einkaufsliste</h2>
                 
                 <div class="einkaufsliste-info">
-                    <p>Für <span id="einkauf-personen">4</span> Personen</p>
+                    <p>Für <span id="einkauf-personen">4</span> Personen | 
+                       <strong id="einkauf-rezept-titel">Kein Rezept ausgewählt</strong>
+                    </p>
                     <div>
                         <button onclick="exportEinkaufslistePDF()">Einkaufsliste als PDF exportieren</button>
                         <button onclick="showPage('rezepte')">Zurück zu Rezepten</button>
@@ -113,7 +118,7 @@
                 </div>
                 
                 <div id="einkaufsliste-content">
-                    <!-- Einkaufsliste wird hier dynamisch eingefügt -->
+                    <p>Bitte wähle zuerst ein Rezept auf der Rezept-Seite aus.</p>
                 </div>
             </div>
         </div>
@@ -139,18 +144,22 @@
                     { menge: 2, einheit: "EL", name: "Tomatenmark" },
                     { menge: 1.5, einheit: "l", name: "Gemüsebrühe" },
                     { menge: 2, einheit: "TL", name: "Paprikapulver" },
-                    { menge: 1, einheit: "Bund", name: "Petersilie, gehackt" }
+                    { menge: 1, einheit: "Bund", name: "Petersilie, gehackt" },
+                    { menge: 3, einheit: "EL", name: "Öl" },
+                    { menge: 1, einheit: "TL", name: "Salz" },
+                    { menge: 0.5, einheit: "TL", name: "Pfeffer" }
                 ],
                 zubereitung: [
-                    "Zwiebel in einem großen Topf anschwitzen",
-                    "Tomatenmark zugeben und kurz mitrösten",
-                    "Kartoffeln und Karotten hinzufügen, 5 Minuten mitdünsten",
-                    "Mit Gemüsebrühe ablöschen und aufkochen lassen",
-                    "Bei mittlerer Hitze 20 Minuten köcheln lassen",
-                    "Tofu und Gewürze zugeben, weitere 10 Minuten köcheln",
-                    "Mit Petersilie bestreuen und servieren"
+                    "Zwiebel in einem großen Topf mit Öl glasig anschwitzen",
+                    "Tomatenmark zugeben und kurz mitrösten bis es duftet",
+                    "Kartoffeln und Karotten hinzufügen, 5 Minuten unter Rühren mitdünsten",
+                    "Mit Gemüsebrühe ablöschen und kräftig aufkochen lassen",
+                    "Hitze reduzieren und bei mittlerer Hitze 20 Minuten köcheln lassen",
+                    "Tofu in Würfeln schneiden und zusammen mit den Gewürzen zugeben",
+                    "Weitere 10 Minuten köcheln lassen bis die Kartoffeln weich sind",
+                    "Mit frisch gehackter Petersilie bestreuen und heiß servieren"
                 ],
-                portionierung: "In feste Schüsseln portionieren. Pro Person 1,5 Liter Eintopf berechnen. Mit Brot servieren."
+                portionierung: "In feste Feldküchen-Schüsseln portionieren. Pro Person ca. 1,5 Liter Eintopf berechnen. Mit frischem Brot oder Knäckebrot servieren. Für Feldverhältnisse in Thermosbehälter abfüllen."
             },
             {
                 id: 2,
@@ -162,25 +171,31 @@
                 kalorien: 520,
                 zubereitungszeit: 35,
                 zutaten: [
-                    { menge: 400, einheit: "g", name: "Nudeln" },
+                    { menge: 400, einheit: "g", name: "Nudeln (Fusilli oder Penne)" },
                     { menge: 200, einheit: "g", name: "Gouda, gerieben" },
-                    { menge: 1, einheit: "", name: "Brokkoli, in Röschen" },
+                    { menge: 1, einheit: "", name: "Brokkoli, in kleinen Röschen" },
                     { menge: 1, einheit: "", name: "Paprika, gewürfelt" },
                     { menge: 2, einheit: "", name: "Eier" },
                     { menge: 200, einheit: "ml", name: "Sahne" },
-                    { menge: 1, einheit: "TL", name: "Muskatnuss" },
-                    { menge: 100, einheit: "g", name: "Parmesan, gerieben" }
+                    { menge: 100, einheit: "ml", name: "Milch" },
+                    { menge: 1, einheit: "TL", name: "Muskatnuss, frisch gerieben" },
+                    { menge: 100, einheit: "g", name: "Parmesan, gerieben" },
+                    { menge: 2, einheit: "EL", name: "Butter" },
+                    { menge: 1, einheit: "TL", name: "Salz" },
+                    { menge: 0.5, einheit: "TL", name: "Pfeffer" }
                 ],
                 zubereitung: [
-                    "Nudeln al dente kochen, Brokkoli blanchieren",
-                    "Ofen auf 200°C vorheizen",
-                    "Eier mit Sahne und Gewürzen verquirlen",
-                    "Nudeln, Gemüse und Gouda in eine Auflaufform geben",
-                    "Eiermischung darüber gießen",
-                    "Mit Parmesan bestreuen",
-                    "25 Minuten backen bis goldbraun"
+                    "Nudeln in reichlich Salzwasser bissfest kochen, abgießen und abtropfen lassen",
+                    "Brokkoli waschen, in Röschen teilen und 3 Minuten blanchieren",
+                    "Ofen auf 200°C Umluft vorheizen",
+                    "Eier mit Sahne, Milch und Gewürzen verquirlen",
+                    "Butter in einer Auflaufform schmelzen, Nudeln und Gemüse einfüllen",
+                    "Geriebenen Gouda unterheben und gleichmäßig verteilen",
+                    "Eiermischung darüber gießen, alles gut durchmischen",
+                    "Mit Parmesan bestreuen und im vorgeheizten Ofen",
+                    "25-30 Minuten backen bis die Oberfläche goldbraun ist"
                 ],
-                portionierung: "In Auflaufformen portionieren. Pro Person 1/8 der Form. Mit Salat servieren."
+                portionierung: "In Auflaufformen portionieren. Pro Person 1/8 der Form. Mit frischem Feldsalat oder eingelegtem Gemüse servieren. Für Außeneinsätze in Aluschalen abfüllen."
             },
             {
                 id: 3,
@@ -193,23 +208,30 @@
                 zubereitungszeit: 15,
                 zutaten: [
                     { menge: 8, einheit: "Scheiben", name: "Vollkornbrot" },
-                    { menge: 200, einheit: "g", name: "Frischkäse" },
-                    { menge: 1, einheit: "", name: "Gurke, in Scheiben" },
-                    { menge: 1, einheit: "", name: "Tomate, in Scheiben" },
-                    { menge: 4, einheit: "Blätter", name: "Salat" },
-                    { menge: 1, einheit: "", name: "Avocado" },
-                    { menge: 2, einheit: "EL", name: "Zitronensaft" }
+                    { menge: 200, einheit: "g", name: "Frischkäse, natur" },
+                    { menge: 1, einheit: "", name: "Gurke, in dünnen Scheiben" },
+                    { menge: 1, einheit: "", name: "Tomate, in dünnen Scheiben" },
+                    { menge: 4, einheit: "Blätter", name: "Eisbergsalat" },
+                    { menge: 1, einheit: "", name: "Avocado, reif" },
+                    { menge: 2, einheit: "EL", name: "Zitronensaft" },
+                    { menge: 1, einheit: "", name: "Rote Zwiebel, in dünnen Ringen" },
+                    { menge: 1, einheit: "Prise", name: "Salz" },
+                    { menge: 1, einheit: "Prise", name: "Pfeffer" },
+                    { menge: 1, einheit: "TL", name: "getrockneter Dill" }
                 ],
                 zubereitung: [
                     "Brot scheibenweise mit Frischkäse bestreichen",
-                    "Avocado mit Zitronensaft zerdrücken",
+                    "Avocado halbieren, Stein entfernen, Fruchtfleisch herauslöffeln",
+                    "Avocado mit Zitronensaft, Salz und Pfeffer zerdrücken",
                     "Auf 4 Brotscheiben Salatblätter legen",
-                    "Gurken- und Tomatenscheiben darauf anordnen",
-                    "Avocadocreme gleichmäßig verteilen",
-                    "Mit restlichen Brotscheiben bedecken",
-                    "Sandwiches diagonal durchschneiden"
+                    "Gurken- und Tomatenscheiben gleichmäßig darauf anordnen",
+                    "Rote Zwiebelringe darüber verteilen",
+                    "Avocadocreme gleichmäßig auf den belegten Scheiben verteilen",
+                    "Mit getrocknetem Dill bestreuen",
+                    "Mit restlichen Brotscheiben bedecken und leicht andrücken",
+                    "Sandwiches diagonal durchschneiden für bessere Handhabung"
                 ],
-                portionierung: "Jedes Sandwich in Frischhaltefolie wickeln. Pro Person 1 Sandwich (2 Dreiecke)."
+                portionierung: "Jedes Sandwich einzeln in Frischhaltefolie oder Butterbrotpapier wickeln. Pro Person 1 Sandwich (2 Dreiecke). Für längere Touren kühl transportieren. Mit Apfel oder Müsliriegel ergänzen."
             },
             {
                 id: 4,
@@ -221,21 +243,26 @@
                 kalorien: 420,
                 zubereitungszeit: 10,
                 zutaten: [
-                    { menge: 400, einheit: "g", name: "Haferflocken" },
-                    { menge: 100, einheit: "g", name: "Nüsse, gemischt" },
-                    { menge: 100, einheit: "g", name: "Trockenfrüchte" },
+                    { menge: 400, einheit: "g", name: "Haferflocken, zart" },
+                    { menge: 100, einheit: "g", name: "Nüsse, gemischt (Walnüsse, Haselnüsse)" },
+                    { menge: 100, einheit: "g", name: "Trockenfrüchte (Rosinen, Aprikosen)" },
+                    { menge: 50, einheit: "g", name: "Sonnenblumenkerne" },
+                    { menge: 50, einheit: "g", name: "Kürbiskerne" },
                     { menge: 4, einheit: "EL", name: "Honig" },
                     { menge: 2, einheit: "TL", name: "Zimt" },
+                    { menge: 1, einheit: "Prise", name: "Salz" },
                     { menge: 1, einheit: "l", name: "Milch oder Pflanzenmilch" }
                 ],
                 zubereitung: [
                     "Haferflocken in eine große Schüssel geben",
-                    "Nüsse hacken und zu den Haferflocken geben",
+                    "Nüsse grob hacken und zu den Haferflocken geben",
                     "Trockenfrüchte klein schneiden und untermischen",
-                    "Honig und Zimt unterrühren",
-                    "Alles gut vermengen"
+                    "Sonnenblumenkerne und Kürbiskerne hinzufügen",
+                    "Honig, Zimt und eine Prise Salz unterrühren",
+                    "Alles gut vermengen bis eine gleichmäßige Mischung entsteht",
+                    "In verschließbare Behälter oder Beutel abfüllen"
                 ],
-                portionierung: "In wiederverschließbare Beutel portionieren. Pro Person 150g Müsli mit 250ml Milch."
+                portionierung: "In wiederverschließbare Beutel oder Dosen portionieren. Pro Person 150g Müsli mit 250ml Milch. Trocken portioniert für Feldverpflegung geeignet. Mit frischen Beeren oder Bananen ergänzbar."
             },
             {
                 id: 5,
@@ -252,28 +279,35 @@
                     { menge: 2, einheit: "", name: "Paprika, in Streifen" },
                     { menge: 3, einheit: "EL", name: "Tomatenmark" },
                     { menge: 2, einheit: "l", name: "Rinderbrühe" },
-                    { menge: 2, einheit: "EL", name: "Paprikapulver" },
-                    { menge: 1, einheit: "EL", name: "Majoran" }
+                    { menge: 2, einheit: "EL", name: "Paprikapulver, edelsüß" },
+                    { menge: 1, einheit: "EL", name: "Majoran" },
+                    { menge: 2, einheit: "EL", name: "Öl" },
+                    { menge: 1, einheit: "EL", name: "Mehl" },
+                    { menge: 2, einheit: "", name: "Lorbeerblätter" },
+                    { menge: 1, einheit: "TL", name: "Kümmel" },
+                    { menge: 1, einheit: "TL", name: "Salz" },
+                    { menge: 0.5, einheit: "TL", name: "Pfeffer" }
                 ],
                 zubereitung: [
-                    "Fleisch in einem großen Topf scharf anbraten",
-                    "Zwiebeln zugeben und mitbraten",
-                    "Tomatenmark einrühren und kurz rösten",
-                    "Mit Brühe ablöschen, aufkochen lassen",
-                    "Bei kleiner Hitze 60 Minuten köcheln",
-                    "Paprika zugeben, weitere 20 Minuten garen",
-                    "Mit Gewürzen abschmecken"
+                    "Fleisch trocken tupfen und in einem großen Gusseisentopf portionsweise scharf anbraten",
+                    "Fleisch herausnehmen, Zwiebeln im Bratfond glasig dünsten",
+                    "Tomatenmark einrühren und kurz mitrösten bis es dunkler wird",
+                    "Paprikapulver zugeben und kurz mitdünsten (nicht verbrennen lassen!)",
+                    "Fleisch zurück in den Topf geben, mit Mehl bestäuben und kurz mitrösten",
+                    "Mit Rinderbrühe ablöschen, kräftig aufkochen lassen",
+                    "Majoran, Lorbeerblätter und Kümmel zugeben",
+                    "Bei kleiner Hitze 60 Minuten köcheln lassen, gelegentlich umrühren",
+                    "Paprika in Streifen schneiden und zugeben, weitere 20 Minuten garen",
+                    "Mit Salz und Pfeffer abschmecken, Lorbeerblätter entfernen"
                 ],
-                portionierung: "Mit Kartoffeln oder Nudeln servieren. Pro Person 300g Gulasch mit Beilage."
+                portionierung: "Mit Salzkartoffeln oder frischem Brot servieren. Pro Person 300g Gulasch mit Beilage. In Feldküchen-Töpfen warm halten. Für mobile Einsätze in Thermosbehältern transportieren."
             }
         ];
-    </script>
 
-    <script>
         // Globale Variablen
         let aktuellesRezept = null;
         let personenAnzahl = 4;
-    
+
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM geladen - starte Initialisierung');
@@ -285,12 +319,13 @@
             document.getElementById('personen').addEventListener('input', function() {
                 personenAnzahl = parseInt(this.value) || 1;
                 console.log('Personenanzahl geändert:', personenAnzahl);
+                // Personenanzahl in der Anzeige aktualisieren
+                document.getElementById('zutaten-personen').textContent = personenAnzahl;
                 if (aktuellesRezept) {
-                    zeigeRezeptDetails(aktuellesRezept);
+                    zeigeAusgewaehltesRezept();
                 }
-                // Einkaufsliste wird erst aktualisiert wenn man auf der Seite ist
             });
-    
+
             // Navigation
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -299,7 +334,7 @@
                     showPage(pageId);
                 });
             });
-    
+
             // Startseite anzeigen
             showPage('rezepte');
             
@@ -308,12 +343,15 @@
                 const hash = window.location.hash.replace('#', '') || 'rezepte';
                 showPage(hash);
             });
-    
+
             const initialPage = window.location.hash.replace('#', '') || 'rezepte';
             showPage(initialPage);
+            
+            // Rezepte initial laden
+            filterRezepte();
         });
-    
-        // Seitenwechsel - KORRIGIERT
+
+        // Seitenwechsel
         function showPage(pageId) {
             console.log('Wechsle zu Seite:', pageId);
             
@@ -324,7 +362,7 @@
                     link.classList.add('active');
                 }
             });
-    
+
             // Alle Seiten ausblenden
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
@@ -337,10 +375,10 @@
                 aktiveSeite.classList.add('active');
                 aktiveSeite.style.display = 'block';
             }
-    
+
             // URL aktualisieren
             window.history.pushState(null, null, `#${pageId}`);
-    
+
             // Spezielle Aktionen pro Seite
             if (pageId === 'rezepte') {
                 // Rezepte neu laden
@@ -350,102 +388,92 @@
                 aktualisiereEinkaufsliste();
             }
         }
-    
-        // Rezepte filtern und anzeigen
+
+        // Rezepte filtern und Dropdown füllen
         function filterRezepte() {
             console.log('Filtere Rezepte...');
             const verpflegungsart = document.getElementById('verpflegungsart').value;
             const verpflegungstyp = document.getElementById('verpflegungstyp').value;
             const nurVegetarisch = document.getElementById('vegetarisch').checked;
-    
-            console.log('Filter:', { verpflegungsart, verpflegungstyp, nurVegetarisch });
-    
+
             const gefilterteRezepte = rezepteDaten.filter(rezept => {
                 if (verpflegungsart && rezept.verpflegungsart !== verpflegungsart) return false;
                 if (verpflegungstyp && rezept.verpflegungstyp !== verpflegungstyp) return false;
                 if (nurVegetarisch && !rezept.vegetarisch) return false;
                 return true;
             });
-    
-            console.log('Gefilterte Rezepte:', gefilterteRezepte);
-            zeigeRezepte(gefilterteRezepte);
-        }
-    
-        // Rezepte in der Grid anzeigen
-        function zeigeRezepte(rezepte) {
-            const container = document.getElementById('rezepte-liste');
-            console.log('Zeige Rezepte an:', rezepte.length);
+
+            // Dropdown füllen
+            const dropdown = document.getElementById('rezept-auswahl');
+            dropdown.innerHTML = '<option value="">-- Bitte Rezept auswählen --</option>';
             
-            if (rezepte.length === 0) {
-                container.innerHTML = '<p class="keine-rezepte">Keine Rezepte gefunden, die den Filterkriterien entsprechen.</p>';
-                document.getElementById('rezept-details').style.display = 'none';
-                return;
-            }
-    
-            container.innerHTML = rezepte.map(rezept => `
-                <div class="rezept-karte" onclick="zeigeRezeptDetails(${rezept.id})">
-                    <h4>${rezept.titel}</h4>
-                    <div class="rezept-info">
-                        <span>${rezept.verpflegungsart === 'warm' ? '🔥 Warm' : '❄️ Kalt'}</span>
-                        <span>${rezept.verpflegungstyp === 'voll' ? '🍽️ Voll' : '✋ Hand'}</span>
-                        <span>${rezept.vegetarisch ? '🌱 Vegetarisch' : '🥩 Mit Fleisch'}</span>
-                    </div>
-                    <p class="rezept-beschreibung">${rezept.beschreibung}</p>
-                    <div class="rezept-info">
-                        <span>${rezept.kalorien} kcal/Person</span>
-                        <span>${rezept.zubereitungszeit} min</span>
-                    </div>
-                </div>
-            `).join('');
-    
+            gefilterteRezepte.forEach(rezept => {
+                const option = document.createElement('option');
+                option.value = rezept.id;
+                option.textContent = rezept.titel;
+                dropdown.appendChild(option);
+            });
+
             // Rezept Details ausblenden
             document.getElementById('rezept-details').style.display = 'none';
             aktuellesRezept = null;
         }
-    
-        // Rezept Details anzeigen
-        function zeigeRezeptDetails(rezeptId) {
-            console.log('Zeige Rezept Details:', rezeptId);
+
+        // Ausgewähltes Rezept anzeigen
+        function zeigeAusgewaehltesRezept() {
+            const dropdown = document.getElementById('rezept-auswahl');
+            const rezeptId = parseInt(dropdown.value);
+            
+            if (!rezeptId) {
+                document.getElementById('rezept-details').style.display = 'none';
+                aktuellesRezept = null;
+                return;
+            }
+
             const rezept = rezepteDaten.find(r => r.id === rezeptId);
             aktuellesRezept = rezept;
-    
+
             if (!rezept) {
                 console.error('Rezept nicht gefunden:', rezeptId);
                 return;
             }
-    
-            // Karten Auswahl aktualisieren
-            document.querySelectorAll('.rezept-karte').forEach(karte => {
-                karte.classList.remove('ausgewaehlt');
-            });
-            event.currentTarget.classList.add('ausgewaehlt');
-    
+
+            // Personenanzahl anzeigen
+            document.getElementById('zutaten-personen').textContent = personenAnzahl;
+
             // Details anzeigen
             document.getElementById('rezept-titel').textContent = rezept.titel;
             document.getElementById('rezept-kalorien').textContent = `${rezept.kalorien * personenAnzahl} kcal gesamt`;
             document.getElementById('rezept-zubereitungszeit').textContent = `${rezept.zubereitungszeit} min Zubereitung`;
             document.getElementById('rezept-art').textContent = `${rezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${rezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}`;
-    
+
             // Zutaten anzeigen (skaliert)
             const zutatenListe = document.getElementById('rezept-zutaten');
             zutatenListe.innerHTML = rezept.zutaten.map(zutat => {
                 const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
-                return `<li>${skalierteMenge.toFixed(1)} ${zutat.einheit} ${zutat.name}</li>`;
+                // Bei kleinen Mengen runden
+                let angezeigteMenge = skalierteMenge;
+                if (skalierteMenge < 1 && zutat.einheit !== 'Prise' && zutat.einheit !== 'TL' && zutat.einheit !== 'EL') {
+                    angezeigteMenge = skalierteMenge.toFixed(2);
+                } else if (skalierteMenge % 1 !== 0) {
+                    angezeigteMenge = skalierteMenge.toFixed(1);
+                }
+                return `<li>${angezeigteMenge} ${zutat.einheit} ${zutat.name}</li>`;
             }).join('');
-    
+
             // Zubereitung anzeigen
             const zubereitungListe = document.getElementById('rezept-zubereitung');
             zubereitungListe.innerHTML = rezept.zubereitung.map(schritt => 
                 `<li>${schritt}</li>`
             ).join('');
-    
+
             // Portionierung anzeigen
             document.getElementById('rezept-portionierung').textContent = rezept.portionierung;
-    
+
             // Details einblenden
             document.getElementById('rezept-details').style.display = 'block';
         }
-    
+
         // Zur Einkaufsliste navigieren
         function zurEinkaufsliste() {
             if (aktuellesRezept) {
@@ -454,20 +482,30 @@
                 alert('Bitte wähle zuerst ein Rezept aus!');
             }
         }
-    
+
         // Einkaufsliste aktualisieren
         function aktualisiereEinkaufsliste() {
             console.log('Aktualisiere Einkaufsliste');
+            
+            // Personenanzahl und Rezeptname in Einkaufsliste anzeigen
+            document.getElementById('einkauf-personen').textContent = personenAnzahl;
+            
             if (!aktuellesRezept) {
-                document.getElementById('einkaufsliste-content').innerHTML = '<p>Bitte wähle zuerst ein Rezept aus der Rezept-Seite aus.</p>';
+                document.getElementById('einkauf-rezept-titel').textContent = 'Kein Rezept ausgewählt';
+                document.getElementById('einkaufsliste-content').innerHTML = '<p>Bitte wähle zuerst ein Rezept auf der Rezept-Seite aus.</p>';
                 return;
             }
-    
-            document.getElementById('einkauf-personen').textContent = personenAnzahl;
+
+            document.getElementById('einkauf-rezept-titel').textContent = aktuellesRezept.titel;
             
             const container = document.getElementById('einkaufsliste-content');
             
             const zutatenGruppiert = gruppiereZutaten(aktuellesRezept.zutaten);
+            
+            if (Object.keys(zutatenGruppiert).length === 0) {
+                container.innerHTML = '<p>Keine Zutaten gefunden.</p>';
+                return;
+            }
             
             container.innerHTML = Object.keys(zutatenGruppiert).map(kategorie => `
                 <div class="einkaufsliste-kategorie">
@@ -481,7 +519,7 @@
                 </div>
             `).join('');
         }
-    
+
         // Zutaten nach Kategorien gruppieren
         function gruppiereZutaten(zutaten) {
             const gruppiert = {
@@ -491,14 +529,23 @@
                 'Milchprodukte': [],
                 'Gewürze & Öle': []
             };
-    
+
             zutaten.forEach(zutat => {
                 const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
+                let angezeigteMenge = skalierteMenge;
+                
+                // Mengen anpassen für bessere Lesbarkeit
+                if (skalierteMenge < 1 && zutat.einheit !== 'Prise' && zutat.einheit !== 'TL' && zutat.einheit !== 'EL') {
+                    angezeigteMenge = skalierteMenge.toFixed(2);
+                } else if (skalierteMenge % 1 !== 0) {
+                    angezeigteMenge = skalierteMenge.toFixed(1);
+                }
+
                 const zutatMitMenge = {
                     ...zutat,
-                    menge: skalierteMenge.toFixed(1)
+                    menge: angezeigteMenge
                 };
-    
+
                 // Einfache Kategorisierung basierend auf Zutatenname
                 const name = zutat.name.toLowerCase();
                 if (name.includes('kartoffel') || name.includes('karotte') || name.includes('zwiebel') || 
@@ -517,17 +564,17 @@
                     gruppiert['Gewürze & Öle'].push(zutatMitMenge);
                 }
             });
-    
+
             // Leere Kategorien entfernen
             Object.keys(gruppiert).forEach(kategorie => {
                 if (gruppiert[kategorie].length === 0) {
                     delete gruppiert[kategorie];
                 }
             });
-    
+
             return gruppiert;
         }
-    
+
         // PDF Export für Rezept (vereinfacht - öffnet Druckdialog)
         function exportRezeptPDF() {
             if (!aktuellesRezept) {
@@ -536,7 +583,7 @@
             }
             window.print();
         }
-    
+
         // PDF Export für Einkaufsliste (vereinfacht - öffnet Druckdialog)
         function exportEinkaufslistePDF() {
             if (!aktuellesRezept) {
