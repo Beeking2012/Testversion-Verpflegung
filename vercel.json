@@ -1,15 +1,11 @@
 {
   "routes": [
     {
-      "src": "/anschaulich",
+      "src": "/rezepte",
       "dest": "/index.html"
     },
     {
-      "src": "/about",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/contact", 
+      "src": "/einkaufsliste",
       "dest": "/index.html"
     },
     {
