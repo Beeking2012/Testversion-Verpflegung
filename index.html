@@ -309,7 +309,7 @@
             color: #2c3e50;
         }
 
-        .einkaufsliste-kategorie {
+        .einkaufsliste-container {
             background: white;
             border-radius: 8px;
             padding: 1.5rem;
@@ -317,7 +317,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        .einkaufsliste-kategorie h3 {
+        .einkaufsliste-container h3 {
             color: #2c3e50;
             margin-bottom: 1rem;
             border-bottom: 2px solid #ecf0f1;
@@ -954,7 +954,7 @@
 
             // Details anzeigen
             document.getElementById('rezept-titel').textContent = rezept.titel;
-            document.getElementById('rezept-kalorien').textContent = `${rezept.kalorien } kcal gesamt`;
+            document.getElementById('rezept-kalorien').textContent = `${rezept.kalorien * personenAnzahl} kcal gesamt`;
             document.getElementById('rezept-zubereitungszeit').textContent = `${skalierteZeit} min Zubereitung`;
             document.getElementById('rezept-art').textContent = `${rezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${rezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}`;
 
@@ -989,7 +989,7 @@
             }
         }
 
-        // Einkaufsliste aktualisieren
+        // Einkaufsliste aktualisieren - OHNE GRUPPIERUNG
         function aktualisiereEinkaufsliste() {
             console.log('Aktualisiere Einkaufsliste für', personenAnzahl, 'Personen');
             
@@ -1006,77 +1006,29 @@
             
             const container = document.getElementById('einkaufsliste-content');
             
-            // Zutaten für Einkaufsliste mit Feldküchen-Umrechnung (gleiche Skalierung wie Rezept)
-            const zutatenGruppiert = gruppiereZutaten(aktuellesRezept.zutaten);
-            
-            if (Object.keys(zutatenGruppiert).length === 0) {
+            // Zutaten für Einkaufsliste OHNE Gruppierung
+            if (aktuellesRezept.zutaten.length === 0) {
                 container.innerHTML = '<p>Keine Zutaten gefunden.</p>';
                 return;
             }
             
-            container.innerHTML = Object.keys(zutatenGruppiert).map(kategorie => `
-                <div class="einkaufsliste-kategorie">
-                    <h3>${kategorie}</h3>
-                    ${zutatenGruppiert[kategorie].map(zutat => `
-                        <div class="einkaufsliste-item">
-                            <span>${zutat.name}</span>
-                            <span>${zutat.menge} ${zutat.einheit}</span>
-                        </div>
-                    `).join('')}
+            // Einfache Liste ohne Kategorien
+            container.innerHTML = `
+                <div class="einkaufsliste-container">
+                    <h3>Alle Zutaten</h3>
+                    ${aktuellesRezept.zutaten.map(zutat => {
+                        const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
+                        const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
+                        
+                        return `
+                            <div class="einkaufsliste-item">
+                                <span>${zutat.name}</span>
+                                <span>${menge} ${einheit}</span>
+                            </div>
+                        `;
+                    }).join('')}
                 </div>
-            `).join('');
-        }
-
-        // Zutaten nach Kategorien gruppieren mit Feldküchen-Umrechnung
-        function gruppiereZutaten(zutaten) {
-            const gruppiert = {
-                'Gemüse & Obst': [],
-                'Proteine': [],
-                'Getreide & Beilagen': [],
-                'Milchprodukte': [],
-                'Gewürze & Öle': []
-            };
-
-            zutaten.forEach(zutat => {
-                const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
-                const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
-
-                const zutatMitMenge = {
-                    ...zutat,
-                    menge: menge,
-                    einheit: einheit
-                };
-
-                // Kategorisierung basierend auf Zutatenname
-                const name = zutat.name.toLowerCase();
-                if (name.includes('kartoffel') || name.includes('karotte') || name.includes('zwiebel') || 
-                    name.includes('tomate') || name.includes('gurke') || name.includes('brokkoli') ||
-                    name.includes('paprika') || name.includes('avocado') || name.includes('salat') ||
-                    name.includes('obst') || name.includes('frucht')) {
-                    gruppiert['Gemüse & Obst'].push(zutatMitMenge);
-                } else if (name.includes('tofu') || name.includes('fleisch') || name.includes('rinder') || 
-                           name.includes('ei') || name.includes('nuss') || name.includes('protein')) {
-                    gruppiert['Proteine'].push(zutatMitMenge);
-                } else if (name.includes('nudel') || name.includes('brot') || name.includes('hafer') ||
-                           name.includes('reis') || name.includes('getreide') || name.includes('müsli')) {
-                    gruppiert['Getreide & Beilagen'].push(zutatMitMenge);
-                } else if (name.includes('käse') || name.includes('sahne') || name.includes('milch') || 
-                           name.includes('frischkäse') || name.includes('parmesan') || name.includes('gouda') ||
-                           name.includes('butter')) {
-                    gruppiert['Milchprodukte'].push(zutatMitMenge);
-                } else {
-                    gruppiert['Gewürze & Öle'].push(zutatMitMenge);
-                }
-            });
-
-            // Leere Kategorien entfernen
-            Object.keys(gruppiert).forEach(kategorie => {
-                if (gruppiert[kategorie].length === 0) {
-                    delete gruppiert[kategorie];
-                }
-            });
-
-            return gruppiert;
+            `;
         }
 
         // Automatische Umrechnung für Feldküchen-Mengen - OHNE TL/EL
@@ -1217,7 +1169,7 @@
             }, 100);
         }
         
-        // PDF Export für Einkaufsliste - KOMPAKTE VERSION
+        // PDF Export für Einkaufsliste - OHNE GRUPPIERUNG
         function exportEinkaufslistePDF() {
             if (!aktuellesRezept) {
                 alert('Bitte wähle zuerst ein Rezept aus!');
@@ -1225,7 +1177,6 @@
             }
         
             const druckContainer = document.getElementById('druck-einkaufsliste-container');
-            const zutatenGruppiert = gruppiereZutaten(aktuellesRezept.zutaten);
             
             druckContainer.innerHTML = `
                 <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 15px; font-size: 10pt;">
@@ -1234,17 +1185,20 @@
                         <p style="font-size: 10pt;"><strong>${aktuellesRezept.titel}</strong> für ${personenAnzahl} Personen</p>
                     </div>
                     
-                    ${Object.keys(zutatenGruppiert).map(kategorie => `
-                        <div style="background: white; padding: 10px; margin-bottom: 12px; border-radius: 3px; border: 1px solid #eee;">
-                            <h3 style="color: #2c3e50; font-size: 12pt; margin-bottom: 8px; border-bottom: 1px solid #ecf0f1; padding-bottom: 3px;">${kategorie}</h3>
-                            ${zutatenGruppiert[kategorie].map(zutat => `
-                                <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #f5f5f5; font-size: 9pt;">
+                    <div style="background: white; padding: 15px; margin-bottom: 12px; border-radius: 3px; border: 1px solid #eee;">
+                        <h3 style="color: #2c3e50; font-size: 12pt; margin-bottom: 10px; border-bottom: 1px solid #ecf0f1; padding-bottom: 3px;">Alle Zutaten</h3>
+                        ${aktuellesRezept.zutaten.map(zutat => {
+                            const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
+                            const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
+                            
+                            return `
+                                <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt;">
                                     <span>${zutat.name}</span>
-                                    <span style="color: #3498db; font-weight: bold;">${zutat.menge} ${zutat.einheit}</span>
+                                    <span style="color: #3498db; font-weight: bold;">${menge} ${einheit}</span>
                                 </div>
-                            `).join('')}
-                        </div>
-                    `).join('')}
+                            `;
+                        }).join('')}
+                    </div>
 
                     <div style="margin-top: 20px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 8pt; color: #666; text-align: center;">
                         <p>Erstellt am: ${new Date().toLocaleString('de-DE')} | Quelle: Feldküche - Militärische Verpflegung</p>
