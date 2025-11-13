@@ -181,10 +181,17 @@ const rezepteDaten = [
 let aktuellesRezept = null;
 let personenAnzahl = 4;
 
-// Funktion zur automatischen Einheiten-Umrechnung
+// Funktion zur intelligenten Einheiten-Umrechnung
 function konvertiereEinheit(menge, einheit) {
     let neueMenge = menge;
     let neueEinheit = einheit;
+    
+    // Liste der Einheiten, die nicht umgerechnet werden sollen
+    const fixeEinheiten = ['Prise', 'TL', 'EL', 'Bund', 'Blätter', 'Scheiben', 'Stück', ''];
+    
+    if (fixeEinheiten.includes(einheit)) {
+        return { menge: menge, einheit: einheit };
+    }
     
     // Gramm zu Kilogramm (ab 1000g)
     if (einheit === "g" && menge >= 1000) {
@@ -208,6 +215,56 @@ function konvertiereEinheit(menge, einheit) {
     }
     
     return { menge: neueMenge, einheit: neueEinheit };
+}
+
+// Funktion zur Formatierung von Mengen mit geeigneten Einheiten für große Portionen
+function formatiereMenge(menge, einheit) {
+    // Zuerst Einheiten umrechnen
+    const konvertiert = konvertiereEinheit(menge, einheit);
+    let angezeigteMenge = konvertiert.menge;
+    let angezeigteEinheit = konvertiert.einheit;
+    
+    // Für lose Gegenstände ohne Einheit "Stück" verwenden
+    if (einheit === "" && menge > 0) {
+        angezeigteEinheit = "Stück";
+    }
+    
+    // Mengen formatieren basierend auf der Einheit
+    if (['kg', 'l'].includes(angezeigteEinheit)) {
+        // Für kg und l: 1-2 Nachkommastellen
+        angezeigteMenge = parseFloat(angezeigteMenge.toFixed(2));
+        // .0 entfernen
+        if (angezeigteMenge % 1 === 0) {
+            angezeigteMenge = parseInt(angezeigteMenge);
+        }
+    } else if (['g', 'ml'].includes(angezeigteEinheit)) {
+        // Für g und ml: auf volle Zahlen runden
+        angezeigteMenge = Math.round(angezeigteMenge);
+    } else if (angezeigteEinheit === 'Stück') {
+        // Für Stück: auf volle Zahlen runden
+        angezeigteMenge = Math.round(angezeigteMenge);
+    } else if (['TL', 'EL'].includes(angezeigteEinheit)) {
+        // Für TL/EL bei großen Mengen: in größere Einheiten umrechnen
+        if (angezeigteMenge >= 16 && angezeigteEinheit === 'EL') {
+            // 16 EL = 1 Becher (ca. 250ml)
+            angezeigteMenge = angezeigteMenge / 16;
+            angezeigteEinheit = 'Becher';
+            angezeigteMenge = parseFloat(angezeigteMenge.toFixed(1));
+        } else if (angezeigteMenge >= 48 && angezeigteEinheit === 'TL') {
+            // 48 TL = 1 Becher (ca. 250ml)
+            angezeigteMenge = angezeigteMenge / 48;
+            angezeigteEinheit = 'Becher';
+            angezeigteMenge = parseFloat(angezeigteMenge.toFixed(1));
+        } else {
+            // Auf halbe Einheiten runden
+            angezeigteMenge = Math.round(angezeigteMenge * 2) / 2;
+            if (angezeigteMenge % 1 === 0) {
+                angezeigteMenge = parseInt(angezeigteMenge);
+            }
+        }
+    }
+    
+    return { menge: angezeigteMenge, einheit: angezeigteEinheit };
 }
 
 // Initialisierung
@@ -362,18 +419,10 @@ function zeigeAusgewaehltesRezept() {
     zutatenListe.innerHTML = rezept.zutaten.map(zutat => {
         const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
         
-        // Einheiten automatisch umrechnen
-        const konvertierteEinheit = konvertiereEinheit(skalierteMenge, zutat.einheit);
-        let angezeigteMenge = konvertierteEinheit.menge;
+        // Einheiten intelligent formatieren
+        const formatierteMenge = formatiereMenge(skalierteMenge, zutat.einheit);
         
-        // Bei kleinen Mengen runden
-        if (angezeigteMenge < 1 && !['Prise', 'TL', 'EL', 'Bund', 'Blätter', 'Scheiben', ''].includes(konvertierteEinheit.einheit)) {
-            angezeigteMenge = angezeigteMenge.toFixed(2);
-        } else if (angezeigteMenge % 1 !== 0) {
-            angezeigteMenge = angezeigteMenge.toFixed(1);
-        }
-        
-        return `<li>${angezeigteMenge} ${konvertierteEinheit.einheit} ${zutat.name}</li>`;
+        return `<li>${formatierteMenge.menge} ${formatierteMenge.einheit} ${zutat.name}</li>`;
     }).join('');
 
     // Zubereitung anzeigen
@@ -448,21 +497,13 @@ function gruppiereZutaten(zutaten) {
     zutaten.forEach(zutat => {
         const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
         
-        // Einheiten automatisch umrechnen
-        const konvertierteEinheit = konvertiereEinheit(skalierteMenge, zutat.einheit);
-        let angezeigteMenge = konvertierteEinheit.menge;
-        
-        // Bei kleinen Mengen runden
-        if (angezeigteMenge < 1 && !['Prise', 'TL', 'EL', 'Bund', 'Blätter', 'Scheiben', ''].includes(konvertierteEinheit.einheit)) {
-            angezeigteMenge = angezeigteMenge.toFixed(2);
-        } else if (angezeigteMenge % 1 !== 0) {
-            angezeigteMenge = angezeigteMenge.toFixed(1);
-        }
+        // Einheiten intelligent formatieren (FÜR EINKAUFSLISTE)
+        const formatierteMenge = formatiereMenge(skalierteMenge, zutat.einheit);
 
         const zutatMitMenge = {
             ...zutat,
-            menge: angezeigteMenge,
-            einheit: konvertierteEinheit.einheit
+            menge: formatierteMenge.menge,
+            einheit: formatierteMenge.einheit
         };
 
         // Einfache Kategorisierung basierend auf Zutatenname
