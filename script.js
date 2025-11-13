@@ -76,43 +76,6 @@ const rezepteDaten = [
 let aktuellesRezept = null;
 let personenAnzahl = 4;
 
-// Vereinfachte Funktion zur Einheiten-Umrechnung
-function konvertiereEinheit(menge, einheit) {
-    // Für leere Einheiten (lose Gegenstände) "Stück" verwenden
-    if (einheit === "") {
-        return { menge: Math.round(menge), einheit: "Stück" };
-    }
-    
-    // Gramm zu Kilogramm (ab 1000g)
-    if (einheit === "g" && menge >= 1000) {
-        const neueMenge = menge / 1000;
-        return { menge: parseFloat(neueMenge.toFixed(2)), einheit: "kg" };
-    }
-    
-    // Milliliter zu Liter (ab 1000ml)
-    if (einheit === "ml" && menge >= 1000) {
-        const neueMenge = menge / 1000;
-        return { menge: parseFloat(neueMenge.toFixed(2)), einheit: "l" };
-    }
-    
-    // TL/EL zu Becher für sehr große Mengen
-    if ((einheit === "EL" && menge >= 16) || (einheit === "TL" && menge >= 48)) {
-        const faktor = einheit === "EL" ? 16 : 48;
-        const neueMenge = menge / faktor;
-        return { menge: parseFloat(neueMenge.toFixed(1)), einheit: "Becher" };
-    }
-    
-    // Standardfall: Menge runden und originale Einheit behalten
-    let angezeigteMenge = menge;
-    if (['g', 'ml', 'Stück'].includes(einheit)) {
-        angezeigteMenge = Math.round(menge);
-    } else if (menge % 1 !== 0) {
-        angezeigteMenge = parseFloat(menge.toFixed(1));
-    }
-    
-    return { menge: angezeigteMenge, einheit: einheit };
-}
-
 // Initialisierung
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM geladen - starte Initialisierung');
@@ -258,15 +221,21 @@ function zeigeAusgewaehltesRezept() {
     document.getElementById('rezept-zubereitungszeit').textContent = `${rezept.zubereitungszeit} min Zubereitung`;
     document.getElementById('rezept-art').textContent = `${rezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${rezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}`;
 
-    // Zutaten anzeigen (skaliert und mit Einheiten-Umrechnung)
+    // Zutaten anzeigen (skaliert)
     const zutatenListe = document.getElementById('rezept-zutaten');
     zutatenListe.innerHTML = rezept.zutaten.map(zutat => {
         const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
         
-        // Einheiten umrechnen
-        const konvertiert = konvertiereEinheit(skalierteMenge, zutat.einheit);
+        // Einfache Formatierung ohne Umrechnung
+        let angezeigteMenge = skalierteMenge;
+        if (skalierteMenge % 1 !== 0) {
+            angezeigteMenge = skalierteMenge.toFixed(1);
+        }
         
-        return `<li>${konvertiert.menge} ${konvertiert.einheit} ${zutat.name}</li>`;
+        // Für leere Einheiten "Stück" anzeigen
+        const einheit = zutat.einheit === "" ? "Stück" : zutat.einheit;
+        
+        return `<li>${angezeigteMenge} ${einheit} ${zutat.name}</li>`;
     }).join('');
 
     // Zubereitung anzeigen
@@ -308,75 +277,37 @@ function aktualisiereEinkaufsliste() {
     
     const container = document.getElementById('einkaufsliste-content');
     
-    const zutatenGruppiert = gruppiereZutaten(aktuellesRezept.zutaten);
+    // Einfache Liste ohne Gruppierung
+    const zutatenListe = aktuellesRezept.zutaten.map(zutat => {
+        const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
+        
+        // Einfache Formatierung ohne Umrechnung
+        let angezeigteMenge = skalierteMenge;
+        if (skalierteMenge % 1 !== 0) {
+            angezeigteMenge = skalierteMenge.toFixed(1);
+        }
+        
+        // Für leere Einheiten "Stück" anzeigen
+        const einheit = zutat.einheit === "" ? "Stück" : zutat.einheit;
+        
+        return {
+            name: zutat.name,
+            menge: angezeigteMenge,
+            einheit: einheit
+        };
+    });
     
-    if (Object.keys(zutatenGruppiert).length === 0) {
-        container.innerHTML = '<p>Keine Zutaten gefunden.</p>';
-        return;
-    }
-    
-    container.innerHTML = Object.keys(zutatenGruppiert).map(kategorie => `
+    container.innerHTML = `
         <div class="einkaufsliste-kategorie">
-            <h3>${kategorie}</h3>
-            ${zutatenGruppiert[kategorie].map(zutat => `
+            <h3>Alle Zutaten</h3>
+            ${zutatenListe.map(zutat => `
                 <div class="einkaufsliste-item">
                     <span>${zutat.name}</span>
                     <span>${zutat.menge} ${zutat.einheit}</span>
                 </div>
             `).join('')}
         </div>
-    `).join('');
-}
-
-// Zutaten nach Kategorien gruppieren
-function gruppiereZutaten(zutaten) {
-    const gruppiert = {
-        'Gemüse & Obst': [],
-        'Proteine': [],
-        'Getreide & Beilagen': [],
-        'Milchprodukte': [],
-        'Gewürze & Öle': []
-    };
-
-    zutaten.forEach(zutat => {
-        const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
-        
-        // Einheiten umrechnen (FÜR EINKAUFSLISTE)
-        const konvertiert = konvertiereEinheit(skalierteMenge, zutat.einheit);
-
-        const zutatMitMenge = {
-            ...zutat,
-            menge: konvertiert.menge,
-            einheit: konvertiert.einheit
-        };
-
-        // Einfache Kategorisierung
-        const name = zutat.name.toLowerCase();
-        if (name.includes('kartoffel') || name.includes('karotte') || name.includes('zwiebel') || 
-            name.includes('tomate') || name.includes('gurke') || name.includes('brokkoli') ||
-            name.includes('paprika') || name.includes('avocado') || name.includes('salat')) {
-            gruppiert['Gemüse & Obst'].push(zutatMitMenge);
-        } else if (name.includes('tofu') || name.includes('fleisch') || name.includes('rinder') || 
-                   name.includes('ei') || name.includes('nuss')) {
-            gruppiert['Proteine'].push(zutatMitMenge);
-        } else if (name.includes('nudel') || name.includes('brot') || name.includes('hafer')) {
-            gruppiert['Getreide & Beilagen'].push(zutatMitMenge);
-        } else if (name.includes('käse') || name.includes('sahne') || name.includes('milch') || 
-                   name.includes('frischkäse') || name.includes('parmesan') || name.includes('gouda')) {
-            gruppiert['Milchprodukte'].push(zutatMitMenge);
-        } else {
-            gruppiert['Gewürze & Öle'].push(zutatMitMenge);
-        }
-    });
-
-    // Leere Kategorien entfernen
-    Object.keys(gruppiert).forEach(kategorie => {
-        if (gruppiert[kategorie].length === 0) {
-            delete gruppiert[kategorie];
-        }
-    });
-
-    return gruppiert;
+    `;
 }
 
 // PDF Export für Rezept
