@@ -363,61 +363,65 @@
             display: block;
         }
 
-        /* Druck-Styles für PDF-Export - VERBESSERT */
-        @media print {
-            /* Immer alles ausblenden */
-            body * {
-                visibility: hidden;
-            }
-            
-            /* Nur den relevanten Inhalt anzeigen */
-            .druck-rezept,
-            .druck-einkaufsliste {
-                visibility: visible;
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-            }
-            
-            /* Navigation und Buttons ausblenden */
-            .navbar,
-            .rezept-actions,
-            .einkaufsliste-info,
-            .filter-section,
-            .personen-input,
-            .rezepte-grid,
-            .rezept-details:not(.druck-rezept),
-            #einkaufsliste-content:not(.druck-einkaufsliste) {
-                display: none !important;
-            }
-            
-            /* Druck-Layout optimieren */
-            .container {
-                padding: 0;
-                margin: 0;
-                max-width: none;
-            }
-            
-            .rezept-details.druck-rezept,
-            .einkaufsliste-kategorie {
-                box-shadow: none;
-                border: none;
-                margin: 0;
-                padding: 1rem;
-            }
-            
-            /* Bessere Lesbarkeit für Druck */
-            .zutaten-section li,
-            .einkaufsliste-item {
-                font-size: 12pt;
-                padding: 0.5rem 0;
-            }
-            
-            h3, h4 {
-                color: #000 !important;
-            }
+    /* DRUCK-STYLES KORRIGIERT */
+    @media print {
+        /* Alles ausblenden */
+        body * {
+            visibility: hidden;
         }
+        
+        /* Nur die Druck-Container anzeigen */
+        #druck-rezept-container,
+        #druck-einkaufsliste-container,
+        #druck-rezept-container *,
+        #druck-einkaufsliste-container * {
+            visibility: visible !important;
+            display: block !important;
+        }
+        
+        /* Druck-Container positionieren */
+        #druck-rezept-container,
+        #druck-einkaufsliste-container {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            background: white !important;
+        }
+        
+        /* Alles andere komplett ausblenden */
+        .navbar,
+        .rezept-actions,
+        .einkaufsliste-info,
+        .filter-section,
+        .personen-input,
+        .rezepte-grid,
+        .rezept-details,
+        #einkaufsliste-content,
+        .container {
+            display: none !important;
+            visibility: hidden !important;
+        }
+        
+        /* Optimierungen für Druck */
+        body {
+            background: white !important;
+            font-size: 12pt !important;
+        }
+        
+        h1, h2, h3 {
+            color: #000 !important;
+            page-break-after: avoid;
+        }
+        
+        table {
+            page-break-inside: avoid;
+        }
+        
+        ol, ul {
+            page-break-inside: avoid;
+        }
+    }
 
         /* Verbesserte Druck-Container */
         .druck-container {
@@ -584,8 +588,8 @@
     </main>
 
     <!-- Versteckte Druck-Container -->
-    <div id="druck-rezept-container" class="druck-container"></div>
-    <div id="druck-einkaufsliste-container" class="druck-container"></div>
+    <div id="druck-rezept-container" class="druck-container" style="display: none;"></div>
+    <div id="druck-einkaufsliste-container" class="druck-container" style="display: none;"></div>
 
     <script>
         // Rezepte Daten - OHNE TL/EL, nur g/ml/kg/l
@@ -1084,98 +1088,106 @@
             return { menge: angezeigteMenge, einheit: finaleEinheit };
         }
 
-        // VERBESSERT: PDF Export für Rezept mit Tabelle
-        function exportRezeptPDF() {
-            if (!aktuellesRezept) {
-                alert('Bitte wähle zuerst ein Rezept aus!');
-                return;
-            }
+
+    // VERBESSERT: PDF Export für Rezept mit Tabelle
+    function exportRezeptPDF() {
+        if (!aktuellesRezept) {
+            alert('Bitte wähle zuerst ein Rezept aus!');
+            return;
+        }
+    
+        console.log('Starte PDF Export für:', aktuellesRezept.titel);
         
-            console.log('Starte PDF Export für:', aktuellesRezept.titel);
-            
-            const druckContainer = document.getElementById('druck-rezept-container');
-            
-            // Zutaten als Tabellenzeilen erstellen
-            const zutatenTabelle = aktuellesRezept.zutaten.map(zutat => {
-                const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
-                const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
-                return `
-                    <tr>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd;">${zutat.name}</td>
-                        <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right; font-weight: bold;">${menge} ${einheit}</td>
-                    </tr>
-                `;
-            }).join('');
+        const druckContainer = document.getElementById('druck-rezept-container');
         
-            // Zubereitung als nummerierte Liste
-            const zubereitungListe = aktuellesRezept.zubereitung.map((schritt, index) => 
-                `<li style="margin-bottom: 10px; line-height: 1.5;">${schritt}</li>`
-            ).join('');
-        
-            // Druck-Container füllen
-            druckContainer.innerHTML = `
-                <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
-                    <!-- Kopfbereich -->
-                    <div style="border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px;">
-                        <h1 style="color: #2c3e50; font-size: 24px; margin-bottom: 15px; text-align: center;">${aktuellesRezept.titel}</h1>
-                        <div style="display: flex; justify-content: center; gap: 25px; font-size: 14px; color: #666; flex-wrap: wrap;">
-                            <span><strong>${aktuellesRezept.kalorien * personenAnzahl} kcal</strong> gesamt</span>
-                            <span><strong>${aktuellesRezept.zubereitungszeit} min</strong> Zubereitung</span>
-                            <span>${aktuellesRezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${aktuellesRezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${aktuellesRezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Zutaten Tabelle -->
-                    <div style="margin-bottom: 30px;">
-                        <h2 style="color: #2c3e50; font-size: 18px; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-bottom: 15px;">
-                            Zutaten für ${personenAnzahl} Personen
-                        </h2>
-                        <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-                            <thead>
-                                <tr>
-                                    <th style="padding: 10px; border-bottom: 2px solid #3498db; text-align: left; background: #f8f9fa;">Zutat</th>
-                                    <th style="padding: 10px; border-bottom: 2px solid #3498db; text-align: right; background: #f8f9fa;">Menge</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${zutatenTabelle}
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- Zubereitung als nummerierte Liste -->
-                    <div style="margin-bottom: 30px;">
-                        <h2 style="color: #2c3e50; font-size: 18px; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-bottom: 15px;">
-                            Zubereitung
-                        </h2>
-                        <ol style="padding-left: 20px; font-size: 14px; line-height: 1.6;">
-                            ${zubereitungListe}
-                        </ol>
-                    </div>
-                    
-                    <!-- Portionierung -->
-                    <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; margin-top: 20px; border-left: 4px solid #3498db;">
-                        <h3 style="color: #2c3e50; font-size: 16px; margin-bottom: 8px;">Portionierung</h3>
-                        <p style="line-height: 1.6; margin: 0; font-size: 14px;">${aktuellesRezept.portionierung}</p>
-                    </div>
-        
-                    <!-- Footer -->
-                    <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #ddd; font-size: 11px; color: #666; text-align: center;">
-                        <p>Erstellt am: ${new Date().toLocaleString('de-DE')} | Quelle: Feldküche - Militärische Verpflegung</p>
+        // Zutaten als Tabellenzeilen erstellen
+        const zutatenTabelle = aktuellesRezept.zutaten.map(zutat => {
+            const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
+            const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
+            return `
+                <tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">${zutat.name}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: right; font-weight: bold;">${menge} ${einheit}</td>
+                </tr>
+            `;
+        }).join('');
+    
+        // Zubereitung als nummerierte Liste
+        const zubereitungListe = aktuellesRezept.zubereitung.map((schritt, index) => 
+            `<li style="margin-bottom: 10px; line-height: 1.5;">${schritt}</li>`
+        ).join('');
+    
+        // NEU: Druck-Container füllen MIT DRUCK-KLASSE
+        druckContainer.innerHTML = `
+            <div class="druck-rezept" style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+                <!-- Kopfbereich -->
+                <div style="border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px;">
+                    <h1 style="color: #2c3e50; font-size: 24px; margin-bottom: 15px; text-align: center;">${aktuellesRezept.titel}</h1>
+                    <div style="display: flex; justify-content: center; gap: 25px; font-size: 14px; color: #666; flex-wrap: wrap;">
+                        <span><strong>${aktuellesRezept.kalorien * personenAnzahl} kcal</strong> gesamt</span>
+                        <span><strong>${aktuellesRezept.zubereitungszeit} min</strong> Zubereitung</span>
+                        <span>${aktuellesRezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${aktuellesRezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${aktuellesRezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}</span>
                     </div>
                 </div>
-            `;
+                
+                <!-- Zutaten Tabelle -->
+                <div style="margin-bottom: 30px;">
+                    <h2 style="color: #2c3e50; font-size: 18px; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-bottom: 15px;">
+                        Zutaten für ${personenAnzahl} Personen
+                    </h2>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
+                        <thead>
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 2px solid #3498db; text-align: left; background: #f8f9fa;">Zutat</th>
+                                <th style="padding: 10px; border-bottom: 2px solid #3498db; text-align: right; background: #f8f9fa;">Menge</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${zutatenTabelle}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Zubereitung als nummerierte Liste -->
+                <div style="margin-bottom: 30px;">
+                    <h2 style="color: #2c3e50; font-size: 18px; border-bottom: 2px solid #3498db; padding-bottom: 8px; margin-bottom: 15px;">
+                        Zubereitung
+                    </h2>
+                    <ol style="padding-left: 20px; font-size: 14px; line-height: 1.6;">
+                        ${zubereitungListe}
+                    </ol>
+                </div>
+                
+                <!-- Portionierung -->
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 4px; margin-top: 20px; border-left: 4px solid #3498db;">
+                    <h3 style="color: #2c3e50; font-size: 16px; margin-bottom: 8px;">Portionierung</h3>
+                    <p style="line-height: 1.6; margin: 0; font-size: 14px;">${aktuellesRezept.portionierung}</p>
+                </div>
+    
+                <!-- Footer -->
+                <div style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #ddd; font-size: 11px; color: #666; text-align: center;">
+                    <p>Erstellt am: ${new Date().toLocaleString('de-DE')} | Quelle: Feldküche - Militärische Verpflegung</p>
+                </div>
+            </div>
+        `;
+    
+        // NEU: Container für Druck sichtbar machen
+        druckContainer.style.display = 'block';
         
-            console.log('Druck-Container gefüllt, starte Druck...');
-            
-            // Drucken
+        console.log('Druck-Container gefüllt, starte Druck...');
+        
+        // Kurz warten dann drucken
+        setTimeout(() => {
             window.print();
             
-            // Container nach Druck leeren
+            // NEU: Nach Druck wieder ausblenden
             setTimeout(() => {
+                druckContainer.style.display = 'none';
                 druckContainer.innerHTML = '';
-            }, 100);
-        }
+                console.log('Druck abgeschlossen, Container geleert');
+            }, 500);
+        }, 100);
+    }
         
         // PDF Export für Einkaufsliste
         function exportEinkaufslistePDF() {
