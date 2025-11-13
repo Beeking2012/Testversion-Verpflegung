@@ -1084,61 +1084,82 @@
         }
 
         // VERBESSERT: PDF Export für Rezept (nur Rezept-Inhalt)
-        function exportRezeptPDF() {
-            if (!aktuellesRezept) {
-                alert('Bitte wähle zuerst ein Rezept aus!');
-                return;
-            }
+        // NEUE FUNKTION: Erstelle ein brauchbares Druck-Rezept
+function generatePrintRecipe() {
+    if (!aktuellesRezept) {
+        return "Kein Rezept ausgewählt";
+    }
 
-            const druckContainer = document.getElementById('druck-rezept-container');
-            
-            // Rezept-Inhalt für Druck vorbereiten
-            druckContainer.innerHTML = `
-                <div class="rezept-details druck-rezept">
-                    <div class="rezept-header">
-                        <h3>${aktuellesRezept.titel}</h3>
-                        <div class="rezept-meta">
-                            <span>${aktuellesRezept.kalorien * personenAnzahl} kcal gesamt</span>
-                            <span>${aktuellesRezept.zubereitungszeit} min Zubereitung</span>
-                            <span>${aktuellesRezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${aktuellesRezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${aktuellesRezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="rezept-content">
-                        <div class="zutaten-section">
-                            <h4>Zutaten für ${personenAnzahl} Personen</h4>
-                            <ul>
-                                ${aktuellesRezept.zutaten.map(zutat => {
-                                    const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
-                                    const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
-                                    return `<li>${menge} ${einheit} ${zutat.name}</li>`;
-                                }).join('')}
-                            </ul>
-                        </div>
-                        
-                        <div class="zubereitung-section">
-                            <h4>Zubereitung</h4>
-                            <ol>
-                                ${aktuellesRezept.zubereitung.map(schritt => `<li>${schritt}</li>`).join('')}
-                            </ol>
-                        </div>
-                        
-                        <div class="portionierung-section">
-                            <h4>Portionierung</h4>
-                            <p>${aktuellesRezept.portionierung}</p>
-                        </div>
-                    </div>
-                </div>
-            `;
+    const zutatenText = aktuellesRezept.zutaten.map(zutat => {
+        const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
+        const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
+        return `- ${menge} ${einheit} ${zutat.name}`;
+    }).join('\n');
 
-            // Drucken
-            window.print();
-            
-            // Container nach Druck leeren
-            setTimeout(() => {
-                druckContainer.innerHTML = '';
-            }, 100);
+    const zubereitungText = aktuellesRezept.zubereitung.map((schritt, index) => 
+        `${index + 1}. ${schritt}`
+    ).join('\n');
+
+    return `
+# ${aktuellesRezept.titel}
+
+## Grundinformationen
+- Personen: ${personenAnzahl}
+- Kalorien gesamt: ${aktuellesRezept.kalorien * personenAnzahl} kcal
+- Zubereitungszeit: ${aktuellesRezept.zubereitungszeit} Minuten
+- Art: ${aktuellesRezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'}
+- Typ: ${aktuellesRezept.verpflegungstyp === 'voll' ? 'Vollverpflegung' : 'Handverpflegung'}
+- Vegetarisch: ${aktuellesRezept.vegetarisch ? 'Ja' : 'Nein'}
+
+## Zutaten
+${zutatenText}
+
+## Zubereitung
+${zubereitungText}
+
+## Portionierung
+${aktuellesRezept.portionierung}
+
+---
+Erstellt am: ${new Date().toLocaleString('de-DE')}
+Quelle: Feldküche - Militärische Verpflegung
+    `.trim();
+}
+
+// NEUE FUNKTION: Verbesserter PDF Export mit brauchbarem Rezept
+    function exportRezeptPDF() {
+        if (!aktuellesRezept) {
+            alert('Bitte wähle zuerst ein Rezept aus!');
+            return;
         }
+    
+        const druckContainer = document.getElementById('druck-rezept-container');
+        
+        // Verwende die neue generatePrintRecipe Funktion
+        const rezeptContent = generatePrintRecipe();
+        
+        // Konvertiere den Text in HTML für die Anzeige
+        const htmlContent = rezeptContent
+            .replace(/# (.+)/g, '<h1>$1</h1>')
+            .replace(/## (.+)/g, '<h2>$1</h2>')
+            .replace(/- (.+)/g, '<li>$1</li>')
+            .replace(/(\d+)\. (.+)/g, '<li>$2</li>')
+            .replace(/(\n)/g, '<br>');
+    
+        druckContainer.innerHTML = `
+            <div class="rezept-details druck-rezept" style="font-family: Arial, sans-serif; padding: 20px;">
+                ${htmlContent}
+            </div>
+        `;
+    
+        // Drucken
+        window.print();
+        
+        // Container nach Druck leeren
+        setTimeout(() => {
+            druckContainer.innerHTML = '';
+        }, 100);
+    }
 
         // VERBESSERT: PDF Export für Einkaufsliste (nur Einkaufslisten-Inhalt)
         function exportEinkaufslistePDF() {
