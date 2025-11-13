@@ -69,6 +69,111 @@ const rezepteDaten = [
             "25-30 Minuten backen bis die Oberfläche goldbraun ist"
         ],
         portionierung: "In Auflaufformen portionieren. Pro Person 1/8 der Form. Mit frischem Feldsalat oder eingelegtem Gemüse servieren. Für Außeneinsätze in Aluschalen abfüllen."
+    },
+    {
+        id: 3,
+        titel: "Feld-Sandwiches",
+        beschreibung: "Praktische Handverpflegung mit Gemüse",
+        verpflegungsart: "kalt",
+        verpflegungstyp: "hand",
+        vegetarisch: true,
+        kalorien: 380,
+        zubereitungszeit: 15,
+        zutaten: [
+            { menge: 8, einheit: "Scheiben", name: "Vollkornbrot" },
+            { menge: 200, einheit: "g", name: "Frischkäse, natur" },
+            { menge: 1, einheit: "", name: "Gurke, in dünnen Scheiben" },
+            { menge: 1, einheit: "", name: "Tomate, in dünnen Scheiben" },
+            { menge: 4, einheit: "Blätter", name: "Eisbergsalat" },
+            { menge: 1, einheit: "", name: "Avocado, reif" },
+            { menge: 2, einheit: "EL", name: "Zitronensaft" },
+            { menge: 1, einheit: "", name: "Rote Zwiebel, in dünnen Ringen" },
+            { menge: 1, einheit: "Prise", name: "Salz" },
+            { menge: 1, einheit: "Prise", name: "Pfeffer" },
+            { menge: 1, einheit: "TL", name: "getrockneter Dill" }
+        ],
+        zubereitung: [
+            "Brot scheibenweise mit Frischkäse bestreichen",
+            "Avocado halbieren, Stein entfernen, Fruchtfleisch herauslöffeln",
+            "Avocado mit Zitronensauf, Salz und Pfeffer zerdrücken",
+            "Auf 4 Brotscheiben Salatblätter legen",
+            "Gurken- und Tomatenscheiben gleichmäßig darauf anordnen",
+            "Rote Zwiebelringe darüber verteilen",
+            "Avocadocreme gleichmäßig auf den belegten Scheiben verteilen",
+            "Mit getrocknetem Dill bestreuen",
+            "Mit restlichen Brotscheiben bedecken und leicht andrücken",
+            "Sandwiches diagonal durchschneiden für bessere Handhabung"
+        ],
+        portionierung: "Jedes Sandwich einzeln in Frischhaltefolie oder Butterbrotpapier wickeln. Pro Person 1 Sandwich (2 Dreiecke). Für längere Touren kühl transportieren. Mit Apfel oder Müsliriegel ergänzen."
+    },
+    {
+        id: 4,
+        titel: "Energie-Müsli",
+        beschreibung: "Kaltes Müsli mit Nüssen und Trockenfrüchten",
+        verpflegungsart: "kalt",
+        verpflegungstyp: "hand",
+        vegetarisch: true,
+        kalorien: 420,
+        zubereitungszeit: 10,
+        zutaten: [
+            { menge: 400, einheit: "g", name: "Haferflocken, zart" },
+            { menge: 100, einheit: "g", name: "Nüsse, gemischt (Walnüsse, Haselnüsse)" },
+            { menge: 100, einheit: "g", name: "Trockenfrüchte (Rosinen, Aprikosen)" },
+            { menge: 50, einheit: "g", name: "Sonnenblumenkerne" },
+            { menge: 50, einheit: "g", name: "Kürbiskerne" },
+            { menge: 4, einheit: "EL", name: "Honig" },
+            { menge: 2, einheit: "TL", name: "Zimt" },
+            { menge: 1, einheit: "Prise", name: "Salz" },
+            { menge: 1, einheit: "l", name: "Milch oder Pflanzenmilch" }
+        ],
+        zubereitung: [
+            "Haferflocken in eine große Schüssel geben",
+            "Nüsse grob hacken und zu den Haferflocken geben",
+            "Trockenfrüchte klein schneiden und untermischen",
+            "Sonnenblumenkerne und Kürbiskerne hinzufügen",
+            "Honig, Zimt und eine Prise Salz unterrühren",
+            "Alles gut vermengen bis eine gleichmäßige Mischung entsteht",
+            "In verschließbare Behälter oder Beutel abfüllen"
+        ],
+        portionierung: "In wiederverschließbare Beutel oder Dosen portionieren. Pro Person 150g Müsli mit 250ml Milch. Trocken portioniert für Feldverpflegung geeignet. Mit frischen Beeren oder Bananen ergänzbar."
+    },
+    {
+        id: 5,
+        titel: "Gulasch mit Fleisch",
+        beschreibung: "Klassisches Gulasch nach Feldküchenart",
+        verpflegungsart: "warm",
+        verpflegungstyp: "voll",
+        vegetarisch: false,
+        kalorien: 580,
+        zubereitungszeit: 90,
+        zutaten: [
+            { menge: 800, einheit: "g", name: "Rindergulasch" },
+            { menge: 3, einheit: "", name: "Zwiebeln, gewürfelt" },
+            { menge: 2, einheit: "", name: "Paprika, in Streifen" },
+            { menge: 3, einheit: "EL", name: "Tomatenmark" },
+            { menge: 2, einheit: "l", name: "Rinderbrühe" },
+            { menge: 2, einheit: "EL", name: "Paprikapulver, edelsüß" },
+            { menge: 1, einheit: "EL", name: "Majoran" },
+            { menge: 2, einheit: "EL", name: "Öl" },
+            { menge: 1, einheit: "EL", name: "Mehl" },
+            { menge: 2, einheit: "", name: "Lorbeerblätter" },
+            { menge: 1, einheit: "TL", name: "Kümmel" },
+            { menge: 1, einheit: "TL", name: "Salz" },
+            { menge: 0.5, einheit: "TL", name: "Pfeffer" }
+        ],
+        zubereitung: [
+            "Fleisch trocken tupfen und in einem großen Gusseisentopf portionsweise scharf anbraten",
+            "Fleisch herausnehmen, Zwiebeln im Bratfond glasig dünsten",
+            "Tomatenmark einrühren und kurz mitrösten bis es dunkler wird",
+            "Paprikapulver zugeben und kurz mitdünsten (nicht verbrennen lassen!)",
+            "Fleisch zurück in den Topf geben, mit Mehl bestäuben und kurz mitrösten",
+            "Mit Rinderbrühe ablöschen, kräftig aufkochen lassen",
+            "Majoran, Lorbeerblätter und Kümmel zugeben",
+            "Bei kleiner Hitze 60 Minuten köcheln lassen, gelegentlich umrühren",
+            "Paprika in Streifen schneiden und zugeben, weitere 20 Minuten garen",
+            "Mit Salz und Pfeffer abschmecken, Lorbeerblätter entfernen"
+        ],
+        portionierung: "Mit Salzkartoffeln oder frischem Brot servieren. Pro Person 300g Gulasch mit Beilage. In Feldküchen-Töpfen warm halten. Für mobile Einsätze in Thermosbehältern transportieren."
     }
 ];
 
@@ -221,21 +326,13 @@ function zeigeAusgewaehltesRezept() {
     document.getElementById('rezept-zubereitungszeit').textContent = `${rezept.zubereitungszeit} min Zubereitung`;
     document.getElementById('rezept-art').textContent = `${rezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${rezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}`;
 
-    // Zutaten anzeigen (skaliert)
+    // Zutaten anzeigen (skaliert mit Feldküchen-Umrechnung)
     const zutatenListe = document.getElementById('rezept-zutaten');
     zutatenListe.innerHTML = rezept.zutaten.map(zutat => {
         const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
+        const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
         
-        // Einfache Formatierung ohne Umrechnung
-        let angezeigteMenge = skalierteMenge;
-        if (skalierteMenge % 1 !== 0) {
-            angezeigteMenge = skalierteMenge.toFixed(1);
-        }
-        
-        // Für leere Einheiten "Stück" anzeigen
-        const einheit = zutat.einheit === "" ? "Stück" : zutat.einheit;
-        
-        return `<li>${angezeigteMenge} ${einheit} ${zutat.name}</li>`;
+        return `<li>${menge} ${einheit} ${zutat.name}</li>`;
     }).join('');
 
     // Zubereitung anzeigen
@@ -277,37 +374,127 @@ function aktualisiereEinkaufsliste() {
     
     const container = document.getElementById('einkaufsliste-content');
     
-    // Einfache Liste ohne Gruppierung
-    const zutatenListe = aktuellesRezept.zutaten.map(zutat => {
-        const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
-        
-        // Einfache Formatierung ohne Umrechnung
-        let angezeigteMenge = skalierteMenge;
-        if (skalierteMenge % 1 !== 0) {
-            angezeigteMenge = skalierteMenge.toFixed(1);
-        }
-        
-        // Für leere Einheiten "Stück" anzeigen
-        const einheit = zutat.einheit === "" ? "Stück" : zutat.einheit;
-        
-        return {
-            name: zutat.name,
-            menge: angezeigteMenge,
-            einheit: einheit
-        };
-    });
+    // Zutaten für Einkaufsliste mit Feldküchen-Umrechnung
+    const zutatenGruppiert = gruppiereZutaten(aktuellesRezept.zutaten);
     
-    container.innerHTML = `
+    if (Object.keys(zutatenGruppiert).length === 0) {
+        container.innerHTML = '<p>Keine Zutaten gefunden.</p>';
+        return;
+    }
+    
+    container.innerHTML = Object.keys(zutatenGruppiert).map(kategorie => `
         <div class="einkaufsliste-kategorie">
-            <h3>Alle Zutaten</h3>
-            ${zutatenListe.map(zutat => `
+            <h3>${kategorie}</h3>
+            ${zutatenGruppiert[kategorie].map(zutat => `
                 <div class="einkaufsliste-item">
                     <span>${zutat.name}</span>
                     <span>${zutat.menge} ${zutat.einheit}</span>
                 </div>
             `).join('')}
         </div>
-    `;
+    `).join('');
+}
+
+// Zutaten nach Kategorien gruppieren mit Feldküchen-Umrechnung
+function gruppiereZutaten(zutaten) {
+    const gruppiert = {
+        'Gemüse & Obst': [],
+        'Proteine': [],
+        'Getreide & Beilagen': [],
+        'Milchprodukte': [],
+        'Gewürze & Öle': []
+    };
+
+    zutaten.forEach(zutat => {
+        const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
+        const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
+
+        const zutatMitMenge = {
+            ...zutat,
+            menge: menge,
+            einheit: einheit
+        };
+
+        // Kategorisierung basierend auf Zutatenname
+        const name = zutat.name.toLowerCase();
+        if (name.includes('kartoffel') || name.includes('karotte') || name.includes('zwiebel') || 
+            name.includes('tomate') || name.includes('gurke') || name.includes('brokkoli') ||
+            name.includes('paprika') || name.includes('avocado') || name.includes('salat') ||
+            name.includes('obst') || name.includes('frucht')) {
+            gruppiert['Gemüse & Obst'].push(zutatMitMenge);
+        } else if (name.includes('tofu') || name.includes('fleisch') || name.includes('rinder') || 
+                   name.includes('ei') || name.includes('nuss') || name.includes('protein')) {
+            gruppiert['Proteine'].push(zutatMitMenge);
+        } else if (name.includes('nudel') || name.includes('brot') || name.includes('hafer') ||
+                   name.includes('reis') || name.includes('getreide') || name.includes('müsli')) {
+            gruppiert['Getreide & Beilagen'].push(zutatMitMenge);
+        } else if (name.includes('käse') || name.includes('sahne') || name.includes('milch') || 
+                   name.includes('frischkäse') || name.includes('parmesan') || name.includes('gouda') ||
+                   name.includes('butter')) {
+            gruppiert['Milchprodukte'].push(zutatMitMenge);
+        } else {
+            gruppiert['Gewürze & Öle'].push(zutatMitMenge);
+        }
+    });
+
+    // Leere Kategorien entfernen
+    Object.keys(gruppiert).forEach(kategorie => {
+        if (gruppiert[kategorie].length === 0) {
+            delete gruppiert[kategorie];
+        }
+    });
+
+    return gruppiert;
+}
+
+// Automatische Umrechnung für Feldküchen-Mengen
+function konvertiereZuFeldkueche(menge, einheit, zutatName) {
+    const name = zutatName.toLowerCase();
+    
+    // Für große Mengen (ab 1000) in kg/l umrechnen
+    if (einheit === "g" && menge >= 1000) {
+        return { menge: (menge / 1000).toFixed(1), einheit: "kg" };
+    }
+    if (einheit === "ml" && menge >= 1000) {
+        return { menge: (menge / 1000).toFixed(1), einheit: "l" };
+    }
+    
+    // Für spezifische Zutaten automatisch passende Einheiten
+    if (einheit === "" || einheit === "Stück") {
+        if (name.includes('kartoffel') || name.includes('karotte') || name.includes('zwiebel') || 
+            name.includes('tomate') || name.includes('gurke') || name.includes('brokkoli') ||
+            name.includes('paprika') || name.includes('avocado')) {
+            if (menge >= 10) {
+                return { menge: Math.round(menge), einheit: "kg" };
+            }
+        }
+    }
+    
+    // Für Öl, Tomatenmark etc. bei großen Mengen
+    if ((einheit === "EL" || einheit === "TL") && menge >= 50) {
+        if (name.includes('öl') || name.includes('tomatenmark')) {
+            const literMenge = einheit === "EL" ? menge * 0.015 : menge * 0.005;
+            if (literMenge >= 1) {
+                return { menge: literMenge.toFixed(1), einheit: "l" };
+            }
+        } else {
+            const kgMenge = einheit === "EL" ? menge * 0.015 : menge * 0.005;
+            if (kgMenge >= 1) {
+                return { menge: kgMenge.toFixed(1), einheit: "kg" };
+            }
+        }
+    }
+    
+    // Standard: Einheit beibehalten, aber runden
+    let angezeigteMenge = menge;
+    if (menge % 1 !== 0) {
+        angezeigteMenge = menge.toFixed(1);
+    }
+    
+    // Für leere Einheiten "Stück" anzeigen
+    const finaleEinheit = einheit === "" ? "Stück" : einheit;
+    
+    return { menge: angezeigteMenge, einheit: finaleEinheit };
 }
 
 // PDF Export für Rezept
