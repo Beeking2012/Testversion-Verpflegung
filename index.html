@@ -954,7 +954,7 @@
 
             // Details anzeigen
             document.getElementById('rezept-titel').textContent = rezept.titel;
-            document.getElementById('rezept-kalorien').textContent = `${rezept.kalorien * personenAnzahl} kcal gesamt`;
+            document.getElementById('rezept-kalorien').textContent = `${rezept.kalorien} kcal gesamt`;
             document.getElementById('rezept-zubereitungszeit').textContent = `${skalierteZeit} min Zubereitung`;
             document.getElementById('rezept-art').textContent = `${rezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${rezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}`;
 
