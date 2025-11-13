@@ -363,31 +363,65 @@
             display: block;
         }
 
-        /* Druck-Styles für PDF-Export */
+        /* Druck-Styles für PDF-Export - VERBESSERT */
         @media print {
+            /* Immer alles ausblenden */
+            body * {
+                visibility: hidden;
+            }
+            
+            /* Nur den relevanten Inhalt anzeigen */
+            .druck-rezept,
+            .druck-einkaufsliste {
+                visibility: visible;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            
+            /* Navigation und Buttons ausblenden */
             .navbar,
             .rezept-actions,
-            .einkaufsliste-info button {
+            .einkaufsliste-info,
+            .filter-section,
+            .personen-input,
+            .rezepte-grid,
+            .rezept-details:not(.druck-rezept),
+            #einkaufsliste-content:not(.druck-einkaufsliste) {
                 display: none !important;
             }
             
-            .content {
-                margin-top: 0;
-            }
-            
+            /* Druck-Layout optimieren */
             .container {
                 padding: 0;
+                margin: 0;
+                max-width: none;
             }
             
-            .page {
-                display: block !important;
-            }
-            
-            .rezept-details,
+            .rezept-details.druck-rezept,
             .einkaufsliste-kategorie {
                 box-shadow: none;
-                border: 1px solid #ddd;
+                border: none;
+                margin: 0;
+                padding: 1rem;
             }
+            
+            /* Bessere Lesbarkeit für Druck */
+            .zutaten-section li,
+            .einkaufsliste-item {
+                font-size: 12pt;
+                padding: 0.5rem 0;
+            }
+            
+            h3, h4 {
+                color: #000 !important;
+            }
+        }
+
+        /* Verbesserte Druck-Container */
+        .druck-container {
+            display: none;
         }
 
         /* Responsive Design */
@@ -546,6 +580,10 @@
             </div>
         </div>
     </main>
+
+    <!-- Versteckte Druck-Container -->
+    <div id="druck-rezept-container" class="druck-container"></div>
+    <div id="druck-einkaufsliste-container" class="druck-container"></div>
 
     <script>
         // Rezepte Daten
@@ -1055,22 +1093,102 @@
             return { menge: angezeigteMenge, einheit: finaleEinheit };
         }
 
-        // PDF Export für Rezept
+        // VERBESSERT: PDF Export für Rezept (nur Rezept-Inhalt)
         function exportRezeptPDF() {
             if (!aktuellesRezept) {
                 alert('Bitte wähle zuerst ein Rezept aus!');
                 return;
             }
+
+            const druckContainer = document.getElementById('druck-rezept-container');
+            
+            // Rezept-Inhalt für Druck vorbereiten
+            druckContainer.innerHTML = `
+                <div class="rezept-details druck-rezept">
+                    <div class="rezept-header">
+                        <h3>${aktuellesRezept.titel}</h3>
+                        <div class="rezept-meta">
+                            <span>${aktuellesRezept.kalorien * personenAnzahl} kcal gesamt</span>
+                            <span>${aktuellesRezept.zubereitungszeit} min Zubereitung</span>
+                            <span>${aktuellesRezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${aktuellesRezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${aktuellesRezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="rezept-content">
+                        <div class="zutaten-section">
+                            <h4>Zutaten für ${personenAnzahl} Personen</h4>
+                            <ul>
+                                ${aktuellesRezept.zutaten.map(zutat => {
+                                    const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
+                                    const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
+                                    return `<li>${menge} ${einheit} ${zutat.name}</li>`;
+                                }).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div class="zubereitung-section">
+                            <h4>Zubereitung</h4>
+                            <ol>
+                                ${aktuellesRezept.zubereitung.map(schritt => `<li>${schritt}</li>`).join('')}
+                            </ol>
+                        </div>
+                        
+                        <div class="portionierung-section">
+                            <h4>Portionierung</h4>
+                            <p>${aktuellesRezept.portionierung}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Drucken
             window.print();
+            
+            // Container nach Druck leeren
+            setTimeout(() => {
+                druckContainer.innerHTML = '';
+            }, 100);
         }
 
-        // PDF Export für Einkaufsliste
+        // VERBESSERT: PDF Export für Einkaufsliste (nur Einkaufslisten-Inhalt)
         function exportEinkaufslistePDF() {
             if (!aktuellesRezept) {
                 alert('Bitte wähle zuerst ein Rezept aus!');
                 return;
             }
+
+            const druckContainer = document.getElementById('druck-einkaufsliste-container');
+            const zutatenGruppiert = gruppiereZutaten(aktuellesRezept.zutaten);
+            
+            // Einkaufslisten-Inhalt für Druck vorbereiten
+            druckContainer.innerHTML = `
+                <div class="druck-einkaufsliste">
+                    <div style="text-align: center; margin-bottom: 2rem;">
+                        <h2>Einkaufsliste</h2>
+                        <p><strong>${aktuellesRezept.titel}</strong> für ${personenAnzahl} Personen</p>
+                    </div>
+                    
+                    ${Object.keys(zutatenGruppiert).map(kategorie => `
+                        <div class="einkaufsliste-kategorie">
+                            <h3>${kategorie}</h3>
+                            ${zutatenGruppiert[kategorie].map(zutat => `
+                                <div class="einkaufsliste-item">
+                                    <span>${zutat.name}</span>
+                                    <span>${zutat.menge} ${zutat.einheit}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // Drucken
             window.print();
+            
+            // Container nach Druck leeren
+            setTimeout(() => {
+                druckContainer.innerHTML = '';
+            }, 100);
         }
     </script>
 </body>
