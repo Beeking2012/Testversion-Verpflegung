@@ -14,14 +14,27 @@
         body {
             font-family: 'Arial', sans-serif;
             line-height: 1.6;
-            background-color: #f5f5f5;
+            background-color: #f9f9f9;
             color: #333;
+        }
+
+        /* DRK Farbpalette */
+        :root {
+            --drk-rot: #d4001a;
+            --drk-rot-dunkel: #b30016;
+            --drk-rot-hell: #ff4d4d;
+            --drk-grau: #4a4a4a;
+            --drk-grau-hell: #f5f5f5;
+            --drk-weiss: #ffffff;
+            --drk-gruen: #2e7d32;
+            --drk-orange: #ff9800;
+            --drk-gelb: #ffc107;
         }
 
         /* Kopfleiste */
         .navbar {
-            background: #2c3e50;
-            color: white;
+            background: var(--drk-rot);
+            color: var(--drk-weiss);
             padding: 1rem 0;
             position: fixed;
             width: 100%;
@@ -50,7 +63,7 @@
         }
 
         .nav-link {
-            color: white;
+            color: var(--drk-weiss);
             text-decoration: none;
             padding: 0.5rem 1rem;
             border-radius: 4px;
@@ -59,7 +72,7 @@
 
         .nav-link:hover,
         .nav-link.active {
-            background-color: #34495e;
+            background-color: var(--drk-rot-dunkel);
         }
 
         /* Hauptinhalt */
@@ -76,7 +89,7 @@
 
         /* Filter-Sektion */
         .filter-section {
-            background: white;
+            background: var(--drk-weiss);
             padding: 1.5rem;
             border-radius: 8px;
             margin-bottom: 2rem;
@@ -96,6 +109,7 @@
         .filter-group label {
             font-weight: bold;
             font-size: 0.9rem;
+            color: var(--drk-grau);
         }
 
         select, input[type="number"], input[type="text"], input[type="date"] {
@@ -106,7 +120,7 @@
         }
 
         .personen-input {
-            background: white;
+            background: var(--drk-weiss);
             padding: 1.5rem;
             border-radius: 8px;
             margin-bottom: 2rem;
@@ -116,6 +130,7 @@
         .personen-input label {
             font-weight: bold;
             margin-right: 1rem;
+            color: var(--drk-grau);
         }
 
         .personen-input input {
@@ -131,7 +146,7 @@
         }
 
         .rezept-karte {
-            background: white;
+            background: var(--drk-weiss);
             border-radius: 8px;
             padding: 1.5rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -146,12 +161,12 @@
         }
 
         .rezept-karte.ausgewaehlt {
-            border-color: #3498db;
-            background-color: #f8f9fa;
+            border-color: var(--drk-rot);
+            background-color: #fff5f5;
         }
 
         .rezept-karte h4 {
-            color: #2c3e50;
+            color: var(--drk-rot);
             margin-bottom: 0.5rem;
         }
 
@@ -159,7 +174,7 @@
             display: flex;
             gap: 1rem;
             font-size: 0.9rem;
-            color: #666;
+            color: var(--drk-grau);
             margin-bottom: 0.5rem;
             flex-wrap: wrap;
         }
@@ -172,7 +187,7 @@
 
         /* Rezept Details */
         .rezept-details {
-            background: white;
+            background: var(--drk-weiss);
             border-radius: 8px;
             padding: 2rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
@@ -180,13 +195,13 @@
         }
 
         .rezept-header {
-            border-bottom: 2px solid #ecf0f1;
+            border-bottom: 2px solid #e0e0e0;
             padding-bottom: 1rem;
             margin-bottom: 2rem;
         }
 
         .rezept-header h3 {
-            color: #2c3e50;
+            color: var(--drk-rot);
             font-size: 1.8rem;
             margin-bottom: 1rem;
         }
@@ -195,7 +210,7 @@
             display: flex;
             gap: 2rem;
             font-size: 0.9rem;
-            color: #7f8c8d;
+            color: var(--drk-grau);
             flex-wrap: wrap;
         }
 
@@ -208,13 +223,13 @@
         .zutaten-section h4,
         .zubereitung-section h4,
         .portionierung-section h4 {
-            color: #2c3e50;
+            color: var(--drk-rot);
             margin-bottom: 1rem;
             font-size: 1.2rem;
         }
 
         .zutaten-section h4 {
-            border-bottom: 2px solid #3498db;
+            border-bottom: 2px solid var(--drk-rot);
             padding-bottom: 0.5rem;
         }
 
@@ -225,7 +240,7 @@
 
         .zutaten-section li {
             padding: 0.75rem 0;
-            border-bottom: 1px solid #ecf0f1;
+            border-bottom: 1px solid #e0e0e0;
             font-size: 1rem;
         }
 
@@ -241,20 +256,20 @@
             padding: 0.75rem 0;
             margin-bottom: 0.5rem;
             line-height: 1.6;
-            border-bottom: 1px solid #f8f9fa;
+            border-bottom: 1px solid #f5f5f5;
         }
 
         .portionierung-section {
             grid-column: 1 / -1;
-            background: #e8f4f8;
+            background: #fff5f5;
             padding: 1.5rem;
             border-radius: 6px;
             margin-top: 1rem;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid var(--drk-rot);
         }
 
         .portionierung-section h4 {
-            color: #2c3e50;
+            color: var(--drk-rot);
             margin-bottom: 0.5rem;
         }
 
@@ -268,12 +283,12 @@
             gap: 1rem;
             margin-top: 2rem;
             padding-top: 2rem;
-            border-top: 2px solid #ecf0f1;
+            border-top: 2px solid #e0e0e0;
         }
 
         button {
-            background: #3498db;
-            color: white;
+            background: var(--drk-rot);
+            color: var(--drk-weiss);
             border: none;
             padding: 0.75rem 1.5rem;
             border-radius: 4px;
@@ -283,44 +298,44 @@
         }
 
         button:hover {
-            background: #2980b9;
+            background: var(--drk-rot-dunkel);
         }
 
         button.secondary {
-            background: #95a5a6;
+            background: var(--drk-grau);
         }
 
         button.secondary:hover {
-            background: #7f8c8d;
+            background: #3a3a3a;
         }
 
         button.success {
-            background: #27ae60;
+            background: var(--drk-gruen);
         }
 
         button.success:hover {
-            background: #219a52;
+            background: #1b5e20;
         }
 
         button.warning {
-            background: #e67e22;
+            background: var(--drk-orange);
         }
 
         button.warning:hover {
-            background: #d35400;
+            background: #e65100;
         }
 
         button.danger {
-            background: #e74c3c;
+            background: #c62828;
         }
 
         button.danger:hover {
-            background: #c0392b;
+            background: #b71c1c;
         }
 
         /* Einkaufsliste */
         .einkaufsliste-optionen {
-            background: white;
+            background: var(--drk-weiss);
             padding: 1.5rem;
             border-radius: 8px;
             margin-bottom: 2rem;
@@ -337,6 +352,7 @@
             align-items: center;
             gap: 0.5rem;
             cursor: pointer;
+            color: var(--drk-grau);
         }
 
         .einkaufsliste-optionen input[type="radio"] {
@@ -344,7 +360,7 @@
         }
 
         .einkaufsliste-info {
-            background: white;
+            background: var(--drk-weiss);
             padding: 1.5rem;
             border-radius: 8px;
             margin-bottom: 2rem;
@@ -362,11 +378,11 @@
         }
 
         .einkaufsliste-info p strong {
-            color: #2c3e50;
+            color: var(--drk-rot);
         }
 
         .einkaufsliste-container {
-            background: white;
+            background: var(--drk-weiss);
             border-radius: 8px;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
@@ -374,9 +390,9 @@
         }
 
         .einkaufsliste-container h3 {
-            color: #2c3e50;
+            color: var(--drk-rot);
             margin-bottom: 1rem;
-            border-bottom: 2px solid #ecf0f1;
+            border-bottom: 2px solid #e0e0e0;
             padding-bottom: 0.5rem;
         }
 
@@ -384,7 +400,7 @@
             display: flex;
             justify-content: space-between;
             padding: 0.75rem 0;
-            border-bottom: 1px solid #ecf0f1;
+            border-bottom: 1px solid #e0e0e0;
             align-items: center;
         }
 
@@ -397,24 +413,24 @@
         }
 
         .einkaufsliste-item span:last-child {
-            color: #3498db;
+            color: var(--drk-rot);
             font-weight: bold;
         }
 
         .einkaufsliste-item.aus-lager {
-            background-color: #e8f6f3;
-            border-left: 4px solid #27ae60;
+            background-color: #f1f8e9;
+            border-left: 4px solid var(--drk-gruen);
             padding-left: 1rem;
         }
 
         .einkaufsliste-item.aus-lager span:first-child {
             text-decoration: line-through;
-            color: #7f8c8d;
+            color: var(--drk-grau);
         }
 
         .einkaufsliste-item.aus-lager::after {
             content: "✓ Aus Lager";
-            background: #27ae60;
+            background: var(--drk-gruen);
             color: white;
             padding: 0.25rem 0.5rem;
             border-radius: 12px;
@@ -424,14 +440,14 @@
 
         /* NEUE CSS-KLASSEN für teilweise Lagerdeckung */
         .einkaufsliste-item.teilweise-aus-lager {
-            background-color: #fff3cd;
-            border-left: 4px solid #ffc107;
+            background-color: #fff8e1;
+            border-left: 4px solid var(--drk-gelb);
             padding-left: 1rem;
         }
 
         .einkaufsliste-item.teilweise-aus-lager::after {
             content: "✓ Teilweise aus Lager";
-            background: #ffc107;
+            background: var(--drk-gelb);
             color: #212529;
             padding: 0.25rem 0.5rem;
             border-radius: 12px;
@@ -442,26 +458,26 @@
 
         .lager-details {
             font-size: 0.8rem;
-            color: #666;
+            color: var(--drk-grau);
             margin-top: 0.25rem;
         }
 
         .lager-details .aus-lager {
-            color: #27ae60;
+            color: var(--drk-gruen);
             font-weight: bold;
         }
 
         .lager-details .zu-kaufen {
-            color: #e74c3c;
+            color: var(--drk-rot);
             font-weight: bold;
         }
 
         .lager-hinweis {
-            background: #e8f4f8;
+            background: #fff5f5;
             padding: 1rem;
             border-radius: 6px;
             margin-top: 1rem;
-            border-left: 4px solid #3498db;
+            border-left: 4px solid var(--drk-rot);
             font-size: 0.9rem;
         }
 
@@ -469,12 +485,12 @@
         .lager-tabs {
             display: flex;
             margin-bottom: 1rem;
-            border-bottom: 2px solid #ecf0f1;
+            border-bottom: 2px solid #e0e0e0;
         }
 
         .lager-tab {
             padding: 1rem 2rem;
-            background: #f8f9fa;
+            background: var(--drk-grau-hell);
             border: none;
             cursor: pointer;
             font-size: 1rem;
@@ -483,21 +499,21 @@
         }
 
         .lager-tab.active {
-            background: white;
-            border-bottom-color: #3498db;
+            background: var(--drk-weiss);
+            border-bottom-color: var(--drk-rot);
             font-weight: bold;
         }
 
         .lager-tab.lebensmittel.active {
-            border-bottom-color: #27ae60;
+            border-bottom-color: var(--drk-gruen);
         }
 
         .lager-tab.material.active {
-            border-bottom-color: #e67e22;
+            border-bottom-color: var(--drk-orange);
         }
 
         .lager-controls {
-            background: white;
+            background: var(--drk-weiss);
             padding: 1.5rem;
             border-radius: 8px;
             margin-bottom: 2rem;
@@ -524,10 +540,11 @@
         .form-group label {
             font-weight: bold;
             font-size: 0.9rem;
+            color: var(--drk-grau);
         }
 
         .lager-table {
-            background: white;
+            background: var(--drk-weiss);
             border-radius: 8px;
             overflow: hidden;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -543,33 +560,33 @@
         .lager-table td {
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #ecf0f1;
+            border-bottom: 1px solid #e0e0e0;
         }
 
         .lager-table th {
-            background: #34495e;
-            color: white;
+            background: var(--drk-rot);
+            color: var(--drk-weiss);
             font-weight: 600;
         }
 
         .lager-table tr:hover {
-            background: #f8f9fa;
+            background: var(--drk-grau-hell);
         }
 
         .lager-table .low-stock {
-            background: #ffeaa7;
+            background: #fff8e1;
         }
 
         .lager-table .critical-stock {
-            background: #fab1a0;
+            background: #ffebee;
         }
 
         .lager-table .expired {
-            background: #ff7675;
+            background: #ffcdd2;
         }
 
         .lager-table .expiring-soon {
-            background: #ffeaa7;
+            background: #fff8e1;
         }
 
         .lager-actions {
@@ -598,7 +615,7 @@
         }
 
         .stat-card {
-            background: white;
+            background: var(--drk-weiss);
             padding: 1.5rem;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -606,7 +623,7 @@
         }
 
         .stat-card h3 {
-            color: #2c3e50;
+            color: var(--drk-grau);
             margin-bottom: 0.5rem;
             font-size: 1.1rem;
         }
@@ -614,23 +631,23 @@
         .stat-card .number {
             font-size: 2rem;
             font-weight: bold;
-            color: #3498db;
+            color: var(--drk-rot);
         }
 
         .stat-card.warning .number {
-            color: #e67e22;
+            color: var(--drk-orange);
         }
 
         .stat-card.critical .number {
-            color: #e74c3c;
+            color: #c62828;
         }
 
         .keine-rezepte {
             text-align: center;
             padding: 2rem;
-            background: white;
+            background: var(--drk-weiss);
             border-radius: 8px;
-            color: #666;
+            color: var(--drk-grau);
         }
 
         /* Seiten werden standardmäßig ausgeblendet */
@@ -987,20 +1004,20 @@
                 </div>
 
                 <!-- Cloud-Synchronisation -->
-                <div class="cloud-actions" style="margin-top: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border: 2px solid #3498db;">
-                    <h3 style="color: #2c3e50; margin-bottom: 1rem;">☁️ Cloud-Synchronisation</h3>
+                <div class="cloud-actions" style="margin-top: 2rem; padding: 1.5rem; background: #f5f5f5; border-radius: 8px; border: 2px solid var(--drk-rot);">
+                    <h3 style="color: var(--drk-rot); margin-bottom: 1rem;">☁️ Cloud-Synchronisation</h3>
                     <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <button onclick="cloudSpeichern()" style="background: #3498db; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem;">
+                        <button onclick="cloudSpeichern()" style="background: var(--drk-rot); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem;">
                             📱 In Cloud speichern
                         </button>
-                        <button onclick="cloudLaden()" style="background: #27ae60; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem;">
+                        <button onclick="cloudLaden()" style="background: var(--drk-gruen); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem;">
                             ⬇️ Aus Cloud laden
                         </button>
-                        <button onclick="cloudStatusPrüfen()" style="background: #f39c12; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem;">
+                        <button onclick="cloudStatusPrüfen()" style="background: var(--drk-orange); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem;">
                             🔄 Sync-Status prüfen
                         </button>
                     </div>
-                    <div id="cloud-status" style="margin-top: 1rem; font-size: 0.9rem; color: #666;"></div>
+                    <div id="cloud-status" style="margin-top: 1rem; font-size: 0.9rem; color: var(--drk-grau);"></div>
                 </div>
             </div>
         </div>
@@ -2276,7 +2293,7 @@
                     ${einkaufslisteHTML}
                     ${hinweisHTML}
                     <!-- Getränke immer separat -->
-                    <div class="einkaufsliste-item" style="background-color: #e8f4f8; margin-top: 10px; padding: 10px; border-radius: 4px;">
+                    <div class="einkaufsliste-item" style="background-color: #fff5f5; margin-top: 10px; padding: 10px; border-radius: 4px;">
                         <span><strong>Getränke (Wasser, Saftschorle)</strong></span>
                         <span><strong>${personenAnzahl} l</strong></span>
                     </div>
@@ -2763,6 +2780,7 @@
             }
         }
 
+        // VERBESSERTE CSV-EXPORT-FUNKTION
         function lagerExportieren() {
             const aktuellesLager = lagerDaten[aktuellerLagerTab];
             const lagerTyp = aktuellerLagerTab === 'lebensmittel' ? 'Lebensmittel' : 'Material';
@@ -2770,24 +2788,97 @@
             let csvHeader, csvRows;
             
             if (aktuellerLagerTab === 'lebensmittel') {
-                csvHeader = 'Artikel,Kategorie,Einheit,Menge,Mindestmenge,Haltbarkeit,Lagerort\n';
-                csvRows = aktuellesLager.map(item => 
-                    `"${item.name}","${item.kategorie}","${item.einheit}",${item.menge},${item.mindestmenge},"${item.haltbarkeit || ''}","${item.lagerort}"`
-                ).join('\n');
+                // Verbesserte CSV-Struktur für Excel
+                csvHeader = [
+                    'SEG Feldküche - Lagerbestand ' + lagerTyp,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                ].join(',') + '\n' +
+                [
+                    'Erstellt am: ' + new Date().toLocaleDateString('de-DE'),
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                ].join(',') + '\n' +
+                [
+                    'Artikel',
+                    'Kategorie',
+                    'Einheit',
+                    'Menge',
+                    'Mindestmenge',
+                    'Haltbarkeit (MHD)',
+                    'Lagerort'
+                ].join(',') + '\n';
+                
+                csvRows = aktuellesLager.map(item => {
+                    // Datum im deutschen Format für Excel
+                    const haltbarkeit = item.haltbarkeit ? 
+                        new Date(item.haltbarkeit).toLocaleDateString('de-DE') : '';
+                    
+                    return [
+                        `"${item.name}"`,
+                        `"${item.kategorie}"`,
+                        `"${item.einheit}"`,
+                        item.menge,
+                        item.mindestmenge,
+                        `"${haltbarkeit}"`,
+                        `"${item.lagerort}"`
+                    ].join(',');
+                }).join('\n');
             } else {
-                csvHeader = 'Artikel,Kategorie,Einheit,Menge,Mindestmenge,Lagerort\n';
+                // Verbesserte CSV-Struktur für Material
+                csvHeader = [
+                    'SEG Feldküche - Lagerbestand ' + lagerTyp,
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                ].join(',') + '\n' +
+                [
+                    'Erstellt am: ' + new Date().toLocaleDateString('de-DE'),
+                    '',
+                    '',
+                    '',
+                    '',
+                    ''
+                ].join(',') + '\n' +
+                [
+                    'Artikel',
+                    'Kategorie',
+                    'Einheit',
+                    'Menge',
+                    'Mindestmenge',
+                    'Lagerort'
+                ].join(',') + '\n';
+                
                 csvRows = aktuellesLager.map(item => 
-                    `"${item.name}","${item.kategorie}","${item.einheit}",${item.menge},${item.mindestmenge},"${item.lagerort}"`
+                    [
+                        `"${item.name}"`,
+                        `"${item.kategorie}"`,
+                        `"${item.einheit}"`,
+                        item.menge,
+                        item.mindestmenge,
+                        `"${item.lagerort}"`
+                    ].join(',')
                 ).join('\n');
             }
             
-            const csvContent = csvHeader + csvRows;
+            // UTF-8 BOM hinzufügen für korrekte Zeichen in Excel
+            const csvContent = '\uFEFF' + csvHeader + csvRows;
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             
             link.setAttribute('href', url);
-            link.setAttribute('download', `${lagerTyp}_lager_${new Date().toISOString().split('T')[0]}.csv`);
+            link.setAttribute('download', `SEG_Feldkueche_Lager_${lagerTyp}_${new Date().toISOString().split('T')[0]}.csv`);
             link.style.visibility = 'hidden';
             
             document.body.appendChild(link);
@@ -2865,11 +2956,11 @@
         // CLOUD-FUNKTIONEN
         async function cloudSpeichern() {
             const status = document.getElementById('cloud-status');
-            status.innerHTML = '<span style="color: #f39c12;">🔄 Speichere in Cloud...</span>';
+            status.innerHTML = '<span style="color: var(--drk-orange);">🔄 Speichere in Cloud...</span>';
             
             try {
                 await lagerDatenSpeichern();
-                status.innerHTML = '<span style="color: #27ae60;">✅ Erfolgreich in Cloud gespeichert</span>';
+                status.innerHTML = '<span style="color: var(--drk-gruen);">✅ Erfolgreich in Cloud gespeichert</span>';
                 
                 // Status automatisch nach 5 Sekunden zurücksetzen
                 setTimeout(() => {
@@ -2880,18 +2971,18 @@
                 
             } catch (error) {
                 console.error('Cloud-Speichern Fehler:', error);
-                status.innerHTML = '<span style="color: #e74c3c;">❌ Fehler beim Speichern: ' + error.message + '</span>';
+                status.innerHTML = '<span style="color: #c62828;">❌ Fehler beim Speichern: ' + error.message + '</span>';
             }
         }
 
         async function cloudLaden() {
             const status = document.getElementById('cloud-status');
-            status.innerHTML = '<span style="color: #f39c12;">🔄 Lade aus Cloud...</span>';
+            status.innerHTML = '<span style="color: var(--drk-orange);">🔄 Lade aus Cloud...</span>';
             
             try {
                 await lagerDatenLaden();
                 lagerAnzeigen();
-                status.innerHTML = '<span style="color: #27ae60;">✅ Daten erfolgreich aus Cloud geladen</span>';
+                status.innerHTML = '<span style="color: var(--drk-gruen);">✅ Daten erfolgreich aus Cloud geladen</span>';
                 
                 // Status automatisch nach 5 Sekunden zurücksetzen
                 setTimeout(() => {
@@ -2902,7 +2993,7 @@
                 
             } catch (error) {
                 console.error('Cloud-Laden Fehler:', error);
-                status.innerHTML = '<span style="color: #e74c3c;">❌ Fehler beim Laden: ' + error.message + '</span>';
+                status.innerHTML = '<span style="color: #c62828;">❌ Fehler beim Laden: ' + error.message + '</span>';
             }
         }
 
@@ -2915,17 +3006,17 @@
                 const now = new Date();
                 const diffMinutes = Math.floor((now - syncDate) / (1000 * 60));
                 
-                let statusText = `<span style="color: #3498db;">📅 Letzte Synchronisation: ${syncDate.toLocaleString('de-DE')}</span>`;
+                let statusText = `<span style="color: var(--drk-rot);">📅 Letzte Synchronisation: ${syncDate.toLocaleString('de-DE')}</span>`;
                 
                 if (diffMinutes > 60) {
-                    statusText += `<br><span style="color: #e67e22;">⚠️ Letzte Synchronisation vor ${diffMinutes} Minuten</span>`;
+                    statusText += `<br><span style="color: var(--drk-orange);">⚠️ Letzte Synchronisation vor ${diffMinutes} Minuten</span>`;
                 } else {
-                    statusText += `<br><span style="color: #27ae60;">✅ Synchronisation aktuell (vor ${diffMinutes} Minuten)</span>`;
+                    statusText += `<br><span style="color: var(--drk-gruen);">✅ Synchronisation aktuell (vor ${diffMinutes} Minuten)</span>`;
                 }
                 
                 status.innerHTML = statusText;
             } else {
-                status.innerHTML = '<span style="color: #e67e22;">⚠️ Noch keine Synchronisation durchgeführt</span>';
+                status.innerHTML = '<span style="color: var(--drk-orange);">⚠️ Noch keine Synchronisation durchgeführt</span>';
             }
         }
 
@@ -2951,31 +3042,31 @@
                     return `
                         <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt;">
                             <span>${zutat.name}</span>
-                            <span style="color: #3498db; font-weight: bold;">${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
+                            <span style="color: var(--drk-rot); font-weight: bold;">${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
                         </div>
                     `;
                 } else {
                     if (ausLager >= benötigt) {
                         // Komplett aus Lager
                         return `
-                            <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt; background: #e8f6f3;">
-                                <span style="text-decoration: line-through; color: #7f8c8d;">${zutat.name}</span>
-                                <span style="color: #27ae60; font-weight: bold;">Aus Lager (${gesamtMenge} ${gesamtEinheit})</span>
+                            <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt; background: #f1f8e9;">
+                                <span style="text-decoration: line-through; color: var(--drk-grau);">${zutat.name}</span>
+                                <span style="color: var(--drk-gruen); font-weight: bold;">Aus Lager (${gesamtMenge} ${gesamtEinheit})</span>
                             </div>
                         `;
                     } else if (ausLager > 0 && zuKaufen > 0) {
                         // Teilweise aus Lager - KORRIGIERTE PDF-DARSTELLUNG
                         return `
-                            <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt; background: #fff3cd;">
+                            <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt; background: #fff8e1;">
                                 <div>
                                     <span>${zutat.name}</span>
                                     <div style="font-size: 8pt; color: #666;">
                                         Gesamt: ${gesamtMenge} ${gesamtEinheit} | 
-                                        <span style="color: #27ae60;">${lagerMenge} ${lagerEinheit} aus Lager</span> | 
-                                        <span style="color: #e74c3c;">${anzuzeigendeMenge} ${anzuzeigendeEinheit} zu kaufen</span>
+                                        <span style="color: var(--drk-gruen);">${lagerMenge} ${lagerEinheit} aus Lager</span> | 
+                                        <span style="color: var(--drk-rot);">${anzuzeigendeMenge} ${anzuzeigendeEinheit} zu kaufen</span>
                                     </div>
                                 </div>
-                                <span style="color: #3498db; font-weight: bold;">${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
+                                <span style="color: var(--drk-rot); font-weight: bold;">${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
                             </div>
                         `;
                     } else {
@@ -2983,7 +3074,7 @@
                         return `
                             <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt;">
                                 <span>${zutat.name}</span>
-                                <span style="color: #3498db; font-weight: bold;">${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
+                                <span style="color: var(--drk-rot); font-weight: bold;">${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
                             </div>
                         `;
                     }
@@ -2993,19 +3084,19 @@
             druckContainer.innerHTML = `
                 <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 15px; font-size: 10pt;">
                     <div style="text-align: center; margin-bottom: 15px;">
-                        <h2 style="font-size: 16pt; margin-bottom: 5px;">Einkaufsliste</h2>
+                        <h2 style="font-size: 16pt; margin-bottom: 5px; color: var(--drk-rot);">Einkaufsliste</h2>
                         <p style="font-size: 10pt;"><strong>${aktuellesRezept.titel}</strong> für ${personenAnzahl} Personen</p>
                         <p style="font-size: 9pt; color: #666;">Modus: ${lagerOption === 'alles-kaufen' ? 'Alles neu kaufen' : 'Lager verwenden'}</p>
                     </div>
                     
                     <div style="background: white; padding: 15px; margin-bottom: 12px; border-radius: 3px; border: 1px solid #eee;">
-                        <h3 style="color: #2c3e50; font-size: 12pt; margin-bottom: 10px; border-bottom: 1px solid #ecf0f1; padding-bottom: 3px;">
+                        <h3 style="color: var(--drk-rot); font-size: 12pt; margin-bottom: 10px; border-bottom: 1px solid var(--drk-rot); padding-bottom: 3px;">
                             Zutaten ${lagerOption === 'lager-verwenden' ? '(mit Lagerabzug)' : ''}
                         </h3>
                         ${einkaufslisteHTML}
-                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt; background: #e8f4f8; margin-top: 10px; padding: 10px; border-radius: 4px;">
+                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt; background: #fff5f5; margin-top: 10px; padding: 10px; border-radius: 4px;">
                             <span style="font-weight: bold;">Getränke (Wasser, Saftschorle)</span>
-                            <span style="color: #3498db; font-weight: bold;">${personenAnzahl} l</span>
+                            <span style="color: var(--drk-rot); font-weight: bold;">${personenAnzahl} l</span>
                         </div>
                     </div>
 
@@ -3241,7 +3332,7 @@
             druckContainer.innerHTML = `
                 <div class="druck-rezept" style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 15px; font-size: 10pt;">
                     <div style="border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;">
-                        <h1 style="color: #2c3e50; font-size: 16pt; margin-bottom: 8px; text-align: center;">${aktuellesRezept.titel}</h1>
+                        <h1 style="color: var(--drk-rot); font-size: 16pt; margin-bottom: 8px; text-align: center;">${aktuellesRezept.titel}</h1>
                         <div style="display: flex; justify-content: center; gap: 15px; font-size: 9pt; color: #666; flex-wrap: wrap;">
                             <span><strong>${aktuellesRezept.kalorien * personenAnzahl} kcal</strong> gesamt</span>
                             <span><strong>${skalierteZeit} min</strong> Zubereitung</span>
@@ -3250,14 +3341,14 @@
                     </div>
                     
                     <div style="margin-bottom: 20px;">
-                        <h2 style="color: #2c3e50; font-size: 12pt; border-bottom: 1px solid #3498db; padding-bottom: 5px; margin-bottom: 10px;">
+                        <h2 style="color: var(--drk-rot); font-size: 12pt; border-bottom: 1px solid var(--drk-rot); padding-bottom: 5px; margin-bottom: 10px;">
                             Zutaten für ${personenAnzahl} Personen
                         </h2>
                         <table style="width: 100%; border-collapse: collapse; font-size: 9pt;">
                             <thead>
                                 <tr>
-                                    <th style="padding: 6px 8px; border-bottom: 1px solid #3498db; text-align: left; background: #f8f9fa;">Zutat</th>
-                                    <th style="padding: 6px 8px; border-bottom: 1px solid #3498db; text-align: right; background: #f8f9fa;">Menge</th>
+                                    <th style="padding: 6px 8px; border-bottom: 1px solid var(--drk-rot); text-align: left; background: #f8f9fa;">Zutat</th>
+                                    <th style="padding: 6px 8px; border-bottom: 1px solid var(--drk-rot); text-align: right; background: #f8f9fa;">Menge</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -3267,7 +3358,7 @@
                     </div>
                     
                     <div style="margin-bottom: 20px;">
-                        <h2 style="color: #2c3e50; font-size: 12pt; border-bottom: 1px solid #3498db; padding-bottom: 5px; margin-bottom: 10px;">
+                        <h2 style="color: var(--drk-rot); font-size: 12pt; border-bottom: 1px solid var(--drk-rot); padding-bottom: 5px; margin-bottom: 10px;">
                             Zubereitung
                         </h2>
                         <ol style="padding-left: 15px; font-size: 10pt; line-height: 1.3;">
@@ -3275,8 +3366,8 @@
                         </ol>
                     </div>
                     
-                    <div style="background: #f8f9fa; padding: 10px; border-radius: 3px; margin-top: 15px; border-left: 3px solid #3498db;">
-                        <h3 style="color: #2c3e50; font-size: 11pt; margin-bottom: 5px;">Portionierung & Getränke</h3>
+                    <div style="background: #f8f9fa; padding: 10px; border-radius: 3px; margin-top: 15px; border-left: 3px solid var(--drk-rot);">
+                        <h3 style="color: var(--drk-rot); font-size: 11pt; margin-bottom: 5px;">Portionierung & Getränke</h3>
                         <p style="line-height: 1.3; margin: 0; font-size: 9pt;">${aktuellesRezept.portionierung}</p>
                         <p style="line-height: 1.3; margin: 10px 0 0 0; font-size: 9pt; font-weight: bold;">Getränke: ${personenAnzahl} Liter (Wasser, Saftschorle) - 1 Liter pro Person</p>
                     </div>
