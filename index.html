@@ -1214,46 +1214,7 @@
                 druckContainer.innerHTML = '';
             }, 100);
         }
-        // VERBESSERT: PDF Export für Einkaufsliste (nur Einkaufslisten-Inhalt)
-        function exportEinkaufslistePDF() {
-            if (!aktuellesRezept) {
-                alert('Bitte wähle zuerst ein Rezept aus!');
-                return;
-            }
-
-            const druckContainer = document.getElementById('druck-einkaufsliste-container');
-            const zutatenGruppiert = gruppiereZutaten(aktuellesRezept.zutaten);
-            
-            // Einkaufslisten-Inhalt für Druck vorbereiten
-            druckContainer.innerHTML = `
-                <div class="druck-einkaufsliste">
-                    <div style="text-align: center; margin-bottom: 2rem;">
-                        <h2>Einkaufsliste</h2>
-                        <p><strong>${aktuellesRezept.titel}</strong> für ${personenAnzahl} Personen</p>
-                    </div>
-                    
-                    ${Object.keys(zutatenGruppiert).map(kategorie => `
-                        <div class="einkaufsliste-kategorie">
-                            <h3>${kategorie}</h3>
-                            ${zutatenGruppiert[kategorie].map(zutat => `
-                                <div class="einkaufsliste-item">
-                                    <span>${zutat.name}</span>
-                                    <span>${zutat.menge} ${zutat.einheit}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-
-            // Drucken
-            window.print();
-            
-            // Container nach Druck leeren
-            setTimeout(() => {
-                druckContainer.innerHTML = '';
-            }, 100);
-        }
+   
     </script>
 </body>
 </html>
