@@ -499,7 +499,7 @@
                         <select id="verpflegungsart">
                             <option value="">Alle</option>
                             <option value="warm">Warmverpflegung</option>
-                            <option value="kalt">Kaltverpflegation</option>
+                            <option value="kalt">Kaltverpflegung</option>
                         </select>
                     </div>
                     
@@ -508,7 +508,7 @@
                         <select id="verpflegungstyp">
                             <option value="">Alle</option>
                             <option value="voll">Vollverpflegung</option>
-                            <option value="hand">Handverpflegation</option>
+                            <option value="hand">Handverpflegung</option>
                         </select>
                     </div>
                     
@@ -595,7 +595,7 @@
     <div id="druck-einkaufsliste-container" class="druck-container" style="display: none;"></div>
 
     <script>
-        // Rezepte Daten - OHNE TL/EL, nur g/ml/kg/l
+        // Rezepte Daten - OHNE TL/EL, nur g/ml/kg/l - MIT BASISZEITEN
         const rezepteDaten = [
             {
                 id: 1,
@@ -605,7 +605,7 @@
                 verpflegungstyp: "voll",
                 vegetarisch: true,
                 kalorien: 450,
-                zubereitungszeit: 45,
+                basisZeit: 45, // Zeit für 100 Personen
                 zutaten: [
                     { menge: 12500, einheit: "g", name: "Tofu, gewürfelt" },
                     { menge: 100, einheit: "", name: "Kartoffeln, gewürfelt" },
@@ -639,7 +639,7 @@
                 verpflegungstyp: "voll",
                 vegetarisch: true,
                 kalorien: 520,
-                zubereitungszeit: 35,
+                basisZeit: 35, // Zeit für 100 Personen
                 zutaten: [
                     { menge: 10000, einheit: "g", name: "Nudeln (Fusilli oder Penne)" },
                     { menge: 5000, einheit: "g", name: "Gouda, gerieben" },
@@ -674,7 +674,7 @@
                 verpflegungstyp: "hand",
                 vegetarisch: true,
                 kalorien: 380,
-                zubereitungszeit: 15,
+                basisZeit: 15, // Zeit für 100 Personen
                 zutaten: [
                     { menge: 200, einheit: "Scheiben", name: "Vollkornbrot" },
                     { menge: 5000, einheit: "g", name: "Frischkäse, natur" },
@@ -710,7 +710,7 @@
                 verpflegungstyp: "hand",
                 vegetarisch: true,
                 kalorien: 420,
-                zubereitungszeit: 10,
+                basisZeit: 10, // Zeit für 100 Personen
                 zutaten: [
                     { menge: 10000, einheit: "g", name: "Haferflocken, zart" },
                     { menge: 2500, einheit: "g", name: "Nüsse, gemischt (Walnüsse, Haselnüsse)" },
@@ -741,7 +741,7 @@
                 verpflegungstyp: "voll",
                 vegetarisch: false,
                 kalorien: 580,
-                zubereitungszeit: 90,
+                basisZeit: 90, // Zeit für 100 Personen
                 zutaten: [
                     { menge: 20000, einheit: "g", name: "Rindergulasch" },
                     { menge: 75, einheit: "", name: "Zwiebeln, gewürfelt" },
@@ -777,6 +777,26 @@
         let aktuellesRezept = null;
         let personenAnzahl = 100; // BASIS: 100 Personen
 
+        // NEUE FUNKTION: Berechnet skalierte Zubereitungszeit
+        function berechneZubereitungszeit(basisZeit, personenAnzahl) {
+            // Basis: Zeit für 100 Personen
+            const basisFaktor = 1.0; // 100 Personen = 100%
+            
+            // Nicht-lineare Skalierung für realistischere Zeiten:
+            if (personenAnzahl <= 100) {
+                // Bis 100 Personen: annähernd linear
+                return Math.round(basisZeit * (personenAnzahl / 100));
+            } else if (personenAnzahl <= 200) {
+                // 100-200 Personen: reduzierte Skalierung
+                const zusatzFaktor = 0.7; // Jede weitere Person nur 70% mehr Zeit
+                return Math.round(basisZeit * (1 + ((personenAnzahl - 100) / 100) * zusatzFaktor));
+            } else {
+                // Über 200 Personen: weitere Reduzierung
+                const zusatzFaktor = 0.5; // Jede weitere Person nur 50% mehr Zeit
+                return Math.round(basisZeit * (2 + ((personenAnzahl - 200) / 100) * zusatzFaktor));
+            }
+        }
+
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM geladen - starte Initialisierung');
@@ -797,7 +817,7 @@
                 
                 // Rezept neu anzeigen mit neuer Personenanzahl
                 if (aktuellesRezept) {
-                    zeigeAusgewaehltesRezept(aktuellesRezept);
+                    zeigeAusgewaehltesRezept(aktuellesRezept.id);
                 }
                 
                 // Einkaufsliste aktualisieren
@@ -891,8 +911,8 @@
                 <div class="rezept-karte" onclick="zeigeAusgewaehltesRezept(${rezept.id})">
                     <h4>${rezept.titel}</h4>
                     <div class="rezept-info">
-                        <span>${rezept.kalorien} kcal</span>
-                        <span>${rezept.zubereitungszeit} min</span>
+                        <span>${rezept.kalorien} kcal/Person</span>
+                        <span>${rezept.basisZeit} min (100 Pers.)</span>
                         <span>${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}</span>
                     </div>
                     <p class="rezept-beschreibung">${rezept.beschreibung}</p>
@@ -914,6 +934,9 @@
                 return;
             }
 
+            // Skalierte Zeit berechnen
+            const skalierteZeit = berechneZubereitungszeit(rezept.basisZeit, personenAnzahl);
+
             // Alle Rezept-Karten zurücksetzen
             document.querySelectorAll('.rezept-karte').forEach(karte => {
                 karte.classList.remove('ausgewaehlt');
@@ -932,7 +955,7 @@
             // Details anzeigen
             document.getElementById('rezept-titel').textContent = rezept.titel;
             document.getElementById('rezept-kalorien').textContent = `${rezept.kalorien * personenAnzahl} kcal gesamt`;
-            document.getElementById('rezept-zubereitungszeit').textContent = `${rezept.zubereitungszeit} min Zubereitung`;
+            document.getElementById('rezept-zubereitungszeit').textContent = `${skalierteZeit} min Zubereitung`;
             document.getElementById('rezept-art').textContent = `${rezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${rezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}`;
 
             // Zutaten anzeigen (skaliert mit Feldküchen-Umrechnung)
@@ -1100,6 +1123,9 @@
         
             console.log('Starte PDF Export für:', aktuellesRezept.titel);
             
+            // Skalierte Zeit für PDF berechnen
+            const skalierteZeit = berechneZubereitungszeit(aktuellesRezept.basisZeit, personenAnzahl);
+            
             const druckContainer = document.getElementById('druck-rezept-container');
             
             // Zutaten als Tabellenzeilen erstellen
@@ -1127,7 +1153,7 @@
                         <h1 style="color: #2c3e50; font-size: 16pt; margin-bottom: 8px; text-align: center;">${aktuellesRezept.titel}</h1>
                         <div style="display: flex; justify-content: center; gap: 15px; font-size: 9pt; color: #666; flex-wrap: wrap;">
                             <span><strong>${aktuellesRezept.kalorien * personenAnzahl} kcal</strong> gesamt</span>
-                            <span><strong>${aktuellesRezept.zubereitungszeit} min</strong> Zubereitung</span>
+                            <span><strong>${skalierteZeit} min</strong> Zubereitung</span>
                             <span>${aktuellesRezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${aktuellesRezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${aktuellesRezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}</span>
                         </div>
                     </div>
