@@ -319,6 +319,30 @@
         }
 
         /* Einkaufsliste */
+        .einkaufsliste-optionen {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .einkaufsliste-optionen label {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .einkaufsliste-optionen input[type="radio"] {
+            margin: 0;
+        }
+
         .einkaufsliste-info {
             background: white;
             padding: 1.5rem;
@@ -375,6 +399,36 @@
         .einkaufsliste-item span:last-child {
             color: #3498db;
             font-weight: bold;
+        }
+
+        .einkaufsliste-item.aus-lager {
+            background-color: #e8f6f3;
+            border-left: 4px solid #27ae60;
+            padding-left: 1rem;
+        }
+
+        .einkaufsliste-item.aus-lager span:first-child {
+            text-decoration: line-through;
+            color: #7f8c8d;
+        }
+
+        .einkaufsliste-item.aus-lager::after {
+            content: "✓ Aus Lager";
+            background: #27ae60;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+        }
+
+        .lager-hinweis {
+            background: #e8f4f8;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            border-left: 4px solid #3498db;
+            font-size: 0.9rem;
         }
 
         /* Lager-Styles */
@@ -678,6 +732,12 @@
             .lager-tab {
                 padding: 0.75rem 1rem;
             }
+            
+            .einkaufsliste-optionen {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
         }
         
         @media (max-width: 480px) {
@@ -821,6 +881,18 @@
         <div id="einkaufsliste" class="page">
             <div class="container">
                 <h2>Einkaufsliste</h2>
+                
+                <!-- Einkaufslisten-Optionen -->
+                <div class="einkaufsliste-optionen">
+                    <label>
+                        <input type="radio" name="lager-option" value="alles-kaufen" checked onchange="aktualisiereEinkaufsliste()">
+                        Alles neu kaufen (Lager ignorieren)
+                    </label>
+                    <label>
+                        <input type="radio" name="lager-option" value="lager-verwenden" onchange="aktualisiereEinkaufsliste()">
+                        Lager verwenden (Vorhandenes abziehen)
+                    </label>
+                </div>
                 
                 <div class="einkaufsliste-info">
                     <p>Für <span id="einkauf-personen">50</span> Personen | 
@@ -979,6 +1051,88 @@
             lebensmittel: [],
             material: []
         };
+
+        // NEUE FUNKTION: Findet Zutat im Lebensmittellager
+        function findeZutatImLager(zutatName) {
+            const lager = lagerDaten.lebensmittel;
+            const gesuchterName = zutatName.toLowerCase();
+            
+            // Einfache Suche nach Teilübereinstimmung
+            for (let item of lager) {
+                const lagerName = item.name.toLowerCase();
+                
+                // Direkte Übereinstimmung oder Teilübereinstimmung
+                if (lagerName.includes(gesuchterName) || gesuchterName.includes(lagerName)) {
+                    return item;
+                }
+                
+                // Spezielle Fälle für häufige Zutaten
+                if ((gesuchterName.includes('kartoffel') && lagerName.includes('kartoffel')) ||
+                    (gesuchterName.includes('karotte') && lagerName.includes('karotte')) ||
+                    (gesuchterName.includes('zwiebel') && lagerName.includes('zwiebel')) ||
+                    (gesuchterName.includes('nudel') && lagerName.includes('nudel')) ||
+                    (gesuchterName.includes('reis') && lagerName.includes('reis')) ||
+                    (gesuchterName.includes('öl') && lagerName.includes('öl')) ||
+                    (gesuchterName.includes('salz') && lagerName.includes('salz'))) {
+                    return item;
+                }
+            }
+            
+            return null;
+        }
+
+        // NEUE FUNKTION: Berechnet benötigte Menge unter Berücksichtigung des Lagers
+        function berechneBenötigteMenge(rezeptZutat, lagerOption) {
+            const skalierteMenge = (rezeptZutat.menge / 50) * personenAnzahl;
+            
+            if (lagerOption === 'alles-kaufen') {
+                return {
+                    benötigt: skalierteMenge,
+                    ausLager: 0,
+                    zuKaufen: skalierteMenge
+                };
+            }
+            
+            // Lager verwenden - prüfe ob Zutat im Lager
+            const lagerItem = findeZutatImLager(rezeptZutat.name);
+            
+            if (!lagerItem) {
+                return {
+                    benötigt: skalierteMenge,
+                    ausLager: 0,
+                    zuKaufen: skalierteMenge
+                };
+            }
+            
+            // Einheiten vergleichen und ggf. umrechnen
+            let lagerMenge = lagerItem.menge;
+            const rezeptEinheit = rezeptZutat.einheit || 'Stück';
+            
+            // Einheiten umrechnen falls nötig
+            if (rezeptEinheit !== lagerItem.einheit) {
+                // Einfache Umrechnung für häufige Fälle
+                if (rezeptEinheit === 'g' && lagerItem.einheit === 'kg') {
+                    lagerMenge = lagerItem.menge * 1000;
+                } else if (rezeptEinheit === 'kg' && lagerItem.einheit === 'g') {
+                    lagerMenge = lagerItem.menge / 1000;
+                } else if (rezeptEinheit === 'ml' && lagerItem.einheit === 'l') {
+                    lagerMenge = lagerItem.menge * 1000;
+                } else if (rezeptEinheit === 'l' && lagerItem.einheit === 'ml') {
+                    lagerMenge = lagerItem.menge / 1000;
+                }
+                // Für Stück vs. kg - schwierig umzurechnen, daher keine Umrechnung
+            }
+            
+            const ausLager = Math.min(skalierteMenge, lagerMenge);
+            const zuKaufen = Math.max(0, skalierteMenge - ausLager);
+            
+            return {
+                benötigt: skalierteMenge,
+                ausLager: ausLager,
+                zuKaufen: zuKaufen,
+                lagerItem: lagerItem
+            };
+        }
 
         // LAGER-FUNKTIONALITÄT
         function wechselLagerTab(tab) {
@@ -1490,8 +1644,114 @@
             event.target.value = '';
         });
 
-        // Weitere vorhandene Funktionen (showPage, filterRezepte, etc.) bleiben unverändert
-        // ... (aus Platzgründen gekürzt)
+        // NEUE EINKAUFSLISTEN-FUNKTIONALITÄT
+        function aktualisiereEinkaufsliste() {
+            document.getElementById('einkauf-personen').textContent = personenAnzahl;
+            
+            if (!aktuellesRezept) {
+                document.getElementById('einkauf-rezept-titel').textContent = 'Kein Rezept ausgewählt';
+                document.getElementById('einkaufsliste-content').innerHTML = '<p>Bitte wähle zuerst ein Rezept auf der Rezept-Seite aus.</p>';
+                return;
+            }
+
+            document.getElementById('einkauf-rezept-titel').textContent = aktuellesRezept.titel;
+            
+            const container = document.getElementById('einkaufsliste-content');
+            const lagerOption = document.querySelector('input[name="lager-option"]:checked').value;
+            
+            let gesparteMenge = 0;
+            let gesparteArtikel = 0;
+            
+            const einkaufslisteHTML = aktuellesRezept.zutaten.map(zutat => {
+                const mengenBerechnung = berechneBenötigteMenge(zutat, lagerOption);
+                const { zuKaufen, ausLager, benötigt } = mengenBerechnung;
+                
+                if (ausLager > 0) {
+                    gesparteMenge += ausLager;
+                    gesparteArtikel++;
+                }
+                
+                // Automatische Umrechnung für große Mengen
+                let { menge: anzuzeigendeMenge, einheit: anzuzeigendeEinheit } = konvertiereZuFeldkueche(zuKaufen, zutat.einheit, zutat.name);
+                const { menge: benoetigteMenge, einheit: benoetigteEinheit } = konvertiereZuFeldkueche(benötigt, zutat.einheit, zutat.name);
+                const { menge: lagerMenge, einheit: lagerEinheit } = konvertiereZuFeldkueche(ausLager, zutat.einheit, zutat.name);
+                
+                if (lagerOption === 'alles-kaufen' || zuKaufen > 0) {
+                    return `
+                        <div class="einkaufsliste-item ${ausLager > 0 ? 'aus-lager' : ''}">
+                            <span>${zutat.name}${ausLager > 0 ? ` (${lagerMenge} ${lagerEinheit} aus Lager)` : ''}</span>
+                            <span>${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
+                        </div>
+                    `;
+                } else {
+                    // Komplett aus Lager - wird durchgestrichen angezeigt
+                    return `
+                        <div class="einkaufsliste-item aus-lager">
+                            <span>${zutat.name}</span>
+                            <span>${benoetigteMenge} ${benoetigteEinheit}</span>
+                        </div>
+                    `;
+                }
+            }).join('');
+            
+            let hinweisHTML = '';
+            if (lagerOption === 'lager-verwenden' && gesparteArtikel > 0) {
+                hinweisHTML = `
+                    <div class="lager-hinweis">
+                        <strong>Lager verwendet:</strong> ${gesparteArtikel} Artikel mit insgesamt ${gesparteMenge.toFixed(1)} Einheiten werden aus dem Lager entnommen.
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = `
+                <div class="einkaufsliste-container">
+                    <h3>Zutaten ${lagerOption === 'lager-verwenden' ? '(mit Lagerabzug)' : '(komplett neu kaufen)'}</h3>
+                    ${einkaufslisteHTML}
+                    ${hinweisHTML}
+                    <!-- Getränke immer separat -->
+                    <div class="einkaufsliste-item" style="background-color: #e8f4f8; margin-top: 10px; padding: 10px; border-radius: 4px;">
+                        <span><strong>Getränke (Wasser, Saftschorle)</strong></span>
+                        <span><strong>${personenAnzahl} l</strong></span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Automatische Umrechnung für Feldküchen-Mengen
+        function konvertiereZuFeldkueche(menge, einheit, zutatName) {
+            const name = zutatName.toLowerCase();
+            
+            // Für große Mengen (ab 1000) in kg/l umrechnen
+            if (einheit === "g" && menge >= 1000) {
+                return { menge: (menge / 1000).toFixed(1), einheit: "kg" };
+            }
+            if (einheit === "ml" && menge >= 1000) {
+                return { menge: (menge / 1000).toFixed(1), einheit: "l" };
+            }
+            
+            // Für spezifische Zutaten automatisch passende Einheiten
+            if (einheit === "" || einheit === "Stück") {
+                if (name.includes('kartoffel') || name.includes('karotte') || name.includes('zwiebel') || 
+                    name.includes('tomate') || name.includes('gurke') || name.includes('brokkoli') ||
+                    name.includes('paprika') || name.includes('avocado') || name.includes('apfel') ||
+                    name.includes('banane')) {
+                    if (menge >= 10) {
+                        return { menge: Math.round(menge), einheit: "kg" };
+                    }
+                }
+            }
+            
+            // Standard: Einheit beibehalten, aber runden
+            let angezeigteMenge = menge;
+            if (menge % 1 !== 0) {
+                angezeigteMenge = menge.toFixed(1);
+            }
+            
+            // Für leere Einheiten "Stück" anzeigen
+            const finaleEinheit = einheit === "" ? "Stück" : einheit;
+            
+            return { menge: angezeigteMenge, einheit: finaleEinheit };
+        }
 
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
@@ -1645,21 +1905,7 @@
             const zutatenListe = document.getElementById('rezept-zutaten');
             zutatenListe.innerHTML = rezept.zutaten.map(zutat => {
                 const skalierteMenge = (zutat.menge / 50) * personenAnzahl;
-                let menge = skalierteMenge;
-                let einheit = zutat.einheit;
-                
-                // Automatische Umrechnung für große Mengen
-                if (einheit === "g" && menge >= 1000) {
-                    menge = (menge / 1000).toFixed(1);
-                    einheit = "kg";
-                }
-                if (einheit === "ml" && menge >= 1000) {
-                    menge = (menge / 1000).toFixed(1);
-                    einheit = "l";
-                }
-                if (einheit === "" && menge >= 10) {
-                    einheit = "kg";
-                }
+                const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
                 
                 return `<li>${menge} ${einheit} ${zutat.name}</li>`;
             }).join('');
@@ -1685,54 +1931,7 @@
             }
         }
 
-        function aktualisiereEinkaufsliste() {
-            document.getElementById('einkauf-personen').textContent = personenAnzahl;
-            
-            if (!aktuellesRezept) {
-                document.getElementById('einkauf-rezept-titel').textContent = 'Kein Rezept ausgewählt';
-                document.getElementById('einkaufsliste-content').innerHTML = '<p>Bitte wähle zuerst ein Rezept auf der Rezept-Seite aus.</p>';
-                return;
-            }
-
-            document.getElementById('einkauf-rezept-titel').textContent = aktuellesRezept.titel;
-            
-            const container = document.getElementById('einkaufsliste-content');
-            
-            container.innerHTML = `
-                <div class="einkaufsliste-container">
-                    <h3>Alle Zutaten</h3>
-                    ${aktuellesRezept.zutaten.map(zutat => {
-                        const skalierteMenge = (zutat.menge / 50) * personenAnzahl;
-                        let menge = skalierteMenge;
-                        let einheit = zutat.einheit;
-                        
-                        if (einheit === "g" && menge >= 1000) {
-                            menge = (menge / 1000).toFixed(1);
-                            einheit = "kg";
-                        }
-                        if (einheit === "ml" && menge >= 1000) {
-                            menge = (menge / 1000).toFixed(1);
-                            einheit = "l";
-                        }
-                        if (einheit === "" && menge >= 10) {
-                            einheit = "kg";
-                        }
-                        
-                        return `
-                            <div class="einkaufsliste-item">
-                                <span>${zutat.name}</span>
-                                <span>${menge} ${einheit}</span>
-                            </div>
-                        `;
-                    }).join('')}
-                    <div class="einkaufsliste-item" style="background-color: #e8f4f8; margin-top: 10px; padding: 10px; border-radius: 4px;">
-                        <span><strong>Getränke (Wasser, Saftschorle)</strong></span>
-                        <span><strong>${personenAnzahl} l</strong></span>
-                    </div>
-                </div>
-            `;
-        }
-
+        // PDF Export Funktionen (angepasst für Lagerintegration)
         function exportRezeptPDF() {
             if (!aktuellesRezept) {
                 alert('Bitte wähle zuerst ein Rezept aus!');
@@ -1744,20 +1943,7 @@
             
             const zutatenTabelle = aktuellesRezept.zutaten.map(zutat => {
                 const skalierteMenge = (zutat.menge / 50) * personenAnzahl;
-                let menge = skalierteMenge;
-                let einheit = zutat.einheit;
-                
-                if (einheit === "g" && menge >= 1000) {
-                    menge = (menge / 1000).toFixed(1);
-                    einheit = "kg";
-                }
-                if (einheit === "ml" && menge >= 1000) {
-                    menge = (menge / 1000).toFixed(1);
-                    einheit = "l";
-                }
-                if (einheit === "" && menge >= 10) {
-                    einheit = "kg";
-                }
+                const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
                 
                 return `
                     <tr>
@@ -1839,40 +2025,45 @@
             }
         
             const druckContainer = document.getElementById('druck-einkaufsliste-container');
+            const lagerOption = document.querySelector('input[name="lager-option"]:checked').value;
+            
+            const einkaufslisteHTML = aktuellesRezept.zutaten.map(zutat => {
+                const mengenBerechnung = berechneBenötigteMenge(zutat, lagerOption);
+                const { zuKaufen, ausLager } = mengenBerechnung;
+                
+                const { menge: anzuzeigendeMenge, einheit: anzuzeigendeEinheit } = konvertiereZuFeldkueche(zuKaufen, zutat.einheit, zutat.name);
+                const { menge: lagerMenge, einheit: lagerEinheit } = konvertiereZuFeldkueche(ausLager, zutat.einheit, zutat.name);
+                
+                if (lagerOption === 'alles-kaufen' || zuKaufen > 0) {
+                    return `
+                        <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt;">
+                            <span>${zutat.name}${ausLager > 0 ? ` (${lagerMenge} ${lagerEinheit} aus Lager)` : ''}</span>
+                            <span style="color: #3498db; font-weight: bold;">${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt; background: #e8f6f3;">
+                            <span style="text-decoration: line-through; color: #7f8c8d;">${zutat.name}</span>
+                            <span style="color: #27ae60; font-weight: bold;">Aus Lager</span>
+                        </div>
+                    `;
+                }
+            }).join('');
             
             druckContainer.innerHTML = `
                 <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 15px; font-size: 10pt;">
                     <div style="text-align: center; margin-bottom: 15px;">
                         <h2 style="font-size: 16pt; margin-bottom: 5px;">Einkaufsliste</h2>
                         <p style="font-size: 10pt;"><strong>${aktuellesRezept.titel}</strong> für ${personenAnzahl} Personen</p>
+                        <p style="font-size: 9pt; color: #666;">Modus: ${lagerOption === 'alles-kaufen' ? 'Alles neu kaufen' : 'Lager verwenden'}</p>
                     </div>
                     
                     <div style="background: white; padding: 15px; margin-bottom: 12px; border-radius: 3px; border: 1px solid #eee;">
-                        <h3 style="color: #2c3e50; font-size: 12pt; margin-bottom: 10px; border-bottom: 1px solid #ecf0f1; padding-bottom: 3px;">Alle Zutaten</h3>
-                        ${aktuellesRezept.zutaten.map(zutat => {
-                            const skalierteMenge = (zutat.menge / 50) * personenAnzahl;
-                            let menge = skalierteMenge;
-                            let einheit = zutat.einheit;
-                            
-                            if (einheit === "g" && menge >= 1000) {
-                                menge = (menge / 1000).toFixed(1);
-                                einheit = "kg";
-                            }
-                            if (einheit === "ml" && menge >= 1000) {
-                                menge = (menge / 1000).toFixed(1);
-                                einheit = "l";
-                            }
-                            if (einheit === "" && menge >= 10) {
-                                einheit = "kg";
-                            }
-                            
-                            return `
-                                <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt;">
-                                    <span>${zutat.name}</span>
-                                    <span style="color: #3498db; font-weight: bold;">${menge} ${einheit}</span>
-                                </div>
-                            `;
-                        }).join('')}
+                        <h3 style="color: #2c3e50; font-size: 12pt; margin-bottom: 10px; border-bottom: 1px solid #ecf0f1; padding-bottom: 3px;">
+                            Zutaten ${lagerOption === 'lager-verwenden' ? '(mit Lagerabzug)' : ''}
+                        </h3>
+                        ${einkaufslisteHTML}
                         <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt; background: #e8f4f8; margin-top: 10px; padding: 10px; border-radius: 4px;">
                             <span style="font-weight: bold;">Getränke (Wasser, Saftschorle)</span>
                             <span style="color: #3498db; font-weight: bold;">${personenAnzahl} l</span>
