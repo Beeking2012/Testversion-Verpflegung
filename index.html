@@ -119,7 +119,7 @@
         }
 
         .personen-input input {
-            width: 100px;
+            width: 120px;
         }
 
         /* Rezepte Grid */
@@ -491,7 +491,7 @@
                         <select id="verpflegungsart">
                             <option value="">Alle</option>
                             <option value="warm">Warmverpflegung</option>
-                            <option value="kalt">Kaltverpflegung</option>
+                            <option value="kalt">Kaltverpflegation</option>
                         </select>
                     </div>
                     
@@ -515,7 +515,8 @@
                 <!-- Personenanzahl -->
                 <div class="personen-input">
                     <label for="personen">Personenanzahl:</label>
-                    <input type="number" id="personen" min="1" max="400" value="4">
+                    <input type="number" id="personen" min="1" max="400" value="100">
+                    <small>Basis: 100 Personen für Feldküche</small>
                 </div>
 
                 <!-- Rezepte Grid -->
@@ -536,7 +537,7 @@
                     
                     <div class="rezept-content">
                         <div class="zutaten-section">
-                            <h4>Zutaten für <span id="zutaten-personen">4</span> Personen</h4>
+                            <h4>Zutaten für <span id="zutaten-personen">100</span> Personen</h4>
                             <ul id="rezept-zutaten"></ul>
                         </div>
                         
@@ -565,7 +566,7 @@
                 <h2>Einkaufsliste</h2>
                 
                 <div class="einkaufsliste-info">
-                    <p>Für <span id="einkauf-personen">4</span> Personen | 
+                    <p>Für <span id="einkauf-personen">100</span> Personen | 
                        <strong id="einkauf-rezept-titel">Kein Rezept ausgewählt</strong>
                     </p>
                     <div>
@@ -586,7 +587,7 @@
     <div id="druck-einkaufsliste-container" class="druck-container"></div>
 
     <script>
-        // Rezepte Daten
+        // Rezepte Daten - OHNE TL/EL, nur g/ml/kg/l
         const rezepteDaten = [
             {
                 id: 1,
@@ -598,17 +599,17 @@
                 kalorien: 450,
                 zubereitungszeit: 45,
                 zutaten: [
-                    { menge: 500, einheit: "g", name: "Tofu, gewürfelt" },
-                    { menge: 4, einheit: "", name: "Kartoffeln, gewürfelt" },
-                    { menge: 2, einheit: "", name: "Karotten, in Scheiben" },
-                    { menge: 1, einheit: "", name: "Zwiebel, gewürfelt" },
-                    { menge: 2, einheit: "EL", name: "Tomatenmark" },
-                    { menge: 1.5, einheit: "l", name: "Gemüsebrühe" },
-                    { menge: 2, einheit: "TL", name: "Paprikapulver" },
-                    { menge: 1, einheit: "Bund", name: "Petersilie, gehackt" },
-                    { menge: 3, einheit: "EL", name: "Öl" },
-                    { menge: 1, einheit: "TL", name: "Salz" },
-                    { menge: 0.5, einheit: "TL", name: "Pfeffer" }
+                    { menge: 12500, einheit: "g", name: "Tofu, gewürfelt" },
+                    { menge: 100, einheit: "", name: "Kartoffeln, gewürfelt" },
+                    { menge: 50, einheit: "", name: "Karotten, in Scheiben" },
+                    { menge: 25, einheit: "", name: "Zwiebel, gewürfelt" },
+                    { menge: 300, einheit: "g", name: "Tomatenmark" },
+                    { menge: 37.5, einheit: "l", name: "Gemüsebrühe" },
+                    { menge: 100, einheit: "g", name: "Paprikapulver" },
+                    { menge: 25, einheit: "Bund", name: "Petersilie, gehackt" },
+                    { menge: 450, einheit: "ml", name: "Öl" },
+                    { menge: 150, einheit: "g", name: "Salz" },
+                    { menge: 75, einheit: "g", name: "Pfeffer" }
                 ],
                 zubereitung: [
                     "Zwiebel in einem großen Topf mit Öl glasig anschwitzen",
@@ -632,18 +633,18 @@
                 kalorien: 520,
                 zubereitungszeit: 35,
                 zutaten: [
-                    { menge: 400, einheit: "g", name: "Nudeln (Fusilli oder Penne)" },
-                    { menge: 200, einheit: "g", name: "Gouda, gerieben" },
-                    { menge: 1, einheit: "", name: "Brokkoli, in kleinen Röschen" },
-                    { menge: 1, einheit: "", name: "Paprika, gewürfelt" },
-                    { menge: 2, einheit: "", name: "Eier" },
-                    { menge: 200, einheit: "ml", name: "Sahne" },
-                    { menge: 100, einheit: "ml", name: "Milch" },
-                    { menge: 1, einheit: "TL", name: "Muskatnuss, frisch gerieben" },
-                    { menge: 100, einheit: "g", name: "Parmesan, gerieben" },
-                    { menge: 2, einheit: "EL", name: "Butter" },
-                    { menge: 1, einheit: "TL", name: "Salz" },
-                    { menge: 0.5, einheit: "TL", name: "Pfeffer" }
+                    { menge: 10000, einheit: "g", name: "Nudeln (Fusilli oder Penne)" },
+                    { menge: 5000, einheit: "g", name: "Gouda, gerieben" },
+                    { menge: 25, einheit: "", name: "Brokkoli, in kleinen Röschen" },
+                    { menge: 25, einheit: "", name: "Paprika, gewürfelt" },
+                    { menge: 50, einheit: "", name: "Eier" },
+                    { menge: 5000, einheit: "ml", name: "Sahne" },
+                    { menge: 2500, einheit: "ml", name: "Milch" },
+                    { menge: 25, einheit: "g", name: "Muskatnuss, frisch gerieben" },
+                    { menge: 2500, einheit: "g", name: "Parmesan, gerieben" },
+                    { menge: 300, einheit: "g", name: "Butter" },
+                    { menge: 150, einheit: "g", name: "Salz" },
+                    { menge: 75, einheit: "g", name: "Pfeffer" }
                 ],
                 zubereitung: [
                     "Nudeln in reichlich Salzwasser bissfest kochen, abgießen und abtropfen lassen",
@@ -667,17 +668,17 @@
                 kalorien: 380,
                 zubereitungszeit: 15,
                 zutaten: [
-                    { menge: 8, einheit: "Scheiben", name: "Vollkornbrot" },
-                    { menge: 200, einheit: "g", name: "Frischkäse, natur" },
-                    { menge: 1, einheit: "", name: "Gurke, in dünnen Scheiben" },
-                    { menge: 1, einheit: "", name: "Tomate, in dünnen Scheiben" },
-                    { menge: 4, einheit: "Blätter", name: "Eisbergsalat" },
-                    { menge: 1, einheit: "", name: "Avocado, reif" },
-                    { menge: 2, einheit: "EL", name: "Zitronensaft" },
-                    { menge: 1, einheit: "", name: "Rote Zwiebel, in dünnen Ringen" },
-                    { menge: 1, einheit: "Prise", name: "Salz" },
-                    { menge: 1, einheit: "Prise", name: "Pfeffer" },
-                    { menge: 1, einheit: "TL", name: "getrockneter Dill" }
+                    { menge: 200, einheit: "Scheiben", name: "Vollkornbrot" },
+                    { menge: 5000, einheit: "g", name: "Frischkäse, natur" },
+                    { menge: 25, einheit: "", name: "Gurke, in dünnen Scheiben" },
+                    { menge: 25, einheit: "", name: "Tomate, in dünnen Scheiben" },
+                    { menge: 100, einheit: "Blätter", name: "Eisbergsalat" },
+                    { menge: 25, einheit: "", name: "Avocado, reif" },
+                    { menge: 300, einheit: "ml", name: "Zitronensaft" },
+                    { menge: 25, einheit: "", name: "Rote Zwiebel, in dünnen Ringen" },
+                    { menge: 75, einheit: "g", name: "Salz" },
+                    { menge: 40, einheit: "g", name: "Pfeffer" },
+                    { menge: 50, einheit: "g", name: "getrockneter Dill" }
                 ],
                 zubereitung: [
                     "Brot scheibenweise mit Frischkäse bestreichen",
@@ -703,15 +704,15 @@
                 kalorien: 420,
                 zubereitungszeit: 10,
                 zutaten: [
-                    { menge: 400, einheit: "g", name: "Haferflocken, zart" },
-                    { menge: 100, einheit: "g", name: "Nüsse, gemischt (Walnüsse, Haselnüsse)" },
-                    { menge: 100, einheit: "g", name: "Trockenfrüchte (Rosinen, Aprikosen)" },
-                    { menge: 50, einheit: "g", name: "Sonnenblumenkerne" },
-                    { menge: 50, einheit: "g", name: "Kürbiskerne" },
-                    { menge: 4, einheit: "EL", name: "Honig" },
-                    { menge: 2, einheit: "TL", name: "Zimt" },
-                    { menge: 1, einheit: "Prise", name: "Salz" },
-                    { menge: 1, einheit: "l", name: "Milch oder Pflanzenmilch" }
+                    { menge: 10000, einheit: "g", name: "Haferflocken, zart" },
+                    { menge: 2500, einheit: "g", name: "Nüsse, gemischt (Walnüsse, Haselnüsse)" },
+                    { menge: 2500, einheit: "g", name: "Trockenfrüchte (Rosinen, Aprikosen)" },
+                    { menge: 1250, einheit: "g", name: "Sonnenblumenkerne" },
+                    { menge: 1250, einheit: "g", name: "Kürbiskerne" },
+                    { menge: 600, einheit: "g", name: "Honig" },
+                    { menge: 100, einheit: "g", name: "Zimt" },
+                    { menge: 75, einheit: "g", name: "Salz" },
+                    { menge: 25, einheit: "l", name: "Milch oder Pflanzenmilch" }
                 ],
                 zubereitung: [
                     "Haferflocken in eine große Schüssel geben",
@@ -734,19 +735,19 @@
                 kalorien: 580,
                 zubereitungszeit: 90,
                 zutaten: [
-                    { menge: 800, einheit: "g", name: "Rindergulasch" },
-                    { menge: 3, einheit: "", name: "Zwiebeln, gewürfelt" },
-                    { menge: 2, einheit: "", name: "Paprika, in Streifen" },
-                    { menge: 3, einheit: "EL", name: "Tomatenmark" },
-                    { menge: 2, einheit: "l", name: "Rinderbrühe" },
-                    { menge: 2, einheit: "EL", name: "Paprikapulver, edelsüß" },
-                    { menge: 1, einheit: "EL", name: "Majoran" },
-                    { menge: 2, einheit: "EL", name: "Öl" },
-                    { menge: 1, einheit: "EL", name: "Mehl" },
-                    { menge: 2, einheit: "", name: "Lorbeerblätter" },
-                    { menge: 1, einheit: "TL", name: "Kümmel" },
-                    { menge: 1, einheit: "TL", name: "Salz" },
-                    { menge: 0.5, einheit: "TL", name: "Pfeffer" }
+                    { menge: 20000, einheit: "g", name: "Rindergulasch" },
+                    { menge: 75, einheit: "", name: "Zwiebeln, gewürfelt" },
+                    { menge: 50, einheit: "", name: "Paprika, in Streifen" },
+                    { menge: 450, einheit: "g", name: "Tomatenmark" },
+                    { menge: 50, einheit: "l", name: "Rinderbrühe" },
+                    { menge: 300, einheit: "g", name: "Paprikapulver, edelsüß" },
+                    { menge: 150, einheit: "g", name: "Majoran" },
+                    { menge: 300, einheit: "ml", name: "Öl" },
+                    { menge: 150, einheit: "g", name: "Mehl" },
+                    { menge: 50, einheit: "", name: "Lorbeerblätter" },
+                    { menge: 75, einheit: "g", name: "Kümmel" },
+                    { menge: 150, einheit: "g", name: "Salz" },
+                    { menge: 75, einheit: "g", name: "Pfeffer" }
                 ],
                 zubereitung: [
                     "Fleisch trocken tupfen und in einem großen Gusseisentopf portionsweise scharf anbraten",
@@ -766,7 +767,7 @@
 
         // Globale Variablen
         let aktuellesRezept = null;
-        let personenAnzahl = 4;
+        let personenAnzahl = 100; // BASIS: 100 Personen
 
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
@@ -784,11 +785,15 @@
                 
                 // Personenanzahl in der Rezept-Anzeige aktualisieren
                 document.getElementById('zutaten-personen').textContent = personenAnzahl;
+                document.getElementById('einkauf-personen').textContent = personenAnzahl;
                 
                 // Rezept neu anzeigen mit neuer Personenanzahl
                 if (aktuellesRezept) {
                     zeigeAusgewaehltesRezept(aktuellesRezept);
                 }
+                
+                // Einkaufsliste aktualisieren
+                aktualisiereEinkaufsliste();
             });
 
             // Navigation
@@ -925,7 +930,7 @@
             // Zutaten anzeigen (skaliert mit Feldküchen-Umrechnung)
             const zutatenListe = document.getElementById('rezept-zutaten');
             zutatenListe.innerHTML = rezept.zutaten.map(zutat => {
-                const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
+                const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
                 const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
                 
                 return `<li>${menge} ${einheit} ${zutat.name}</li>`;
@@ -970,7 +975,7 @@
             
             const container = document.getElementById('einkaufsliste-content');
             
-            // Zutaten für Einkaufsliste mit Feldküchen-Umrechnung
+            // Zutaten für Einkaufsliste mit Feldküchen-Umrechnung (gleiche Skalierung wie Rezept)
             const zutatenGruppiert = gruppiereZutaten(aktuellesRezept.zutaten);
             
             if (Object.keys(zutatenGruppiert).length === 0) {
@@ -1002,7 +1007,7 @@
             };
 
             zutaten.forEach(zutat => {
-                const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
+                const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
                 const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
 
                 const zutatMitMenge = {
@@ -1043,7 +1048,7 @@
             return gruppiert;
         }
 
-        // Automatische Umrechnung für Feldküchen-Mengen
+        // Automatische Umrechnung für Feldküchen-Mengen - OHNE TL/EL
         function konvertiereZuFeldkueche(menge, einheit, zutatName) {
             const name = zutatName.toLowerCase();
             
@@ -1062,21 +1067,6 @@
                     name.includes('paprika') || name.includes('avocado')) {
                     if (menge >= 10) {
                         return { menge: Math.round(menge), einheit: "kg" };
-                    }
-                }
-            }
-            
-            // Für Öl, Tomatenmark etc. bei großen Mengen
-            if ((einheit === "EL" || einheit === "TL") && menge >= 50) {
-                if (name.includes('öl') || name.includes('tomatenmark')) {
-                    const literMenge = einheit === "EL" ? menge * 0.015 : menge * 0.005;
-                    if (literMenge >= 1) {
-                        return { menge: literMenge.toFixed(1), einheit: "l" };
-                    }
-                } else {
-                    const kgMenge = einheit === "EL" ? menge * 0.015 : menge * 0.005;
-                    if (kgMenge >= 1) {
-                        return { menge: kgMenge.toFixed(1), einheit: "kg" };
                     }
                 }
             }
@@ -1119,7 +1109,7 @@
                             <h4>Zutaten für ${personenAnzahl} Personen</h4>
                             <ul>
                                 ${aktuellesRezept.zutaten.map(zutat => {
-                                    const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
+                                    const skalierteMenge = (zutat.menge / 100) * personenAnzahl;
                                     const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
                                     return `<li>${menge} ${einheit} ${zutat.name}</li>`;
                                 }).join('')}
