@@ -3,3392 +3,682 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feldküche - SEG Verpflegung</title>
+    <title>Kaiserslautern Standorte</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Font Awesome für Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            background-color: #f9f9f9;
+            font-family: Arial, sans-serif;
+        }
+        
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+        
+        /* Popup Styles */
+        .custom-popup {
+            min-width: 250px;
+            cursor: pointer;
+        }
+        
+        .popup-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        
+        .popup-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+        
+        .popup-info {
+            margin-bottom: 5px;
+            color: #555;
+        }
+        
+        .popup-distance {
+            color: #007bff;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        /* Detail Panel Styles - Standard */
+        #detail-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            overflow-y: auto;
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        #detail-panel.active {
+            right: 0;
+        }
+        
+        /* Detail Panel Vollbild */
+        #detail-panel.fullscreen {
+            right: 0;
+            width: 100%;
+            z-index: 10000;
+        }
+        
+        .close-button {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .fullscreen-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .button-group {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .detail-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
             color: #333;
         }
-
-        /* DRK Farbpalette */
-        :root {
-            --drk-rot: #d4001a;
-            --drk-rot-dunkel: #b30016;
-            --drk-rot-hell: #ff4d4d;
-            --drk-grau: #4a4a4a;
-            --drk-grau-hell: #f5f5f5;
-            --drk-weiss: #ffffff;
-            --drk-gruen: #2e7d32;
-            --drk-orange: #ff9800;
-            --drk-gelb: #ffc107;
-        }
-
-        /* Kopfleiste */
-        .navbar {
-            background: var(--drk-rot);
-            color: var(--drk-weiss);
-            padding: 1rem 0;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 2rem;
-        }
-
-        .nav-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-link {
-            color: var(--drk-weiss);
-            text-decoration: none;
-            padding: 0.5rem 1rem;
+        
+        .detail-type {
+            background: #f0f0f0;
+            padding: 4px 8px;
             border-radius: 4px;
-            transition: background-color 0.3s;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-size: 0.9em;
         }
-
-        .nav-link:hover,
-        .nav-link.active {
-            background-color: var(--drk-rot-dunkel);
+        
+        .info-section {
+            margin: 20px 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
         }
-
-        /* Hauptinhalt */
-        .content {
-            margin-top: 80px;
-            min-height: calc(100vh - 80px);
+        
+        .info-section h3 {
+            margin-bottom: 10px;
+            color: #333;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* Filter-Sektion */
-        .filter-section {
-            background: var(--drk-weiss);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-            align-items: end;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .filter-group label {
-            font-weight: bold;
-            font-size: 0.9rem;
-            color: var(--drk-grau);
-        }
-
-        select, input[type="number"], input[type="text"], input[type="date"] {
-            padding: 0.5rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-        }
-
-        .personen-input {
-            background: var(--drk-weiss);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .personen-input label {
-            font-weight: bold;
-            margin-right: 1rem;
-            color: var(--drk-grau);
-        }
-
-        .personen-input input {
-            width: 120px;
-        }
-
-        /* Rezepte Grid */
-        .rezepte-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .rezept-karte {
-            background: var(--drk-weiss);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 2px solid transparent;
-        }
-
-        .rezept-karte:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-        }
-
-        .rezept-karte.ausgewaehlt {
-            border-color: var(--drk-rot);
-            background-color: #fff5f5;
-        }
-
-        .rezept-karte h4 {
-            color: var(--drk-rot);
-            margin-bottom: 0.5rem;
-        }
-
-        .rezept-info {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.9rem;
-            color: var(--drk-grau);
-            margin-bottom: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .rezept-beschreibung {
-            font-size: 0.9rem;
-            color: #555;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Rezept Details */
-        .rezept-details {
-            background: var(--drk-weiss);
-            border-radius: 8px;
-            padding: 2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        .rezept-header {
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .rezept-header h3 {
-            color: var(--drk-rot);
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-        }
-
-        .rezept-meta {
-            display: flex;
-            gap: 2rem;
-            font-size: 0.9rem;
-            color: var(--drk-grau);
-            flex-wrap: wrap;
-        }
-
-        .rezept-content {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 3rem;
-        }
-
-        .zutaten-section h4,
-        .zubereitung-section h4,
-        .portionierung-section h4 {
-            color: var(--drk-rot);
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-
-        .zutaten-section h4 {
-            border-bottom: 2px solid var(--drk-rot);
-            padding-bottom: 0.5rem;
-        }
-
-        .zutaten-section ul {
+        
+        .feature-list {
             list-style: none;
             padding: 0;
         }
-
-        .zutaten-section li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #e0e0e0;
-            font-size: 1rem;
-        }
-
-        .zutaten-section li:last-child {
-            border-bottom: none;
-        }
-
-        .zubereitung-section ol {
-            padding-left: 1.5rem;
-        }
-
-        .zubereitung-section li {
-            padding: 0.75rem 0;
-            margin-bottom: 0.5rem;
-            line-height: 1.6;
+        
+        .feature-list li {
+            padding: 5px 0;
             border-bottom: 1px solid #f5f5f5;
         }
-
-        .portionierung-section {
-            grid-column: 1 / -1;
-            background: #fff5f5;
-            padding: 1.5rem;
-            border-radius: 6px;
-            margin-top: 1rem;
-            border-left: 4px solid var(--drk-rot);
-        }
-
-        .portionierung-section h4 {
-            color: var(--drk-rot);
-            margin-bottom: 0.5rem;
-        }
-
-        .portionierung-section p {
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        .rezept-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 2px solid #e0e0e0;
-        }
-
-        button {
-            background: var(--drk-rot);
-            color: var(--drk-weiss);
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background: var(--drk-rot-dunkel);
-        }
-
-        button.secondary {
-            background: var(--drk-grau);
-        }
-
-        button.secondary:hover {
-            background: #3a3a3a;
-        }
-
-        button.success {
-            background: var(--drk-gruen);
-        }
-
-        button.success:hover {
-            background: #1b5e20;
-        }
-
-        button.warning {
-            background: var(--drk-orange);
-        }
-
-        button.warning:hover {
-            background: #e65100;
-        }
-
-        button.danger {
-            background: #c62828;
-        }
-
-        button.danger:hover {
-            background: #b71c1c;
-        }
-
-        /* Einkaufsliste */
-        .einkaufsliste-optionen {
-            background: var(--drk-weiss);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .einkaufsliste-optionen label {
+        
+        .feature-list li:before {
+            content: "✓ ";
+            color: #007bff;
             font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            color: var(--drk-grau);
-        }
-
-        .einkaufsliste-optionen input[type="radio"] {
-            margin: 0;
-        }
-
-        .einkaufsliste-info {
-            background: var(--drk-weiss);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .einkaufsliste-info p {
-            margin: 0;
-            font-size: 1.1rem;
-        }
-
-        .einkaufsliste-info p strong {
-            color: var(--drk-rot);
-        }
-
-        .einkaufsliste-container {
-            background: var(--drk-weiss);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .einkaufsliste-container h3 {
-            color: var(--drk-rot);
-            margin-bottom: 1rem;
-            border-bottom: 2px solid #e0e0e0;
-            padding-bottom: 0.5rem;
-        }
-
-        .einkaufsliste-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #e0e0e0;
-            align-items: center;
-        }
-
-        .einkaufsliste-item:last-child {
-            border-bottom: none;
-        }
-
-        .einkaufsliste-item span:first-child {
-            font-weight: 500;
-        }
-
-        .einkaufsliste-item span:last-child {
-            color: var(--drk-rot);
-            font-weight: bold;
-        }
-
-        .einkaufsliste-item.aus-lager {
-            background-color: #f1f8e9;
-            border-left: 4px solid var(--drk-gruen);
-            padding-left: 1rem;
-        }
-
-        .einkaufsliste-item.aus-lager span:first-child {
-            text-decoration: line-through;
-            color: var(--drk-grau);
-        }
-
-        .einkaufsliste-item.aus-lager::after {
-            content: "✓ Aus Lager";
-            background: var(--drk-gruen);
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            margin-left: 1rem;
-        }
-
-        /* NEUE CSS-KLASSEN für teilweise Lagerdeckung */
-        .einkaufsliste-item.teilweise-aus-lager {
-            background-color: #fff8e1;
-            border-left: 4px solid var(--drk-gelb);
-            padding-left: 1rem;
-        }
-
-        .einkaufsliste-item.teilweise-aus-lager::after {
-            content: "✓ Teilweise aus Lager";
-            background: var(--drk-gelb);
-            color: #212529;
-            padding: 0.25rem 0.5rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            margin-left: 1rem;
-            font-weight: bold;
-        }
-
-        .lager-details {
-            font-size: 0.8rem;
-            color: var(--drk-grau);
-            margin-top: 0.25rem;
-        }
-
-        .lager-details .aus-lager {
-            color: var(--drk-gruen);
-            font-weight: bold;
-        }
-
-        .lager-details .zu-kaufen {
-            color: var(--drk-rot);
-            font-weight: bold;
-        }
-
-        .lager-hinweis {
-            background: #fff5f5;
-            padding: 1rem;
-            border-radius: 6px;
-            margin-top: 1rem;
-            border-left: 4px solid var(--drk-rot);
-            font-size: 0.9rem;
-        }
-
-        /* Lager-Styles */
-        .lager-tabs {
-            display: flex;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid #e0e0e0;
-        }
-
-        .lager-tab {
-            padding: 1rem 2rem;
-            background: var(--drk-grau-hell);
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s;
-        }
-
-        .lager-tab.active {
-            background: var(--drk-weiss);
-            border-bottom-color: var(--drk-rot);
-            font-weight: bold;
-        }
-
-        .lager-tab.lebensmittel.active {
-            border-bottom-color: var(--drk-gruen);
-        }
-
-        .lager-tab.material.active {
-            border-bottom-color: var(--drk-orange);
-        }
-
-        .lager-controls {
-            background: var(--drk-weiss);
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .lager-form {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            align-items: end;
-            flex: 1;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .form-group label {
-            font-weight: bold;
-            font-size: 0.9rem;
-            color: var(--drk-grau);
-        }
-
-        .lager-table {
-            background: var(--drk-weiss);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        .lager-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .lager-table th,
-        .lager-table td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .lager-table th {
-            background: var(--drk-rot);
-            color: var(--drk-weiss);
-            font-weight: 600;
-        }
-
-        .lager-table tr:hover {
-            background: var(--drk-grau-hell);
-        }
-
-        .lager-table .low-stock {
-            background: #fff8e1;
-        }
-
-        .lager-table .critical-stock {
-            background: #ffebee;
-        }
-
-        .lager-table .expired {
-            background: #ffcdd2;
-        }
-
-        .lager-table .expiring-soon {
-            background: #fff8e1;
-        }
-
-        .lager-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .lager-actions button {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
-        }
-
-        .menge-input {
-            width: 80px;
-            padding: 0.3rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            text-align: center;
-        }
-
-        .lager-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: var(--drk-weiss);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .stat-card h3 {
-            color: var(--drk-grau);
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .stat-card .number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--drk-rot);
-        }
-
-        .stat-card.warning .number {
-            color: var(--drk-orange);
-        }
-
-        .stat-card.critical .number {
-            color: #c62828;
-        }
-
-        .keine-rezepte {
-            text-align: center;
-            padding: 2rem;
-            background: var(--drk-weiss);
-            border-radius: 8px;
-            color: var(--drk-grau);
-        }
-
-        /* Seiten werden standardmäßig ausgeblendet */
-        .page {
-            display: none;
-        }
-
-        /* Nur die aktive Seite wird angezeigt */
-        .page.active {
-            display: block;
-        }
-
-        /* DRUCK-STYLES */
-        @media print {
-            body * {
-                visibility: hidden;
-            }
-            
-            #druck-rezept-container,
-            #druck-einkaufsliste-container,
-            #druck-rezept-container *,
-            #druck-einkaufsliste-container * {
-                visibility: visible !important;
-                display: block !important;
-            }
-            
-            #druck-rezept-container,
-            #druck-einkaufsliste-container {
-                position: absolute !important;
-                left: 0 !important;
-                top: 0 !important;
-                width: 100% !important;
-                background: white !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            
-            .navbar,
-            .rezept-actions,
-            .einkaufsliste-info,
-            .filter-section,
-            .personen-input,
-            .rezepte-grid,
-            .rezept-details,
-            #einkaufsliste-content,
-            .container {
-                display: none !important;
-                visibility: hidden !important;
-            }
-            
-            body {
-                background: white !important;
-                font-size: 10pt !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            
-            h1, h2, h3 {
-                color: #000 !important;
-                page-break-after: avoid;
-            }
-            
-            table {
-                page-break-inside: avoid;
-            }
-            
-            ol, ul {
-                page-break-inside: avoid;
-            }
-        }
-
-        .druck-container {
-            display: none;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .nav-container {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .container {
-                padding: 1rem;
-            }
-            
-            .filter-section {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .rezept-content {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            
-            .rezepte-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .einkaufsliste-info {
-                flex-direction: column;
-                align-items: stretch;
-                text-align: center;
-            }
-            
-            .rezept-actions {
-                flex-direction: column;
-            }
-            
-            .rezept-meta {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .lager-form {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .lager-table {
-                overflow-x: auto;
-            }
-            
-            .lager-actions {
-                flex-direction: column;
-            }
-            
-            .lager-tabs {
-                flex-direction: column;
-            }
-            
-            .lager-tab {
-                padding: 0.75rem 1rem;
-            }
-            
-            .einkaufsliste-optionen {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 1rem;
-            }
         }
         
-        @media (max-width: 480px) {
-            .nav-title {
-                font-size: 1.2rem;
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+        
+        .gallery img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        /* Vollbild Gallery */
+        #detail-panel.fullscreen .gallery {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+        
+        #detail-panel.fullscreen .gallery img {
+            height: 150px;
+        }
+        
+        #detail-panel.fullscreen .detail-image {
+            height: 300px;
+        }
+        
+        #detail-panel.fullscreen .info-section {
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Control Buttons */
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .control-button {
+            background: white;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .control-button:hover {
+            background: #f8f9fa;
+            border-color: #007bff;
+        }
+        
+        .location-button {
+            color: #007bff;
+        }
+        
+        /* User Location Marker */
+        .user-location-marker {
+            background: #007bff;
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            box-shadow: 0 0 10px rgba(0,123,255,0.5);
+        }
+        
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            #detail-panel {
+                width: 100%;
+                right: -100%;
             }
             
-            .nav-links {
-                gap: 1rem;
+            #detail-panel.fullscreen {
+                width: 100%;
             }
             
-            .nav-link {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.9rem;
+            .map-controls {
+                top: 5px;
+                right: 5px;
             }
             
-            .container {
-                padding: 0.5rem;
+            .control-button {
+                padding: 8px;
+                font-size: 14px;
             }
             
-            .rezept-karte {
-                padding: 1rem;
+            .button-group {
+                flex-direction: column;
+                gap: 10px;
             }
             
-            .rezept-details {
-                padding: 1rem;
-            }
-            
-            .rezept-content {
-                gap: 1.5rem;
-            }
-            
-            button {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.9rem;
-            }
-            
-            .lager-stats {
-                grid-template-columns: 1fr;
+            .fullscreen-button, .close-button {
+                width: 100%;
+                margin-left: 0;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Kopfleiste -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <h1 class="nav-title">SEG Feldküche</h1>
-            <div class="nav-links">
-                <a href="#rezepte" class="nav-link active" data-page="rezepte">Rezepte</a>
-                <a href="#einkaufsliste" class="nav-link" data-page="einkaufsliste">Einkaufsliste</a>
-                <a href="#lager" class="nav-link" data-page="lager">Lager</a>
-            </div>
-        </div>
-    </nav>
+    <div id="map"></div>
+    <div id="detail-panel">
+        <!-- Detail-Inhalt wird dynamisch eingefügt -->
+    </div>
 
-    <main class="content">
-        <!-- Rezept-Seite -->
-        <div id="rezepte" class="page active">
-            <div class="container">
-                <h2>Rezeptauswahl SEG Verpflegung</h2>
-                
-                <!-- Filter-Optionen -->
-                <div class="filter-section">
-                    <div class="filter-group">
-                        <label>Verpflegungsart:</label>
-                        <select id="verpflegungsart">
-                            <option value="">Alle</option>
-                            <option value="warm">Warmverpflegung</option>
-                            <option value="kalt">Kaltverpflegation</option>
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label>Verpflegungstyp:</label>
-                        <select id="verpflegungstyp">
-                            <option value="">Alle</option>
-                            <option value="voll">Vollverpflegung</option>
-                            <option value="lunch">Lunchpakete</option>
-                            <option value="hand">Handverpflegung</option>
-                        </select>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <label>
-                            <input type="checkbox" id="vegetarisch">
-                            Nur vegetarische Rezepte
-                        </label>
-                    </div>
-                </div>
+    <!-- Control Buttons -->
+    <div class="map-controls">
+        <button class="control-button location-button" onclick="centerOnUserLocation()" title="Zu meinem Standort">
+            <i class="fas fa-location-arrow"></i>
+        </button>
+    </div>
 
-                <!-- Personenanzahl -->
-                <div class="personen-input">
-                    <label for="personen">Personenanzahl:</label>
-                    <input type="number" id="personen" min="1" max="400" value="50">
-                    <small>Basis: 50 Personen für SEG-Einsatz</small>
-                </div>
-
-                <!-- Rezepte Grid -->
-                <div class="rezepte-grid" id="rezepte-grid">
-                    <!-- Rezepte werden hier dynamisch eingefügt -->
-                </div>
-
-                <!-- Ausgewähltes Rezept -->
-                <div id="rezept-details" class="rezept-details" style="display: none;">
-                    <div class="rezept-header">
-                        <h3 id="rezept-titel"></h3>
-                        <div class="rezept-meta">
-                            <span id="rezept-kalorien"></span>
-                            <span id="rezept-zubereitungszeit"></span>
-                            <span id="rezept-art"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="rezept-content">
-                        <div class="zutaten-section">
-                            <h4>Zutaten für <span id="zutaten-personen">50</span> Personen</h4>
-                            <ul id="rezept-zutaten"></ul>
-                        </div>
-                        
-                        <div class="zubereitung-section">
-                            <h4>Zubereitung</h4>
-                            <ol id="rezept-zubereitung"></ol>
-                        </div>
-                        
-                        <div class="portionierung-section">
-                            <h4>Portionierung & Getränke</h4>
-                            <p id="rezept-portionierung"></p>
-                        </div>
-                    </div>
-                    
-                    <div class="rezept-actions">
-                        <button onclick="exportRezeptPDF()">Rezept als PDF exportieren</button>
-                        <button onclick="zurEinkaufsliste()">Zur Einkaufsliste</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Einkaufsliste-Seite -->
-        <div id="einkaufsliste" class="page">
-            <div class="container">
-                <h2>Einkaufsliste</h2>
-                
-                <!-- Einkaufslisten-Optionen -->
-                <div class="einkaufsliste-optionen">
-                    <label>
-                        <input type="radio" name="lager-option" value="alles-kaufen" checked onchange="aktualisiereEinkaufsliste()">
-                        Alles neu kaufen (Lager ignorieren)
-                    </label>
-                    <label>
-                        <input type="radio" name="lager-option" value="lager-verwenden" onchange="aktualisiereEinkaufsliste()">
-                        Lager verwenden (Vorhandenes abziehen)
-                    </label>
-                </div>
-                
-                <div class="einkaufsliste-info">
-                    <p>Für <span id="einkauf-personen">50</span> Personen | 
-                       <strong id="einkauf-rezept-titel">Kein Rezept ausgewählt</strong>
-                    </p>
-                    <div>
-                        <button onclick="exportEinkaufslistePDF()">Einkaufsliste als PDF exportieren</button>
-                        <button onclick="showPage('rezepte')">Zurück zu Rezepten</button>
-                    </div>
-                </div>
-                
-                <div id="einkaufsliste-content">
-                    <p>Bitte wähle zuerst ein Rezept auf der Rezept-Seite aus.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Lager-Seite -->
-        <div id="lager" class="page">
-            <div class="container">
-                <h2>Lagerverwaltung</h2>
-                
-                <!-- Lager-Tabs -->
-                <div class="lager-tabs">
-                    <button class="lager-tab lebensmittel active" onclick="wechselLagerTab('lebensmittel')">🍽️ Lebensmittel</button>
-                    <button class="lager-tab material" onclick="wechselLagerTab('material')">🛠️ Material</button>
-                </div>
-                
-                <!-- Lager-Statistiken -->
-                <div class="lager-stats" id="lager-stats">
-                    <!-- Statistiken werden dynamisch eingefügt -->
-                </div>
-
-                <!-- Lager-Controls -->
-                <div class="lager-controls">
-                    <div class="lager-form" id="lager-form">
-                        <!-- Formular wird je nach Tab dynamisch eingefügt -->
-                    </div>
-                </div>
-
-                <!-- Lager-Tabelle -->
-                <div class="lager-table">
-                    <table>
-                        <thead id="lager-table-header">
-                            <!-- Tabellenkopf wird dynamisch eingefügt -->
-                        </thead>
-                        <tbody id="lager-tabelle">
-                            <!-- Lagerdaten werden dynamisch eingefügt -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Lager-Aktionen -->
-                <div class="rezept-actions">
-                    <button onclick="lagerExportieren()">Aktuelles Lager als CSV exportieren</button>
-                    <button class="secondary" onclick="lagerImportieren()">Lager importieren</button>
-                    <button class="warning" onclick="lagerLeeren()">Aktuelles Lager zurücksetzen</button>
-                </div>
-
-                <!-- Cloud-Synchronisation -->
-                <div class="cloud-actions" style="margin-top: 2rem; padding: 1.5rem; background: #f5f5f5; border-radius: 8px; border: 2px solid var(--drk-rot);">
-                    <h3 style="color: var(--drk-rot); margin-bottom: 1rem;">☁️ Cloud-Synchronisation</h3>
-                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <button onclick="cloudSpeichern()" style="background: var(--drk-rot); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem;">
-                            📱 In Cloud speichern
-                        </button>
-                        <button onclick="cloudLaden()" style="background: var(--drk-gruen); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem;">
-                            ⬇️ Aus Cloud laden
-                        </button>
-                        <button onclick="cloudStatusPrüfen()" style="background: var(--drk-orange); color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem;">
-                            🔄 Sync-Status prüfen
-                        </button>
-                    </div>
-                    <div id="cloud-status" style="margin-top: 1rem; font-size: 0.9rem; color: var(--drk-grau);"></div>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Versteckte Druck-Container -->
-    <div id="druck-rezept-container" class="druck-container" style="display: none;"></div>
-    <div id="druck-einkaufsliste-container" class="druck-container" style="display: none;"></div>
-
-    <!-- Versteckter Datei-Input für Import -->
-    <input type="file" id="lager-import-file" accept=".csv" style="display: none;">
-
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
     <script>
-        // Upstash Redis Konfiguration
-        const UPSTASH_CONFIG = {
-            URL: "https://helping-cougar-30935.upstash.io",
-            TOKEN: "AXjXAAIncDJhNzc0OTViMWEwZGI0MDdlYmRjNWFhOTYxYjRmNjVhYXAyMzA5MzU",
-            READ_ONLY_TOKEN: "AnjXAAIgcDKLfeRS33kEwLSXH-5rwwYziTlTxrIHmmAT-n9rbo_Elg"
-        };
-
-        // Rezepte Daten (3 Rezepte als Demo)
-        const rezepteDaten = [
+        // Meine Standorte-Daten für Kaiserslautern
+        const locations = [
             {
-            id: 1,
-            titel: "SEG-Eintopf mit Rindfleisch",
-            beschreibung: "Kraftvoller Eintopf für kalte Einsatztage",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 650,
-            basisZeit: 60,
-            zutaten: [
-                { menge: 4000, einheit: "g", name: "Rindfleisch, gewürfelt" },
-                { menge: 6000, einheit: "g", name: "Kartoffeln, gewürfelt" },
-                { menge: 2000, einheit: "g", name: "Karotten, in Scheiben" },
-                { menge: 1000, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                { menge: 500, einheit: "g", name: "Sellerie, gewürfelt" },
-                { menge: 200, einheit: "g", name: "Tomatenmark" },
-                { menge: 15, einheit: "l", name: "Rinderbrühe" },
-                { menge: 80, einheit: "g", name: "Paprikapulver" },
-                { menge: 30, einheit: "g", name: "Majoran" },
-                { menge: 200, einheit: "ml", name: "Öl" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 20, einheit: "g", name: "Pfeffer" }
-            ],
-            zubereitung: [
-                "Rindfleisch in großen Bratentöpfen portionsweise scharf anbraten",
-                "Zwiebeln und Sellerie im Bratfond glasig dünsten",
-                "Tomatenmark zugeben und kurz mitrösten",
-                "Fleisch zurück in den Topf geben, mit Brühe ablöschen",
-                "Kartoffeln und Karotten hinzufügen, aufkochen lassen",
-                "Bei mittlerer Hitze 45 Minuten köcheln lassen",
-                "Gewürze zugeben und weitere 15 Minuten garen",
-                "Mit Salz und Pfeffer abschmecken"
-            ],
-            portionierung: "In Feldküchen-Schüsseln portionieren. Pro Person ca. 500ml Eintopf. Dazu 1 Liter Getränke pro Person (Wasser, Apfelschorle im Verhältnis 1:3). Mit frischem Brot servieren."
-        },
-        {
-            id: 2,
-            titel: "Nudelpfanne mit Gemüse und Hähnchen",
-            beschreibung: "Schnelle Nudelpfanne für den Einsatz",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 580,
-            basisZeit: 35,
-            zutaten: [
-                { menge: 5000, einheit: "g", name: "Nudeln (Spiralnudeln)" },
-                { menge: 4000, einheit: "g", name: "Hähnchenbrust, gewürfelt" },
-                { menge: 2000, einheit: "g", name: "Zucchini, in Scheiben" },
-                { menge: 1500, einheit: "g", name: "Paprika, gewürfelt" },
-                { menge: 1000, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                { menge: 400, einheit: "g", name: "Tomatenmark" },
-                { menge: 300, einheit: "ml", name: "Sojasauce" },
-                { menge: 150, einheit: "ml", name: "Öl" },
-                { menge: 50, einheit: "g", name: "Knoblauch, gehackt" },
-                { menge: 60, einheit: "g", name: "Salz" },
-                { menge: 20, einheit: "g", name: "Pfeffer" },
-                { menge: 40, einheit: "g", name: "Paprikapulver" }
-            ],
-            zubereitung: [
-                "Nudeln in großen Töpfen bissfest kochen, abgießen",
-                "Hähnchen in Bratpfannen goldbraun anbraten",
-                "Zwiebeln und Knoblauch in Öl anschwitzen",
-                "Paprika und Zucchini zugeben, 5 Minuten braten",
-                "Tomatenmark und Gewürze zugeben, kurz mitrösten",
-                "Gekochte Nudeln und Hähnchen unterheben",
-                "Mit Sojasauce abschmecken, alles gut vermengen"
-            ],
-            portionierung: "In wärmeisolierten Behältern portionieren. Pro Person ca. 400g Nudelpfanne. Dazu 1 Liter Getränke pro Person (Wasser, Tee)."
-        },
-        {
-            id: 3,
-            titel: "Kartoffel-Gemüse-Pfanne mit Würstchen",
-            beschreibung: "Sättigende Pfanne mit Kartoffeln und Gemüse",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 620,
-            basisZeit: 45,
-            zutaten: [
-                { menge: 6000, einheit: "g", name: "Kartoffeln, gewürfelt" },
-                { menge: 3000, einheit: "g", name: "Wiener Würstchen, in Scheiben" },
-                { menge: 2000, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                { menge: 1500, einheit: "g", name: "Paprika, gewürfelt" },
-                { menge: 1000, einheit: "g", name: "Zucchini, gewürfelt" },
-                { menge: 500, einheit: "g", name: "Tomatenmark" },
-                { menge: 200, einheit: "ml", name: "Öl" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 30, einheit: "g", name: "Pfeffer" },
-                { menge: 40, einheit: "g", name: "Paprikapulver" },
-                { menge: 20, einheit: "g", name: "Majoran" }
-            ],
-            zubereitung: [
-                "Kartoffeln vorkochen, abkühlen lassen und würfeln",
-                "Zwiebeln in Öl glasig dünsten",
-                "Kartoffelwürfel zugeben und goldbraun braten",
-                "Würstchenscheiben zugeben und mitbraten",
-                "Gemüse zugeben und 10 Minuten mitdünsten",
-                "Tomatenmark und Gewürze unterrühren",
-                "Bei mittlerer Hitze 15 Minuten garen lassen"
-            ],
-            portionierung: "Pro Person ca. 450g Pfanne. Dazu Senf und Ketchup bereitstellen. Getränke: Wasser und Tee."
-        },
-        {
-            id: 4,
-            titel: "Linseneintopf mit Räuchertofu",
-            beschreibung: "Vegetarischer Eintopf mit würzigem Räuchertofu",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 520,
-            basisZeit: 50,
-            zutaten: [
-                { menge: 3000, einheit: "g", name: "Räuchertofu, gewürfelt" },
-                { menge: 2000, einheit: "g", name: "Rote Linsen" },
-                { menge: 3000, einheit: "g", name: "Kartoffeln, gewürfelt" },
-                { menge: 1500, einheit: "g", name: "Karotten, in Scheiben" },
-                { menge: 1000, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                { menge: 500, einheit: "g", name: "Sellerie, gewürfelt" },
-                { menge: 12, einheit: "l", name: "Gemüsebrühe" },
-                { menge: 150, einheit: "ml", name: "Öl" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 25, einheit: "g", name: "Pfeffer" },
-                { menge: 30, einheit: "g", name: "Kümmel" },
-                { menge: 20, einheit: "g", name: "Majoran" }
-            ],
-            zubereitung: [
-                "Räuchertofu in Öl knusprig anbraten",
-                "Zwiebeln und Sellerie zugeben und glasig dünsten",
-                "Linsen waschen und zugeben",
-                "Mit Gemüsebrühe ablöschen",
-                "Kartoffeln und Karotten zugeben",
-                "30 Minuten köcheln lassen",
-                "Gewürze zugeben und abschmecken"
-            ],
-            portionierung: "Pro Person ca. 500ml Eintopf. Dazu Brot und 1 Liter Getränke pro Person."
-        },
-        {
-            id: 5,
-            titel: "Chili con Carne",
-            beschreibung: "Würziges Chili mit Rindfleisch und Bohnen",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 680,
-            basisZeit: 60,
-            zutaten: [
-                { menge: 4000, einheit: "g", name: "Rinderhackfleisch" },
-                { menge: 4000, einheit: "g", name: "Kidneybohnen, Dose" },
-                { menge: 2000, einheit: "g", name: "Mais, Dose" },
-                { menge: 2000, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                { menge: 1000, einheit: "g", name: "Paprika, gewürfelt" },
-                { menge: 800, einheit: "g", name: "Tomatenmark" },
-                { menge: 4, einheit: "Dosen", name: "Stücktomaten" },
-                { menge: 100, einheit: "g", name: "Chilipulver" },
-                { menge: 50, einheit: "g", name: "Kreuzkümmel" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 200, einheit: "ml", name: "Öl" }
-            ],
-            zubereitung: [
-                "Hackfleisch in Öl krümelig anbraten",
-                "Zwiebeln und Paprika zugeben und mitdünsten",
-                "Tomatenmark zugeben und kurz anrösten",
-                "Stücktomaten zugeben, zerdrücken",
-                "Gewürze zugeben, 30 Minuten köcheln",
-                "Bohnen und Mais zugeben, weitere 15 Minuten garen"
-            ],
-            portionierung: "Pro Person ca. 450g Chili. Dazu Reis oder Brot. Getränke: Wasser und Apfelschorle."
-        },
-        {
-            id: 6,
-            titel: "Gemüsecurry mit Reis",
-            beschreibung: "Mildes Gemüsecurry nach asiatischer Art",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 550,
-            basisZeit: 40,
-            zutaten: [
-                { menge: 4000, einheit: "g", name: "Reis" },
-                { menge: 3000, einheit: "g", name: "Brokkoli" },
-                { menge: 2000, einheit: "g", name: "Karotten, in Streifen" },
-                { menge: 1500, einheit: "g", name: "Paprika, in Streifen" },
-                { menge: 1000, einheit: "g", name: "Zucchini, in Scheiben" },
-                { menge: 1000, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                { menge: 400, einheit: "ml", name: "Kokosmilch" },
-                { menge: 200, einheit: "g", name: "Currypaste (mild)" },
-                { menge: 150, einheit: "ml", name: "Öl" },
-                { menge: 60, einheit: "g", name: "Salz" },
-                { menge: 20, einheit: "g", name: "Pfeffer" }
-            ],
-            zubereitung: [
-                "Reis nach Packungsanleitung kochen",
-                "Zwiebeln in Öl glasig dünsten",
-                "Currypaste zugeben und kurz anrösten",
-                "Hartes Gemüse zugeben und 5 Minuten dünsten",
-                "Weiches Gemüse zugeben, mit Kokosmilch ablöschen",
-                "15 Minuten köcheln lassen, mit Salz und Pfeffer abschmecken"
-            ],
-            portionierung: "Pro Person 200g Reis und 300g Curry. Getränke: Wasser und Tee."
-        },
-        {
-            id: 7,
-            titel: "Gulaschsuppe nach ungarischer Art",
-            beschreibung: "Würzige, kräftige Gulaschsuppe",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 620,
-            basisZeit: 75,
-            zutaten: [
-                { menge: 5000, einheit: "g", name: "Rindfleisch für Gulasch" },
-                { menge: 4000, einheit: "g", name: "Kartoffeln, gewürfelt" },
-                { menge: 2000, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                { menge: 1500, einheit: "g", name: "Paprika, in Streifen" },
-                { menge: 300, einheit: "g", name: "Tomatenmark" },
-                { menge: 12, einheit: "l", name: "Rinderbrühe" },
-                { menge: 100, einheit: "g", name: "Paprikapulver" },
-                { menge: 30, einheit: "g", name: "Kümmel" },
-                { menge: 200, einheit: "ml", name: "Öl" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 25, einheit: "g", name: "Pfeffer" }
-            ],
-            zubereitung: [
-                "Zwiebeln in Öl glasig dünsten",
-                "Rindfleisch zugeben und kräftig anbraten",
-                "Paprikapulver zugeben, kurz mitrösten",
-                "Mit Brühe ablöschen, 45 Minuten köcheln",
-                "Kartoffeln und Paprika zugeben, weitere 20 Minuten garen",
-                "Mit Gewürzen abschmecken"
-            ],
-            portionierung: "Pro Person ca. 500ml Suppe. Dazu frisches Brot servieren."
-        },
-        {
-            id: 8,
-            titel: "Käsespätzle mit Röstzwiebeln",
-            beschreibung: "Schwäbische Spezialität für die Feldküche",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 720,
-            basisZeit: 35,
-            zutaten: [
-                { menge: 6000, einheit: "g", name: "Spätzle, fertig" },
-                { menge: 2000, einheit: "g", name: "Bergkäse, gerieben" },
-                { menge: 500, einheit: "g", name: "Butter" },
-                { menge: 300, einheit: "g", name: "Röstzwiebeln" },
-                { menge: 500, einheit: "ml", name: "Sahne" },
-                { menge: 60, einheit: "g", name: "Salz" },
-                { menge: 20, einheit: "g", name: "Muskat" },
-                { menge: 30, einheit: "g", name: "Pfeffer" }
-            ],
-            zubereitung: [
-                "Spätzle in Salzwasser bissfest kochen, abgießen",
-                "Butter in großen Pfannen schmelzen",
-                "Spätzle darin goldgelb braten",
-                "Sahne und Käse zugeben, schmelzen lassen",
-                "Mit Muskat, Salz und Pfeffer würzen",
-                "Mit Röstzwiebeln bestreuen"
-            ],
-            portionierung: "Pro Person ca. 250g Käsespätzle. Dazu Apfelmus oder Salat servieren."
-        },
-                    {
-            id: 9,
-            titel: "Bolognese mit Spaghetti",
-            beschreibung: "Klassische Fleischsauce zu Spaghetti",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 650,
-            basisZeit: 50,
-            zutaten: [
-                { menge: 5000, einheit: "g", name: "Spaghetti" },
-                { menge: 4000, einheit: "g", name: "Rinderhackfleisch" },
-                { menge: 2000, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                { menge: 1500, einheit: "g", name: "Karotten, gerieben" },
-                { menge: 1000, einheit: "g", name: "Sellerie, gewürfelt" },
-                { menge: 800, einheit: "g", name: "Tomatenmark" },
-                { menge: 4, einheit: "Dosen", name: "Stücktomaten" },
-                { menge: 200, einheit: "ml", name: "Rotwein" },
-                { menge: 200, einheit: "ml", name: "Öl" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 30, einheit: "g", name: "Oregano" },
-                { menge: 25, einheit: "g", name: "Basilikum" }
-            ],
-            zubereitung: [
-                "Spaghetti in Salzwasser bissfest kochen",
-                "Hackfleisch in Öl krümelig braten",
-                "Zwiebeln, Karotten, Sellerie zugeben und mitdünsten",
-                "Tomatenmark zugeben, kurz anrösten",
-                "Mit Rotwein ablöschen, Stücktomaten zugeben",
-                "30 Minuten köcheln lassen, mit Kräutern abschmecken"
-            ],
-            portionierung: "Pro Person 100g Spaghetti und 200g Sauce. Dazu Parmesan und Brot."
-        },
-                    {
-            id: 10,
-            titel: "Kürbis-Ingwer-Suppe",
-            beschreibung: "Cremige Suppe mit würziger Note",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 480,
-            basisZeit: 40,
-            zutaten: [
-                { menge: 8000, einheit: "g", name: "Hokkaido-Kürbis, gewürfelt" },
-                { menge: 2000, einheit: "g", name: "Kartoffeln, gewürfelt" },
-                { menge: 1000, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                { menge: 100, einheit: "g", name: "Ingwer, frisch gerieben" },
-                { menge: 10, einheit: "l", name: "Gemüsebrühe" },
-                { menge: 400, einheit: "ml", name: "Kokosmilch" },
-                { menge: 150, einheit: "ml", name: "Öl" },
-                { menge: 60, einheit: "g", name: "Salz" },
-                { menge: 20, einheit: "g", name: "Pfeffer" },
-                { menge: 10, einheit: "g", name: "Muskat" }
-            ],
-            zubereitung: [
-                "Zwiebeln und Ingwer in Öl anschwitzen",
-                "Kürbis und Kartoffeln zugeben, kurz mitdünsten",
-                "Mit Brühe ablöschen, 25 Minuten köcheln",
-                "Pürieren bis cremig",
-                "Kokosmilch unterrühren, mit Gewürzen abschmecken"
-            ],
-            portionierung: "Pro Person ca. 400ml Suppe. Dazu Brot und Kürbiskerne."
-        },
-                    {
-            id: 11,
-            titel: "Rahmgulasch mit Pilzen",
-            beschreibung: "Zartes Gulasch in Rahmsauce",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 680,
-            basisZeit: 70,
-            zutaten: [
-                { menge: 5000, einheit: "g", name: "Schweinegulasch" },
-                { menge: 3000, einheit: "g", name: "Champignons, geviertelt" },
-                { menge: 2000, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                { menge: 500, einheit: "ml", name: "Sahne" },
-                { menge: 200, einheit: "ml", name: "Weißwein" },
-                { menge: 300, einheit: "g", name: "Tomatenmark" },
-                { menge: 200, einheit: "ml", name: "Öl" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 30, einheit: "g", name: "Pfeffer" },
-                { menge: 20, einheit: "g", name: "Majoran" },
-                { menge: 40, einheit: "g", name: "Paprikapulver" }
-            ],
-            zubereitung: [
-                "Fleisch in Öl scharf anbraten",
-                "Zwiebeln zugeben und glasig dünsten",
-                "Tomatenmark zugeben, kurz anrösten",
-                "Mit Wein ablöschen, 45 Minuten köcheln",
-                "Pilze zugeben, weitere 15 Minuten garen",
-                "Sahne zugeben, nicht mehr kochen lassen"
-            ],
-            portionierung: "Pro Person ca. 400g Gulasch. Dazu Nudeln oder Kartoffeln."
-        },
-                    {
-            id: 12,
-            titel: "Gemüsepfanne Asia-Style",
-            beschreibung: "Wok-Gemüse mit Hähnchen und Reis",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 580,
-            basisZeit: 35,
-            zutaten: [
-                { menge: 4000, einheit: "g", name: "Reis" },
-                { menge: 3000, einheit: "g", name: "Hähnchenbrust, in Streifen" },
-                { menge: 2000, einheit: "g", name: "Pak Choi, grob geschnitten" },
-                { menge: 1500, einheit: "g", name: "Möhren, in Streifen" },
-                { menge: 1000, einheit: "g", name: "Paprika, in Streifen" },
-                { menge: 500, einheit: "g", name: "Frühlingszwiebeln, in Ringen" },
-                { menge: 200, einheit: "ml", name: "Sojasauce" },
-                { menge: 100, einheit: "ml", name: "Sesamöl" },
-                { menge: 50, einheit: "g", name: "Ingwer, gerieben" },
-                { menge: 4, einheit: "Zehen", name: "Knoblauch, gehackt" }
-            ],
-            zubereitung: [
-                "Reis kochen",
-                "Hähnchenstreifen in Sesamöl anbraten",
-                "Ingwer und Knoblauch zugeben",
-                "Hartes Gemüse zugeben, kurz anbraten",
-                "Weiches Gemüse zugeben, mit Sojasauce ablöschen",
-                "5 Minuten dünsten, mit Reis servieren"
-            ],
-            portionierung: "Pro Person 150g Reis und 300g Gemüsepfanne."
-          },
-                    {
-            id: 13,
-            titel: "Erbseneintopf mit Kasseler",
-            beschreibung: "Traditioneller Eintopf mit Kasseler und Erbsen",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 590,
-            basisZeit: 55,
-            zutaten: [
-                { menge: 4000, einheit: "g", name: "Kasseler, gewürfelt" },
-                { menge: 3000, einheit: "g", name: "Gelbe Erbsen, getrocknet" },
-                { menge: 4000, einheit: "g", name: "Kartoffeln, gewürfelt" },
-                { menge: 2000, einheit: "g", name: "Möhren, in Scheiben" },
-                { menge: 1000, einheit: "g", name: "Sellerie, gewürfelt" },
-                { menge: 12, einheit: "l", name: "Gemüsebrühe" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 30, einheit: "g", name: "Majoran" },
-                { menge: 20, einheit: "g", name: "Pfeffer" }
-            ],
-            zubereitung: [
-                "Erbsen über Nacht einweichen, abgießen",
-                "Kasseler in Brühe 20 Minuten kochen",
-                "Erbsen zugeben, 20 Minuten köcheln",
-                "Kartoffeln und Gemüse zugeben, weitere 20 Minuten garen",
-                "Mit Gewürzen abschmecken"
-            ],
-            portionierung: "Pro Person ca. 500ml Eintopf. Dazu Brot und Senf."
-        },
-                    {
-            id: 14,
-            titel: "Paprikagemüse mit Reis",
-            beschreibung: "Ungarisches Paprikagemüse",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 520,
-            basisZeit: 45,
-            zutaten: [
-                { menge: 4000, einheit: "g", name: "Reis" },
-                { menge: 6000, einheit: "g", name: "Paprika, gemischt" },
-                { menge: 3000, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                { menge: 2000, einheit: "g", name: "Tomaten, gewürfelt" },
-                { menge: 400, einheit: "g", name: "Tomatenmark" },
-                { menge: 100, einheit: "g", name: "Paprikapulver" },
-                { menge: 200, einheit: "ml", name: "Öl" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 25, einheit: "g", name: "Pfeffer" }
-            ],
-            zubereitung: [
-                "Reis kochen",
-                "Zwiebeln in Öl glasig dünsten",
-                "Paprikapulver zugeben, kurz anrösten",
-                "Paprika und Tomaten zugeben, 20 Minuten dünsten",
-                "Tomatenmark unterrühren, mit Gewürzen abschmecken"
-            ],
-            portionierung: "Pro Person 150g Reis und 300g Paprikagemüse."
-        },
-                    {
-            id: 15,
-            titel: "Kartoffelsuppe mit Wienern",
-            beschreibung: "Cremige Kartoffelsuppe mit Würstchen",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 540,
-            basisZeit: 40,
-            zutaten: [
-                { menge: 6000, einheit: "g", name: "Kartoffeln, gewürfelt" },
-                { menge: 2000, einheit: "g", name: "Möhren, in Scheiben" },
-                { menge: 1500, einheit: "g", name: "Lauch, in Ringen" },
-                { menge: 1000, einheit: "g", name: "Sellerie, gewürfelt" },
-                { menge: 50, einheit: "Stück", name: "Wiener Würstchen" },
-                { menge: 10, einheit: "l", name: "Gemüsebrühe" },
-                { menge: 400, einheit: "ml", name: "Sahne" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 30, einheit: "g", name: "Pfeffer" },
-                { menge: 20, einheit: "g", name: "Muskat" }
-            ],
-            zubereitung: [
-                "Gemüse in Brühe 25 Minuten kochen",
-                "Pürieren bis zur gewünschten Konsistenz",
-                "Sahne unterrühren, nicht kochen",
-                "Würstchen in Scheiben schneiden, in der Suppe erwärmen",
-                "Mit Gewürzen abschmecken"
-            ],
-            portionierung: "Pro Person ca. 400ml Suppe mit 1 Würstchen. Dazu Brot."
-        },
-                    {
-            id: 16,
-            titel: "Kalte Platte mit Aufschnitt und Salaten",
-            beschreibung: "Abwechslungsreiche Kalte Platte für den Einsatz",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 680,
-            basisZeit: 90,
-            zutaten: [
-                { menge: 100, einheit: "Stück", name: "Baguettebrötchen" },
-                { menge: 2500, einheit: "g", name: "Salami" },
-                { menge: 2500, einheit: "g", name: "Schinken, gekocht" },
-                { menge: 2500, einheit: "g", name: "Hähnchenbrust" },
-                { menge: 500, einheit: "g", name: "Margarine" },
-                { menge: 500, einheit: "g", name: "Butter" },
-                { menge: 1000, einheit: "g", name: "Majonäise" },
-                { menge: 3000, einheit: "g", name: "Eisbergsalat" },
-                { menge: 2000, einheit: "g", name: "Tomaten, in Scheiben" },
-                { menge: 500, einheit: "g", name: "Gurken, eingelegt" },
-                { menge: 1500, einheit: "g", name: "Gurken, frisch, in Scheiben" },
-                { menge: 2000, einheit: "g", name: "Krautsalat" },
-                { menge: 800, einheit: "g", name: "Remoulade" },
-                { menge: 3000, einheit: "g", name: "Käse (Edam/Gouda), in Scheiben" },
-                { menge: 1500, einheit: "g", name: "Paprika, gemischt, in Streifen" },
-                { menge: 800, einheit: "g", name: "Zwiebeln, in Ringen" }
-            ],
-            zubereitung: [
-                "Alle Aufschnitte und Käse portioniert auf Platten anrichten",
-                "Salate (Eisbergsalat, Krautsalat) in Schüsseln anrichten",
-                "Tomaten, Gurken und Paprika waschen, schneiden und auf Platten verteilen",
-                "Margarine, Butter, Majonäise und Remoulade in Schälchen portionieren",
-                "Brötchen in Körben servieren"
-            ],
-            portionierung: "Als Buffet anrichten. Pro Person ca. 150g Aufschnitt, 100g Käse, 200g Salate und 2 Brötchen."
-        },
-        {
-            id: 17,
-            titel: "Nudelsalat-Buffet",
-            beschreibung: "Verschiedene Nudelsalate zur Auswahl",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 620,
-            basisZeit: 60,
-            zutaten: [
-                { menge: 5000, einheit: "g", name: "Nudeln (verschiedene Sorten)" },
-                { menge: 2000, einheit: "g", name: "Kirschtomaten, geviertelt" },
-                { menge: 1500, einheit: "g", name: "Gurken, gewürfelt" },
-                { menge: 1000, einheit: "g", name: "Paprika, gewürfelt" },
-                { menge: 800, einheit: "g", name: "Karotten, geraspelt" },
-                { menge: 500, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                { menge: 1000, einheit: "ml", name: "Joghurt-Dressing" },
-                { menge: 500, einheit: "ml", name: "Vinaigrette" },
-                { menge: 300, einheit: "g", name: "Kräuter, frisch gehackt" },
-                { menge: 100, einheit: "Stück", name: "Brötchen" },
-                { menge: 2000, einheit: "g", name: "Käse, gewürfelt" }
-            ],
-            zubereitung: [
-                "Nudeln bissfest kochen, abkühlen lassen",
-                "Gemüse waschen, schneiden und vorbereiten",
-                "Nudeln auf verschiedene Schüsseln verteilen",
-                "Mit unterschiedlichen Dressings und Gemüse mischen",
-                "Mit Kräutern bestreuen, kühl stellen"
-            ],
-            portionierung: "Pro Person 300g Nudelsalat und 2 Brötchen. Verschiedene Dressings zur Auswahl."
-        },
-        {
-            id: 18,
-            titel: "Wrap-Bar mit verschiedenen Füllungen",
-            beschreibung: "Selbstgemachte Wraps zur Zusammenstellung",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 650,
-            basisZeit: 75,
-            zutaten: [
-                { menge: 100, einheit: "Stück", name: "Wrap-Tortillas" },
-                { menge: 3000, einheit: "g", name: "Hähnchenbrust, gekocht" },
-                { menge: 2000, einheit: "g", name: "Schinken, gekocht" },
-                { menge: 1500, einheit: "g", name: "Thunfisch aus der Dose" },
-                { menge: 3000, einheit: "g", name: "Gemischter Salat" },
-                { menge: 2000, einheit: "g", name: "Tomaten, gewürfelt" },
-                { menge: 1500, einheit: "g", name: "Gurken, gewürfelt" },
-                { menge: 1000, einheit: "g", name: "Paprika, gewürfelt" },
-                { menge: 1500, einheit: "g", name: "Käse, gerieben" },
-                { menge: 800, einheit: "g", name: "Joghurt-Dip" },
-                { menge: 800, einheit: "g", name: "Knoblauch-Dip" },
-                { menge: 500, einheit: "g", name: "Salsa" }
-            ],
-            zubereitung: [
-                "Alle Füllungen in separaten Schüsseln anrichten",
-                "Fleisch und Fisch zerpflücken/schneiden",
-                "Gemüse waschen und schneiden",
-                "Dips und Saucen vorbereiten",
-                "Tortillas getrennt anbieten"
-            ],
-            portionierung: "Als Bar anrichten. Pro Person 2-3 Wraps je nach Größe. Verschiedene Füllungen zur Auswahl."
-        },
-        {
-            id: 19,
-            titel: "Brotzeitteller mit regionalen Spezialitäten",
-            beschreibung: "Bayerische Brotzeit für den Einsatz",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 720,
-            basisZeit: 45,
-            zutaten: [
-                { menge: 80, einheit: "Stück", name: "Brezeln" },
-                { menge: 100, einheit: "Stück", name: "Radi" },
-                { menge: 3000, einheit: "g", name: "Obazda" },
-                { menge: 2000, einheit: "g", name: "Leberkäse, gekocht" },
-                { menge: 1500, einheit: "g", name: "Weißwurst" },
-                { menge: 2000, einheit: "g", name: "Bierkäse" },
-                { menge: 1500, einheit: "g", name: "Räucherkäse" },
-                { menge: 1000, einheit: "g", name: "Butter" },
-                { menge: 2000, einheit: "g", name: "Gurken, eingelegt" },
-                { menge: 1500, einheit: "g", name: "Zwiebeln, in Ringen" }
-            ],
-            zubereitung: [
-                "Brezeln auf Tellern anrichten",
-                "Obazda in Schüsseln portionieren",
-                "Käse und Wurst auf Schneidebrettern anrichten",
-                "Gemüse in Schälchen vorbereiten",
-                "Butter separat anbieten"
-            ],
-            portionierung: "Pro Person 1 Brezel, 150g Käse/Wurst, 100g Obazda und Beilagen."
-        },
-        {
-            id: 20,
-            titel: "Antipasti-Platte mediterran",
-            beschreibung: "Mediterrane Vorspeisen als Hauptmahlzeit",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 580,
-            basisZeit: 60,
-            zutaten: [
-                { menge: 100, einheit: "Stück", name: "Ciabatta-Brote" },
-                { menge: 4000, einheit: "g", name: "Mozzarella" },
-                { menge: 3000, einheit: "g", name: "Tomaten, in Scheiben" },
-                { menge: 2000, einheit: "g", name: "Auberginen, gegrillt" },
-                { menge: 2000, einheit: "g", name: "Zucchini, gegrillt" },
-                { menge: 1500, einheit: "g", name: "Paprika, gegrillt" },
-                { menge: 1000, einheit: "g", name: "Oliven, gemischt" },
-                { menge: 800, einheit: "g", name: "Artischockenherzen" },
-                { menge: 500, einheit: "ml", name: "Olivenöl" },
-                { menge: 300, einheit: "g", name: "Basilikum, frisch" },
-                { menge: 200, einheit: "g", name: "Pinienkerne" }
-            ],
-            zubereitung: [
-                "Gemüse waschen und grillen/vorbereiten",
-                "Mozzarella abtropfen lassen und portionieren",
-                "Ciabatta in Scheiben schneiden",
-                "Alles auf großen Platten anrichten",
-                "Mit Olivenöl beträufeln, mit Basilikum bestreuen"
-            ],
-            portionierung: "Pro Person 200g Antipasti, 2-3 Ciabatta-Scheiben. Verschiedene Komponenten zur Auswahl."
-        },
-                {
-            id: 21,
-            titel: "Klassische Lunchpakete",
-            beschreibung: "Praktische Lunchpakete für mobile Einsatzkräfte",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "lunch",
-            vegetarisch: false,
-            kalorien: 720,
-            basisZeit: 25,
-            zutaten: [
-                { menge: 50, einheit: "Stück", name: "Vollkornbrötchen" },
-                { menge: 1250, einheit: "g", name: "Käse, in Scheiben" },
-                { menge: 1000, einheit: "g", name: "Aufschnitt" },
-                { menge: 1500, einheit: "g", name: "Tomaten, in Scheiben" },
-                { menge: 1000, einheit: "g", name: "Gurken, in Scheiben" },
-                { menge: 50, einheit: "Stück", name: "Äpfel" },
-                { menge: 50, einheit: "Stück", name: "Müsliriegel" },
-                { menge: 50, einheit: "Stück", name: "Trinkpäckchen (Apfelsaft)" },
-                { menge: 50, einheit: "Stück", name: "Schokoriegel" }
-            ],
-            zubereitung: [
-                "Brötchen aufschneiden und mit Käse und Aufschnitt belegen",
-                "Tomaten- und Gurkenscheiben separat verpacken",
-                "Äpfel waschen und trocknen",
-                "Alle Komponenten in Lunchpakete portionieren",
-                "Jedes Paket enthält: 1 belegtes Brötchen, Gemüsebeilage, 1 Apfel, 1 Müsliriegel, 1 Schokoriegel, 1 Trinkpäckchen"
-            ],
-            portionierung: "In einzelnen Lunchpaketen verpacken. Pro Person 1 komplettes Paket. Zusätzlich Wasser für den gesamten Einsatz bereitstellen."
-        },
-        {
-            id: 22,
-            titel: "Energie-Lunchpakete Sport",
-            beschreibung: "Energiereiche Pakete für körperlich anstrengende Einsätze",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "lunch",
-            vegetarisch: false,
-            kalorien: 850,
-            basisZeit: 30,
-            zutaten: [
-                { menge: 50, einheit: "Stück", name: "Mehrkornbrötchen" },
-                { menge: 1500, einheit: "g", name: "Putenbrust" },
-                { menge: 1000, einheit: "g", name: "Käse, in Scheiben" },
-                { menge: 1000, einheit: "g", name: "Studentenfutter" },
-                { menge: 50, einheit: "Stück", name: "Energieriegel" },
-                { menge: 50, einheit: "Stück", name: "Bananen" },
-                { menge: 50, einheit: "Stück", name: "Isotonische Getränke" },
-                { menge: 2500, einheit: "g", name: "Möhren, Baby" },
-                { menge: 50, einheit: "Stück", name: "Müsliriegel" }
-            ],
-            zubereitung: [
-                "Brötchen mit Putenbrust und Käse belegen",
-                "Bananen und Möhren waschen",
-                "Studentenfutter in kleine Beutel portionieren",
-                "Alle Komponenten in stabile Lunchpakete packen",
-                "Isotonische Getränke gekühlt bereitstellen"
-            ],
-            portionierung: "Pro Person 1 Brötchen, 1 Banane, 50g Studentenfutter, 1 Energieriegel, 1 isotonisches Getränk."
-        },
-        {
-            id: 23,
-            titel: "Vegetarische Lunchpakete",
-            beschreibung: "Ausgewogene vegetarische Lunchpakete",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "lunch",
-            vegetarisch: true,
-            kalorien: 680,
-            basisZeit: 35,
-            zutaten: [
-                { menge: 50, einheit: "Stück", name: "Vollkorntoast" },
-                { menge: 1500, einheit: "g", name: "Frischkäse" },
-                { menge: 1000, einheit: "g", name: "Avocado" },
-                { menge: 1500, einheit: "g", name: "Paprika, in Streifen" },
-                { menge: 1000, einheit: "g", name: "Gurken, in Stiften" },
-                { menge: 50, einheit: "Stück", name: "Birnen" },
-                { menge: 50, einheit: "Stück", name: "Nussmischung" },
-                { menge: 50, einheit: "Stück", name: "Fruchtsaft" },
-                { menge: 50, einheit: "Stück", name: "Joghurt" }
-            ],
-            zubereitung: [
-                "Toast mit Frischkäse bestreichen",
-                "Avocado schälen, entkernen und in Scheiben schneiden",
-                "Gemüse waschen und schneiden",
-                "Birnen waschen",
-                "Joghurt und Nüsse portionieren"
-            ],
-            portionierung: "Pro Person 2 Toasts, 1/4 Avocado, Gemüsesticks, 1 Birne, 1 Joghurt, 1 Nussmischung, 1 Saft."
-        },
-        {
-            id: 24,
-            titel: "Wrap-Lunchpakete",
-            beschreibung: "Praktische Wraps für unterwegs",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "lunch",
-            vegetarisch: false,
-            kalorien: 750,
-            basisZeit: 40,
-            zutaten: [
-                { menge: 100, einheit: "Stück", name: "Wrap-Tortillas" },
-                { menge: 2000, einheit: "g", name: "Hähnchenbrust, gekocht" },
-                { menge: 1500, einheit: "g", name: "Salatblätter" },
-                { menge: 1000, einheit: "g", name: "Tomaten, gewürfelt" },
-                { menge: 1000, einheit: "g", name: "Gurken, gewürfelt" },
-                { menge: 800, einheit: "g", name: "Joghurt-Dressing" },
-                { menge: 50, einheit: "Stück", name: "Äpfel" },
-                { menge: 50, einheit: "Stück", name: "Müsliriegel" },
-                { menge: 50, einheit: "Stück", name: "Wasserflaschen 0,5l" }
-            ],
-            zubereitung: [
-                "Tortillas mit Dressing bestreichen",
-                "Hähnchenbrust in Streifen schneiden",
-                "Salat und Gemüse vorbereiten",
-                "Wraps zusammenrollen und in Folie wickeln",
-                "Äpfel waschen, Müsliriegel verpacken"
-            ],
-            portionierung: "Pro Person 2 Wraps, 1 Apfel, 1 Müsliriegel, 1 Wasserflasche."
-        },
-        {
-            id: 25,
-            titel: "Kraftpakete für Langzeiteinsatz",
-            beschreibung: "Besonders nahrhafte Pakete für 24h-Einsätze",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "lunch",
-            vegetarisch: false,
-            kalorien: 1200,
-            basisZeit: 45,
-            zutaten: [
-                { menge: 50, einheit: "Stück", name: "Schinken-Käse-Toast" },
-                { menge: 50, einheit: "Stück", name: "Fertigsalate in Bechern" },
-                { menge: 50, einheit: "Stück", name: "Proteinriegel" },
-                { menge: 50, einheit: "Stück", name: "Nussmischungen" },
-                { menge: 50, einheit: "Stück", name: "Trockenfrüchte" },
-                { menge: 50, einheit: "Stück", name: "Energydrinks" },
-                { menge: 50, einheit: "Stück", name: "Wasserflaschen 1l" },
-                { menge: 50, einheit: "Stück", name: "Fruchtquetschies" },
-                { menge: 50, einheit: "Stück", name: "Müsliriegel" }
-            ],
-            zubereitung: [
-                "Toasts vorbereiten und verpacken",
-                "Fertigsalate kühl lagern",
-                "Nüsse und Trockenfrüchte portionieren",
-                "Getränke bereitstellen",
-                "Alles in stabile Transportboxen packen"
-            ],
-            portionierung: "Pro Person 2 Toasts, 1 Salat, 2 Riegel, 1 Nussmischung, 1 Trockenfrucht, 1 Energydrink, 1 Wasser."
-        },
-                {
-            id: 26,
-            titel: "Würstchen im Schlafrock",
-            beschreibung: "Wiener Würstchen in Blätterteig für unterwegs",
-            verpflegungsart: "warm",
-            verpflegungstyp: "hand",
-            vegetarisch: false,
-            kalorien: 420,
-            basisZeit: 30,
-            zutaten: [
-                { menge: 100, einheit: "Stück", name: "Wiener Würstchen" },
-                { menge: 100, einheit: "Stück", name: "Blätterteigplatten" },
-                { menge: 200, einheit: "g", name: "Senf" },
-                { menge: 200, einheit: "g", name: "Ketchup" },
-                { menge: 2, einheit: "Stück", name: "Eier zum Bestreichen" }
-            ],
-            zubereitung: [
-                "Blätterteig ausrollen und in Rechtecke schneiden",
-                "Je 1 Würstchen auf jedes Teigstück legen",
-                "Mit Senf bestreichen",
-                "Teig um das Würstchen wickeln, Enden festdrücken",
-                "Mit Ei bestreichen, im Ofen backen bis goldbraun"
-            ],
-            portionierung: "Pro Person 2 Stück. Mit Senf und Ketchup servieren. In Alufolie warm halten."
-        },
-        {
-            id: 27,
-            titel: "Mini-Frikadellen im Brötchen",
-            beschreibung: "Kleine Frikadellen im Brötchen zum Mitnehmen",
-            verpflegungsart: "warm",
-            verpflegungstyp: "hand",
-            vegetarisch: false,
-            kalorien: 480,
-            basisZeit: 40,
-            zutaten: [
-                { menge: 4000, einheit: "g", name: "Hackfleischmischung" },
-                { menge: 100, einheit: "Stück", name: "Mini-Brötchen" },
-                { menge: 500, einheit: "g", name: "Zwiebeln, gewürfelt" },
-                { menge: 4, einheit: "Stück", name: "Eier" },
-                { menge: 200, einheit: "g", name: "Semmelbrösel" },
-                { menge: 200, einheit: "ml", name: "Öl" },
-                { menge: 300, einheit: "g", name: "Senf" },
-                { menge: 300, einheit: "g", name: "Ketchup" }
-            ],
-            zubereitung: [
-                "Hackfleisch mit Zwiebeln, Eiern und Semmelbröseln mischen",
-                "Kleine Frikadellen formen",
-                "In Öl von beiden Seiten goldbraun braten",
-                "Brötchen aufschneiden und mit Senf bestreichen",
-                "Frikadellen in Brötchen legen"
-            ],
-            portionierung: "Pro Person 2 Mini-Frikadellenbrötchen. Mit Ketchup servieren."
-        },
-        {
-            id: 28,
-            titel: "Kartoffelecken mit Dip",
-            beschreibung: "Würzige Ofenkartoffeln zum Mitnehmen",
-            verpflegungsart: "warm",
-            verpflegungstyp: "hand",
-            vegetarisch: true,
-            kalorien: 380,
-            basisZeit: 45,
-            zutaten: [
-                { menge: 8000, einheit: "g", name: "Kartoffeln, festkochend" },
-                { menge: 200, einheit: "ml", name: "Olivenöl" },
-                { menge: 100, einheit: "g", name: "Paprikapulver" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 40, einheit: "g", name: "Knoblauchpulver" },
-                { menge: 2000, einheit: "g", name: "Joghurt-Dip" },
-                { menge: 2000, einheit: "g", name: "Kräuterquark" }
-            ],
-            zubereitung: [
-                "Kartoffeln waschen und in Spalten schneiden",
-                "Mit Öl und Gewürzen vermengen",
-                "Im Ofen goldbraun backen",
-                "Dips vorbereiten",
-                "Kartoffelecken in Papiertüten portionieren"
-            ],
-            portionierung: "Pro Person 200g Kartoffelecken mit 2 Dip-Behältnissen."
-        },
-        {
-            id: 29,
-            titel: "Gemüse-Frittata-Stücke",
-            beschreibung: "Italienische Eierspeise in handlichen Portionen",
-            verpflegungsart: "warm",
-            verpflegungstyp: "hand",
-            vegetarisch: true,
-            kalorien: 350,
-            basisZeit: 35,
-            zutaten: [
-                { menge: 60, einheit: "Stück", name: "Eier" },
-                { menge: 2000, einheit: "g", name: "Gemüse, gewürfelt (Paprika, Zucchini, Zwiebeln)" },
-                { menge: 1000, einheit: "g", name: "Käse, gerieben" },
-                { menge: 200, einheit: "ml", name: "Milch" },
-                { menge: 100, einheit: "ml", name: "Öl" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 30, einheit: "g", name: "Pfeffer" },
-                { menge: 50, einheit: "g", name: "Kräuter, frisch" }
-            ],
-            zubereitung: [
-                "Gemüse in Öl anbraten",
-                "Eier mit Milch verquirlen, würzen",
-                "Gemüse in Backformen geben, Eimischung darüber",
-                "Mit Käse bestreuen, backen bis goldbraun",
-                "In handliche Stücke schneiden"
-            ],
-            portionierung: "Pro Person 2 Frittata-Stücke. In Backpapier gewickelt servieren."
-        },
-        {
-            id: 30,
-            titel: "Pikante Pfannkuchen mit Schinken-Käse-Füllung",
-            beschreibung: "Gefüllte Pfannkuchen für die Hand",
-            verpflegungsart: "warm",
-            verpflegungstyp: "hand",
-            vegetarisch: false,
-            kalorien: 450,
-            basisZeit: 50,
-            zutaten: [
-                { menge: 4000, einheit: "g", name: "Pfannkuchenteig (fertig)" },
-                { menge: 2000, einheit: "g", name: "Schinken, gekocht" },
-                { menge: 2000, einheit: "g", name: "Käse, gerieben" },
-                { menge: 1000, einheit: "g", name: "Crème fraîche" },
-                { menge: 200, einheit: "ml", name: "Öl" },
-                { menge: 500, einheit: "g", name: "Zwiebeln, gewürfelt" }
-            ],
-            zubereitung: [
-                "Pfannkuchen backen",
-                "Zwiebeln glasig dünsten, mit Schinken und Crème fraîche mischen",
-                "Pfannkuchen mit Füllung bestreichen, zusammenrollen",
-                "Mit Käse bestreuen, überbacken",
-                "In handliche Stücke schneiden"
-            ],
-            portionierung: "Pro Person 2 Pfannkuchenstücke. In Alufolie warm halten."
-        },
-               {
-            id: 31,
-            titel: "Energiebällchen Power-Mix",
-            beschreibung: "Kohlenhydrat- und proteinreiche Energiebällchen",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "hand",
-            vegetarisch: true,
-            kalorien: 280,
-            basisZeit: 25,
-            zutaten: [
-                { menge: 2000, einheit: "g", name: "Haferflocken" },
-                { menge: 1000, einheit: "g", name: "Datteln, entsteint" },
-                { menge: 500, einheit: "g", name: "Mandelmus" },
-                { menge: 500, einheit: "g", name: "Kokosraspel" },
-                { menge: 500, einheit: "g", name: "Leinsamen" },
-                { menge: 500, einheit: "g", name: "Kakaopulver" },
-                { menge: 200, einheit: "ml", name: "Ahornsirup" },
-                { menge: 100, einheit: "ml", name: "Wasser" }
-            ],
-            zubereitung: [
-                "Datteln mit Wasser pürieren",
-                "Alle Zutaten vermengen",
-                "Zu kleinen Bällchen formen",
-                "In Kokosraspel wälzen",
-                "Kühl stellen"
-            ],
-            portionierung: "Pro Person 3 Energiebällchen. In Papier eingewickelt servieren."
-        },
-        {
-            id: 32,
-            titel: "Protein-Power-Sandwiches",
-            beschreibung: "Sandwiches mit hohem Proteingehalt",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "hand",
-            vegetarisch: false,
-            kalorien: 520,
-            basisZeit: 30,
-            zutaten: [
-                { menge: 100, einheit: "Stück", name: "Vollkorntoast" },
-                { menge: 3000, einheit: "g", name: "Putenbrust" },
-                { menge: 1500, einheit: "g", name: "Käse, in Scheiben" },
-                { menge: 1000, einheit: "g", name: "Salatblätter" },
-                { menge: 800, einheit: "g", name: "Tomaten, in Scheiben" },
-                { menge: 500, einheit: "g", name: "Gurken, in Scheiben" },
-                { menge: 500, einheit: "g", name: "Senf" },
-                { menge: 500, einheit: "g", name: "Remoulade" }
-            ],
-            zubereitung: [
-                "Toastscheiben mit Senf oder Remoulade bestreichen",
-                "Mit Putenbrust, Käse und Gemüse belegen",
-                "Zusammendrücken und diagonal durchschneiden",
-                "In Frischhaltefolie wickeln"
-            ],
-            portionierung: "Pro Person 2 Sandwichhälften. Gekühlt bereitstellen."
-        },
-        {
-            id: 33,
-            titel: "Frischkäse-Baguette mit Kräutern",
-            beschreibung: "Französische Baguettes mit Frischkäsefüllung",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "hand",
-            vegetarisch: true,
-            kalorien: 380,
-            basisZeit: 20,
-            zutaten: [
-                { menge: 50, einheit: "Stück", name: "Mini-Baguettes" },
-                { menge: 3000, einheit: "g", name: "Frischkäse" },
-                { menge: 500, einheit: "g", name: "Kräuter, frisch gehackt" },
-                { menge: 500, einheit: "g", name: "Paprika, gewürfelt" },
-                { menge: 300, einheit: "g", name: "Frühlingszwiebeln, in Ringen" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 30, einheit: "g", name: "Pfeffer" }
-            ],
-            zubereitung: [
-                "Baguettes aufschneiden, aber nicht durchtrennen",
-                "Frischkäse mit Kräutern und Gewürzen vermengen",
-                "Gemüse unterheben",
-                "Baguettes mit Frischkäsecreme füllen",
-                "Zusammendrücken"
-            ],
-            portionierung: "Pro Person 1 Mini-Baguette. In Folie gewickelt servieren."
-        },
-        {
-            id: 34,
-            titel: "Obst- und Gemüse-Snackbox",
-            beschreibung: "Gesunde Snackbox mit frischem Obst und Gemüse",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "hand",
-            vegetarisch: true,
-            kalorien: 320,
-            basisZeit: 35,
-            zutaten: [
-                { menge: 50, einheit: "Stück", name: "Äpfel" },
-                { menge: 50, einheit: "Stück", name: "Bananen" },
-                { menge: 2500, einheit: "g", name: "Möhren, Baby" },
-                { menge: 2000, einheit: "g", name: "Paprika, in Streifen" },
-                { menge: 1500, einheit: "g", name: "Gurken, in Stiften" },
-                { menge: 1000, einheit: "g", name: "Kirschtomaten" },
-                { menge: 1000, einheit: "g", name: "Studentenfutter" },
-                { menge: 1000, einheit: "g", name: "Joghurt-Dip" }
-            ],
-            zubereitung: [
-                "Obst und Gemüse waschen",
-                "Gemüse in handliche Stücke schneiden",
-                "Studentenfutter portionieren",
-                "Dip in kleine Behälter füllen",
-                "Alles in Snackboxen anrichten"
-            ],
-            portionierung: "Pro Person 1 Apfel, 1 Banane, Gemüsesticks, 20g Studentenfutter, 1 Dip."
-        },
-        {
-            id: 35,
-            titel: "Müsliriegel selbstgemacht",
-            beschreibung: "Energiereiche Müsliriegel ohne Backen",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "hand",
-            vegetarisch: true,
-            kalorien: 250,
-            basisZeit: 40,
-            zutaten: [
-                { menge: 2000, einheit: "g", name: "Haferflocken" },
-                { menge: 1000, einheit: "g", name: "Nussmischung" },
-                { menge: 1000, einheit: "g", name: "Trockenfrüchte" },
-                { menge: 500, einheit: "g", name: "Kokosöl" },
-                { menge: 500, einheit: "g", name: "Honig" },
-                { menge: 500, einheit: "g", name: "Erdnussbutter" },
-                { menge: 200, einheit: "g", name: "Kakaopulver" }
-            ],
-            zubereitung: [
-                "Nüsse und Trockenfrüchte hacken",
-                "Kokosöl, Honig und Erdnussbutter erwärmen",
-                "Alle Zutaten vermengen",
-                "In Backform pressen",
-                "Kühl stellen, in Riegel schneiden"
-            ],
-            portionierung: "Pro Person 2 Müsliriegel. In Backpapier gewickelt servieren."
-        } 
-    ];
+                id: 1,
+                name: "Goetheschule",
+                lat: 49.4444,
+                lng: 7.7689,
+                image: "Goethe.png",
+                images: [
+                    "Goethe-EG.png",
+                    "Lageplan-Goethe.png",
+                    "Goethe.png"
+                ],
+                shortInfo: "Kapazität: 80 Personen",
+                type: "Schule",
+                description: "Die Turnhalle kann als Unterkunft genutzt werden im Schulgebäude Steht ausreichend Infrastrucktur zur Verfügung um eine Adäquate versorgung der Betroffenen sicherzustellen. Auch Sanitäranlagen sind in ausreichender Anzahl vorhanden",
+                features: [
+                    "Barrierefrei",
+                    "Krankenhausnahe",
+                    "Gute Räumlichkeiten",
+                    "Kochbereiche",
+                    "Stabiele Heizung",
+                ],
+                openingHours: "Mo-Fr: 7:30-16:00, Sekretariat: 7:30-15:00",
+                address: "Goethestraße 42, 67655 Kaiserslautern",
+                contact: "Tel: 0631 123456, Email: info@goetheschule-kl.de",
+                website: "www.goetheschule-kl.de",
+                distance: null
+            },
+            {
+                id: 2,
+                name: "Burggymnasium",
+                lat: 49.4469,
+                lng: 7.7725,
+                image: "Burg.png",
+                images: [
+                    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop",
+                    "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop",
+                    "https://images.unsplash.com/photo-1541336032412-2048a678540d?w=400&h=300&fit=crop"
+                ],
+                shortInfo: "Kapazität: 120 Personen",
+                type: "Schule",
+                description: "Die Turnhalle ist nicht Barierefrei zugänglich. Die Halle ist in 3 Segmente sparierbar. Es stehen ausreichend Sanitär und infrastrucktur anlagen zur verfügung",
+                features: [
+                    "Sprachlicher und musischer Schwerpunkt",
+                    "Orchester und Chöre",
+                    "Schüleraustauschprogramme",
+                    "Digitale Klassenzimmer",
+                    "Kunst- und Musikräume",
+                    "Mensa mit frischem Essen",
+                    "Theater-AG",
+                    "Sprachzertifikate"
+                ],
+                openingHours: "Mo-Fr: 7:30-17:00, Sekretariat: 7:30-15:30",
+                address: "Burgstraße 15, 67655 Kaiserslautern",
+                contact: "Tel: 0631 234567, Email: sekretariat@burggymnasium-kl.de",
+                website: "www.burggymnasium-kl.de",
+                distance: null
+            },
+            {
+                id: 3,
+                name: "Rittersberg",
+                lat: 49.4417,
+                lng: 7.7758,
+                image: "Rittersberg.png",
+                images: [
+                    "https://images.unsplash.com/photo-1541336032412-2048a678540d?w=400&h=300&fit=crop",
+                    "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop",
+                    "https://images.unsplash.com/photo-1588072432836-e10032774350?w=400&h=300&fit=crop"
+                ],
+                shortInfo: "Kapazität: 90 Personen",
+                type: "Schule",
+                description: "Die Turnhalle ist Ebenerdig zu erreichen",
+                features: [
+                    "Bilingualer Zweig Deutsch-Englisch",
+                    "Internationale Austauschprogramme",
+                    "Moderne Sportanlagen",
+                    "Schülerfirma und Projekte",
+                    "Digitale Lernplattformen",
+                    "Aula für Veranstaltungen",
+                    "Mediathek",
+                    "Berufsorientierung"
+                ],
+                openingHours: "Mo-Fr: 7:30-16:30, Sekretariat: 7:30-15:00",
+                address: "Rittersbergstraße 25, 67655 Kaiserslautern",
+                contact: "Tel: 0631 345678, Email: info@rittersberg-gymnasium.de",
+                website: "www.rittersberg-gymnasium.de",
+                distance: null
+            },
+            {
+                id: 4,
+                name: "Albert-Schweitzer-Gymnasium (ASG)",
+                lat: 49.4392,
+                lng: 7.7803,
+                image: "ASG.png",
+                images: [
+                    "https://images.unsplash.com/photo-1588072432836-e10032774350?w=400&h=300&fit=crop",
+                    "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=400&h=300&fit=crop",
+                    "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=300&fit=crop"
+                ],
+                shortInfo: "Kapazität: 200 Personen",
+                type: "Schule",
+                description: "Die Turnhalle ist nicht ebenerdig zugänglich und Brandschutztechnisch bedenklich",
+                features: [
+                    "Soziales und ökologisches Profil",
+                    "Umwelt-AG und Schulgarten",
+                    "Sozialpraktika",
+                    "Moderne Naturwissenschaftsräume",
+                    "Schulcafé mit Fair-Trade-Produkten",
+                    "Inklusive Lernumgebung",
+                    "Streitschlichter-Programm",
+                    "Energie-Spar-Projekte"
+                ],
+                openingHours: "Mo-Fr: 7:30-16:00, Sekretariat: 7:30-14:30",
+                address: "Albert-Schweitzer-Straße 10, 67663 Kaiserslautern",
+                contact: "Tel: 0631 456789, Email: asg@kaiserslautern.de",
+                website: "www.asg-kl.de",
+                distance: null
+            }
+        ];
 
         // Globale Variablen
-        let aktuellesRezept = null;
-        let personenAnzahl = 50;
-        let aktuellerLagerTab = 'lebensmittel';
-        let lagerDaten = {
-            lebensmittel: [],
-            material: []
-        };
+        let map;
+        let userLocationMarker = null;
+        let userLat = null;
+        let userLng = null;
+        let markers = [];
+        let currentLocationId = null;
 
-        // NEUE FUNKTION: Findet Zutat im Lebensmittellager
-        function findeZutatImLager(zutatName) {
-            const lager = lagerDaten.lebensmittel;
-            const gesuchterName = zutatName.toLowerCase();
-            
-            // Einfache Suche nach Teilübereinstimmung
-            for (let item of lager) {
-                const lagerName = item.name.toLowerCase();
-                
-                // Direkte Übereinstimmung oder Teilübereinstimmung
-                if (lagerName.includes(gesuchterName) || gesuchterName.includes(lagerName)) {
-                    return item;
-                }
-                
-                // Spezielle Fälle für häufige Zutaten
-                if ((gesuchterName.includes('kartoffel') && lagerName.includes('kartoffel')) ||
-                    (gesuchterName.includes('karotte') && lagerName.includes('karotte')) ||
-                    (gesuchterName.includes('zwiebel') && lagerName.includes('zwiebel')) ||
-                    (gesuchterName.includes('nudel') && lagerName.includes('nudel')) ||
-                    (gesuchterName.includes('reis') && lagerName.includes('reis')) ||
-                    (gesuchterName.includes('öl') && lagerName.includes('öl')) ||
-                    (gesuchterName.includes('salz') && lagerName.includes('salz'))) {
-                    return item;
-                }
-            }
-            
-            return null;
+        // Karte initialisieren
+        function initMap() {
+            map = L.map('map').setView([49.4444, 7.7689], 14);
+
+            // OpenStreetMap Tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Standort ermitteln
+            getLocation();
         }
 
-        // NEUE FUNKTION: Berechnet benötigte Menge unter Berücksichtigung des Lagers
-        function berechneBenötigteMenge(rezeptZutat, lagerOption) {
-            const skalierteMenge = (rezeptZutat.menge / 50) * personenAnzahl;
-            
-            if (lagerOption === 'alles-kaufen') {
-                return {
-                    benötigt: skalierteMenge,
-                    ausLager: 0,
-                    zuKaufen: skalierteMenge
-                };
-            }
-            
-            // Lager verwenden - prüfe ob Zutat im Lager
-            const lagerItem = findeZutatImLager(rezeptZutat.name);
-            
-            if (!lagerItem) {
-                return {
-                    benötigt: skalierteMenge,
-                    ausLager: 0,
-                    zuKaufen: skalierteMenge
-                };
-            }
-            
-            // Einheiten vergleichen und ggf. umrechnen
-            let lagerMenge = lagerItem.menge;
-            const rezeptEinheit = rezeptZutat.einheit || 'Stück';
-            
-            // Einheiten umrechnen falls nötig
-            if (rezeptEinheit !== lagerItem.einheit) {
-                // Einfache Umrechnung für häufige Fälle
-                if (rezeptEinheit === 'g' && lagerItem.einheit === 'kg') {
-                    lagerMenge = lagerItem.menge * 1000;
-                } else if (rezeptEinheit === 'kg' && lagerItem.einheit === 'g') {
-                    lagerMenge = lagerItem.menge / 1000;
-                } else if (rezeptEinheit === 'ml' && lagerItem.einheit === 'l') {
-                    lagerMenge = lagerItem.menge * 1000;
-                } else if (rezeptEinheit === 'l' && lagerItem.einheit === 'ml') {
-                    lagerMenge = lagerItem.menge / 1000;
-                }
-                // Für Stück vs. kg - schwierig umzurechnen, daher keine Umrechnung
-            }
-            
-            const ausLager = Math.min(skalierteMenge, lagerMenge);
-            const zuKaufen = Math.max(0, skalierteMenge - ausLager);
-            
-            return {
-                benötigt: skalierteMenge,
-                ausLager: ausLager,
-                zuKaufen: zuKaufen,
-                lagerItem: lagerItem
-            };
-        }
-
-        // VERBESSERTE EINKAUFSLISTEN-FUNKTIONALITÄT
-        function aktualisiereEinkaufsliste() {
-            document.getElementById('einkauf-personen').textContent = personenAnzahl;
-            
-            if (!aktuellesRezept) {
-                document.getElementById('einkauf-rezept-titel').textContent = 'Kein Rezept ausgewählt';
-                document.getElementById('einkaufsliste-content').innerHTML = '<p>Bitte wähle zuerst ein Rezept auf der Rezept-Seite aus.</p>';
-                return;
-            }
-
-            document.getElementById('einkauf-rezept-titel').textContent = aktuellesRezept.titel;
-            
-            const container = document.getElementById('einkaufsliste-content');
-            const lagerOption = document.querySelector('input[name="lager-option"]:checked').value;
-            
-            let gesparteMenge = 0;
-            let gesparteArtikel = 0;
-            let teilweiseGedeckt = 0;
-
-            const einkaufslisteHTML = aktuellesRezept.zutaten.map(zutat => {
-                const mengenBerechnung = berechneBenötigteMenge(zutat, lagerOption);
-                const { zuKaufen, ausLager, benötigt } = mengenBerechnung;
-                
-                if (ausLager > 0) {
-                    gesparteMenge += ausLager;
-                    gesparteArtikel++;
-                }
-
-                // Teilweise Deckung zählen
-                if (ausLager > 0 && zuKaufen > 0) {
-                    teilweiseGedeckt++;
-                }
-                
-                // Automatische Umrechnung für große Mengen
-                let { menge: anzuzeigendeMenge, einheit: anzuzeigendeEinheit } = konvertiereZuFeldkueche(zuKaufen, zutat.einheit, zutat.name);
-                const { menge: benoetigteMenge, einheit: benoetigteEinheit } = konvertiereZuFeldkueche(benötigt, zutat.einheit, zutat.name);
-                const { menge: lagerMenge, einheit: lagerEinheit } = konvertiereZuFeldkueche(ausLager, zutat.einheit, zutat.name);
-                const { menge: gesamtMenge, einheit: gesamtEinheit } = konvertiereZuFeldkueche(benötigt, zutat.einheit, zutat.name);
-
-                if (lagerOption === 'alles-kaufen') {
-                    // Alles neu kaufen - normale Darstellung
-                    return `
-                        <div class="einkaufsliste-item">
-                            <span>${zutat.name}</span>
-                            <span>${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
-                        </div>
-                    `;
-                } else {
-                    // Lager verwenden
-                    if (ausLager >= benötigt) {
-                        // KOMPLETT aus Lager
-                        gesparteArtikel++;
-                        return `
-                            <div class="einkaufsliste-item aus-lager">
-                                <span>${zutat.name}</span>
-                                <span>${gesamtMenge} ${gesamtEinheit}</span>
-                            </div>
-                        `;
-                    } else if (ausLager > 0 && zuKaufen > 0) {
-                        // TEILWEISE aus Lager - KORRIGIERTE DARSTELLUNG
-                        return `
-                            <div class="einkaufsliste-item teilweise-aus-lager">
-                                <div>
-                                    <span>${zutat.name}</span>
-                                    <div class="lager-details">
-                                        Gesamt: ${gesamtMenge} ${gesamtEinheit} | 
-                                        <span class="aus-lager">${lagerMenge} ${lagerEinheit} aus Lager</span> | 
-                                        <span class="zu-kaufen">${anzuzeigendeMenge} ${anzuzeigendeEinheit} zu kaufen</span>
-                                    </div>
-                                </div>
-                                <span>${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
-                            </div>
-                        `;
-                    } else {
-                        // GAR NICHT aus Lager
-                        return `
-                            <div class="einkaufsliste-item">
-                                <span>${zutat.name}</span>
-                                <span>${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
-                            </div>
-                        `;
+        // Standort erfassen
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    showPosition,
+                    showError,
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 60000
                     }
-                }
-            }).join('');
-            
-            let hinweisHTML = '';
-            if (lagerOption === 'lager-verwenden') {
-                let hinweisText = '';
-                if (gesparteArtikel > 0 && teilweiseGedeckt > 0) {
-                    hinweisText = `<strong>Lager verwendet:</strong> ${gesparteArtikel - teilweiseGedeckt} Artikel komplett aus Lager, ${teilweiseGedeckt} Artikel teilweise aus Lager.`;
-                } else if (gesparteArtikel > 0) {
-                    hinweisText = `<strong>Lager verwendet:</strong> ${gesparteArtikel} Artikel mit insgesamt ${gesparteMenge.toFixed(1)} Einheiten werden aus dem Lager entnommen.`;
-                } else {
-                    hinweisText = `<strong>Keine Lagerbestände verfügbar</strong> für dieses Rezept. Alles muss neu gekauft werden.`;
-                }
-                
-                hinweisHTML = `
-                    <div class="lager-hinweis">
-                        ${hinweisText}
-                    </div>
-                `;
+                );
+            } else {
+                alert("Geolocation wird von diesem Browser nicht unterstützt.");
+                useDefaultLocation();
             }
-            
-            container.innerHTML = `
-                <div class="einkaufsliste-container">
-                    <h3>Zutaten ${lagerOption === 'lager-verwenden' ? '(mit Lagerabzug)' : '(komplett neu kaufen)'}</h3>
-                    ${einkaufslisteHTML}
-                    ${hinweisHTML}
-                    <!-- Getränke immer separat -->
-                    <div class="einkaufsliste-item" style="background-color: #fff5f5; margin-top: 10px; padding: 10px; border-radius: 4px;">
-                        <span><strong>Getränke (Wasser, Saftschorle)</strong></span>
-                        <span><strong>${personenAnzahl} l</strong></span>
-                    </div>
-                </div>
-            `;
         }
 
-        // Automatische Umrechnung für Feldküchen-Mengen
-        function konvertiereZuFeldkueche(menge, einheit, zutatName) {
-            const name = zutatName.toLowerCase();
+        // Standort erfolgreich ermittelt
+        function showPosition(position) {
+            userLat = position.coords.latitude;
+            userLng = position.coords.longitude;
             
-            // Für große Mengen (ab 1000) in kg/l umrechnen
-            if (einheit === "g" && menge >= 1000) {
-                return { menge: (menge / 1000).toFixed(1), einheit: "kg" };
-            }
-            if (einheit === "ml" && menge >= 1000) {
-                return { menge: (menge / 1000).toFixed(1), einheit: "l" };
-            }
+            // Karte auf Standort zentrieren
+            map.setView([userLat, userLng], 14);
             
-            // Für spezifische Zutaten automatisch passende Einheiten
-            if (einheit === "" || einheit === "Stück") {
-                if (name.includes('kartoffel') || name.includes('karotte') || name.includes('zwiebel') || 
-                    name.includes('tomate') || name.includes('gurke') || name.includes('brokkoli') ||
-                    name.includes('paprika') || name.includes('avocado') || name.includes('apfel') ||
-                    name.includes('banane')) {
-                    if (menge >= 10) {
-                        return { menge: Math.round(menge), einheit: "kg" };
-                    }
-                }
-            }
+            // Eigenen Standort markieren
+            userLocationMarker = L.circleMarker([userLat, userLng], {
+                color: '#007bff',
+                fillColor: '#007bff',
+                fillOpacity: 0.8,
+                radius: 8,
+                className: 'user-location-marker'
+            }).addTo(map)
+            .bindPopup("Dein aktueller Standort")
+            .openPopup();
             
-            // Standard: Einheit beibehalten, aber runden
-            let angezeigteMenge = menge;
-            if (menge % 1 !== 0) {
-                angezeigteMenge = menge.toFixed(1);
-            }
-            
-            // Für leere Einheiten "Stück" anzeigen
-            const finaleEinheit = einheit === "" ? "Stück" : einheit;
-            
-            return { menge: angezeigteMenge, einheit: finaleEinheit };
+            // Distanzen berechnen und Marker hinzufügen
+            calculateDistances();
+            addLocationMarkers();
         }
 
-        // LAGER-FUNKTIONALITÄT
-        function wechselLagerTab(tab) {
-            aktuellerLagerTab = tab;
-            
-            // Tabs aktivieren
-            document.querySelectorAll('.lager-tab').forEach(tabElement => {
-                tabElement.classList.remove('active');
+        // Fehlerbehandlung
+        function showError(error) {
+            console.error("Geolocation Error:", error);
+            useDefaultLocation();
+        }
+
+        // Fallback: Standardposition
+        function useDefaultLocation() {
+            userLat = 49.4444;
+            userLng = 7.7689;
+            map.setView([userLat, userLng], 14);
+            calculateDistances();
+            addLocationMarkers();
+        }
+
+        // Distanzen berechnen (Haversine-Formel)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Erdradius in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        // Distanzen zu allen Orten berechnen
+        function calculateDistances() {
+            locations.forEach(location => {
+                if (userLat && userLng) {
+                    location.distance = calculateDistance(
+                        userLat, userLng, 
+                        location.lat, location.lng
+                    ).toFixed(1);
+                }
             });
-            event.target.classList.add('active');
-            
-            // Formular und Tabelle aktualisieren
-            lagerFormularAktualisieren();
-            lagerAnzeigen();
         }
 
-        function lagerFormularAktualisieren() {
-            const formContainer = document.getElementById('lager-form');
-            
-            if (aktuellerLagerTab === 'lebensmittel') {
-                formContainer.innerHTML = `
-                    <div class="form-group">
-                        <label for="neues-item">Artikelname</label>
-                        <input type="text" id="neues-item" placeholder="z.B. Kartoffeln">
-                    </div>
-                    <div class="form-group">
-                        <label for="neue-kategorie">Kategorie</label>
-                        <select id="neue-kategorie">
-                            <option value="Gemüse">Gemüse</option>
-                            <option value="Getreide">Getreide</option>
-                            <option value="Konserven">Konserven</option>
-                            <option value="Getränke">Getränke</option>
-                            <option value="Gewürze">Gewürze</option>
-                            <option value="Milchprodukte">Milchprodukte</option>
-                            <option value="Fleisch">Fleisch</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="neue-einheit">Einheit</label>
-                        <select id="neue-einheit">
-                            <option value="kg">kg</option>
-                            <option value="g">g</option>
-                            <option value="l">l</option>
-                            <option value="ml">ml</option>
-                            <option value="Stück">Stück</option>
-                            <option value="Dosen">Dosen</option>
-                            <option value="Packungen">Packungen</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="neue-menge">Aktuelle Menge</label>
-                        <input type="number" id="neue-menge" min="0" step="1" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="neue-mindestmenge">Mindestmenge</label>
-                        <input type="number" id="neue-mindestmenge" min="0" step="1" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="neue-haltbarkeit">Haltbarkeit (MHD)</label>
-                        <input type="date" id="neue-haltbarkeit">
-                    </div>
-                    <div class="form-group">
-                        <label for="neue-lagerort">Lagerort</label>
-                        <select id="neue-lagerort">
-                            <option value="Kühlschrank">Kühlschrank</option>
-                            <option value="Trockenlager">Trockenlager</option>
-                            <option value="Tiefkühl">Tiefkühl</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>&nbsp;</label>
-                        <button class="success" onclick="neuesLagerItem()">Hinzufügen</button>
+        // Marker für alle Standorte hinzufügen
+        function addLocationMarkers() {
+            locations.forEach(location => {
+                // Popup-Inhalt erstellen
+                const popupContent = `
+                    <div class="custom-popup" onclick="showLocationDetails(${location.id})">
+                        ${location.image ? `<img src="${location.image}" alt="${location.name}" class="popup-image">` : ''}
+                        <div class="popup-title">${location.name}</div>
+                        <div class="popup-info">${location.shortInfo}</div>
+                        ${location.distance ? `<div class="popup-distance">${location.distance} km entfernt</div>` : ''}
+                        <small style="color: #666;">Klicken für Details</small>
                     </div>
                 `;
-            } else {
-                formContainer.innerHTML = `
-                    <div class="form-group">
-                        <label for="neues-item">Artikelname</label>
-                        <input type="text" id="neues-item" placeholder="z.B. Gaskartuschen">
-                    </div>
-                    <div class="form-group">
-                        <label for="neue-kategorie">Kategorie</label>
-                        <select id="neue-kategorie">
-                            <option value="Küchenausstattung">Küchenausstattung</option>
-                            <option value="Verbrauchsmaterial">Verbrauchsmaterial</option>
-                            <option value="Sicherheit">Sicherheit</option>
-                            <option value="Reinigung">Reinigung</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="neue-einheit">Einheit</label>
-                        <select id="neue-einheit">
-                            <option value="Stück">Stück</option>
-                            <option value="Packungen">Packungen</option>
-                            <option value="Flaschen">Flaschen</option>
-                            <option value="Kanister">Kanister</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="neue-menge">Aktuelle Menge</label>
-                        <input type="number" id="neue-menge" min="0" step="1" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="neue-mindestmenge">Mindestmenge</label>
-                        <input type="number" id="neue-mindestmenge" min="0" step="1" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="neue-lagerort">Lagerort</label>
-                        <select id="neue-lagerort">
-                            <option value="Lagerraum A">Lagerraum A</option>
-                            <option value="Lagerraum B">Lagerraum B</option>
-                            <option value="Feldküchen-Anhänger">Feldküchen-Anhänger</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>&nbsp;</label>
-                        <button class="success" onclick="neuesLagerItem()">Hinzufügen</button>
-                    </div>
-                `;
-            }
-        }
-        // KORRIGIERTE LAGER-DATEN LADEN FUNKTION
-        async function lagerDatenLaden() {
-            try {
-                console.log('Lade Lagerdaten von Upstash...');
                 
-                const response = await fetch(`${UPSTASH_CONFIG.URL}/get/lager`, {
-                    headers: {
-                        'Authorization': `Bearer ${UPSTASH_CONFIG.TOKEN}`
+                // Marker erstellen
+                const marker = L.marker([location.lat, location.lng])
+                    .addTo(map)
+                    .bindPopup(popupContent);
+                
+                // Mouseover Event (öffnet Popup)
+                marker.on('mouseover', function(e) {
+                    this.openPopup();
+                });
+                
+                // Für Touch-Geräte: Click öffnet Popup
+                marker.on('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        this.openPopup();
                     }
                 });
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log('Upstash GET Response:', data);
-                
-                if (data && data.result) {
-                    // WICHTIG: Prüfen ob data.result bereits ein String ist oder schon ein Objekt
-                    let geladeneDaten;
-                    if (typeof data.result === 'string') {
-                        geladeneDaten = JSON.parse(data.result);
-                    } else {
-                        geladeneDaten = data.result;
-                    }
-                    
-                    if (geladeneDaten && (geladeneDaten.lebensmittel || geladeneDaten.material)) {
-                        lagerDaten = geladeneDaten;
-                        console.log('Lagerdaten erfolgreich aus Cloud geladen:', lagerDaten);
-                        
-                        // Sync-Zeitpunkt speichern
-                        localStorage.setItem('lastCloudSync', new Date().toISOString());
-                        localStorage.setItem('lagerDaten', JSON.stringify(lagerDaten));
-                    } else {
-                        throw new Error('Ungültiges Datenformat aus Cloud');
-                    }
-                } else {
-                    throw new Error('Keine Daten in Cloud gefunden');
-                }
-                
-            } catch (error) {
-                console.error('Fehler beim Laden der Lagerdaten aus Cloud:', error);
-                
-                // Fallback zu localStorage
-                const localData = localStorage.getItem('lagerDaten');
-                if (localData) {
-                    try {
-                        lagerDaten = JSON.parse(localData);
-                        console.log('Lagerdaten aus lokalem Storage geladen');
-                    } catch (parseError) {
-                        console.error('Fehler beim Parsen der lokalen Daten:', parseError);
-                        lagerStandardDatenLaden();
-                    }
-                } else {
-                    lagerStandardDatenLaden();
-                }
-            }
-            
-            lagerFormularAktualisieren();
-            lagerAnzeigen();
-        }
-        
-        // Hilfsfunktion für Standard-Lagerdaten
-        function lagerStandardDatenLaden() {
-            console.log('Lade Standard-Lagerdaten');
-            lagerDaten = {
-                lebensmittel: [
-                    { name: "Kartoffeln", kategorie: "Gemüse", einheit: "kg", menge: 100, mindestmenge: 50, haltbarkeit: "2024-12-31", lagerort: "Trockenlager" },
-                    { name: "Nudeln", kategorie: "Getreide", einheit: "kg", menge: 50, mindestmenge: 25, haltbarkeit: "2025-06-30", lagerort: "Trockenlager" },
-                    { name: "Öl", kategorie: "Gewürze", einheit: "l", menge: 20, mindestmenge: 10, haltbarkeit: "2025-03-15", lagerort: "Trockenlager" }
-                ],
-                material: [
-                    { name: "Gaskartuschen", kategorie: "Küchenausstattung", einheit: "Stück", menge: 10, mindestmenge: 5, lagerort: "Feldküchen-Anhänger" },
-                    { name: "Einweggeschirr", kategorie: "Verbrauchsmaterial", einheit: "Packungen", menge: 20, mindestmenge: 10, lagerort: "Lagerraum A" },
-                    { name: "Desinfektionsmittel", kategorie: "Reinigung", einheit: "Flaschen", menge: 15, mindestmenge: 8, lagerort: "Lagerraum B" }
-                ]
-            };
-            localStorage.setItem('lagerDaten', JSON.stringify(lagerDaten));
+                markers.push(marker);
+            });
         }
 
-        // VERBESSERTE LAGER-DATEN SPEICHERN FUNKTION
-        async function lagerDatenSpeichern() {
-            try {
-                console.log('Speichere Lagerdaten in Upstash...', lagerDaten);
+        // Detail-Panel anzeigen
+        function showLocationDetails(locationId) {
+            const location = locations.find(loc => loc.id === locationId);
+            if (!location) return;
+            
+            currentLocationId = locationId;
+            const detailPanel = document.getElementById('detail-panel');
+            
+            // HTML für Details erstellen
+            detailPanel.innerHTML = `
+                <div class="button-group">
+                    <button class="close-button" onclick="closeDetailPanel()">
+                        <i class="fas fa-times"></i> Schließen
+                    </button>
+                    <button class="fullscreen-button" onclick="toggleFullscreenPanel()">
+                        <i class="fas fa-expand"></i> Vollbild
+                    </button>
+                </div>
                 
-                const response = await fetch(`${UPSTASH_CONFIG.URL}/set/lager`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${UPSTASH_CONFIG.TOKEN}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(lagerDaten)
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                ${location.images && location.images.length > 0 ? 
+                    `<img src="${location.images[0]}" alt="${location.name}" class="detail-image">` : 
+                    '<div class="detail-image" style="background: #ccc; display: flex; align-items: center; justify-content: center; color: #666;">Kein Bild verfügbar</div>'
                 }
                 
-                const result = await response.json();
-                console.log('Upstash SET Response:', result);
+                <h1 class="detail-title">${location.name}</h1>
+                <span class="detail-type">${location.type}</span>
                 
-                // Immer auch lokal speichern als Backup
-                localStorage.setItem('lagerDaten', JSON.stringify(lagerDaten));
-                localStorage.setItem('lastCloudSync', new Date().toISOString());
+                ${location.distance ? `<div style="margin: 10px 0; color: #007bff; font-weight: bold;">${location.distance} km von dir entfernt</div>` : ''}
                 
-                console.log('Daten erfolgreich in Cloud und lokal gespeichert');
-                return true;
-                
-            } catch (error) {
-                console.error('Fehler beim Speichern der Lagerdaten in Cloud:', error);
-                
-                // Fallback: Nur lokal speichern
-                localStorage.setItem('lagerDaten', JSON.stringify(lagerDaten));
-                localStorage.setItem('lastCloudSync', new Date().toISOString());
-                
-                throw new Error(`Cloud-Speichern fehlgeschlagen: ${error.message}. Daten wurden lokal gesichert.`);
-            }
-        }
-
-        function lagerAnzeigen() {
-            const tabelle = document.getElementById('lager-tabelle');
-            const header = document.getElementById('lager-table-header');
-            const statsContainer = document.getElementById('lager-stats');
-            const aktuellesLager = lagerDaten[aktuellerLagerTab];
-            
-            if (!tabelle || !header || !statsContainer) return;
-            
-            // Tabellenkopf je nach Lager-Typ
-            if (aktuellerLagerTab === 'lebensmittel') {
-                header.innerHTML = `
-                    <tr>
-                        <th>Artikel</th>
-                        <th>Kategorie</th>
-                        <th>Einheit</th>
-                        <th>Menge</th>
-                        <th>Mindestmenge</th>
-                        <th>Haltbarkeit</th>
-                        <th>Lagerort</th>
-                        <th>Status</th>
-                        <th>Aktionen</th>
-                    </tr>
-                `;
-            } else {
-                header.innerHTML = `
-                    <tr>
-                        <th>Artikel</th>
-                        <th>Kategorie</th>
-                        <th>Einheit</th>
-                        <th>Menge</th>
-                        <th>Mindestmenge</th>
-                        <th>Lagerort</th>
-                        <th>Status</th>
-                        <th>Aktionen</th>
-                    </tr>
-                `;
-            }
-            
-            // Statistiken berechnen
-            const gesamtArtikel = aktuellesLager.length;
-            const niedrigerBestand = aktuellesLager.filter(item => item.menge < item.mindestmenge).length;
-            const kritischerBestand = aktuellesLager.filter(item => item.menge < item.mindestmenge * 0.5).length;
-            
-            // Statistiken anzeigen
-            statsContainer.innerHTML = `
-                <div class="stat-card">
-                    <h3>Gesamtartikel</h3>
-                    <div class="number">${gesamtArtikel}</div>
+                <div class="info-section">
+                    <h3>Beschreibung</h3>
+                    <p>${location.description}</p>
                 </div>
-                <div class="stat-card ${niedrigerBestand > 0 ? 'warning' : ''}">
-                    <h3>Niedriger Bestand</h3>
-                    <div class="number">${niedrigerBestand}</div>
+                
+                ${location.features && location.features.length > 0 ? `
+                <div class="info-section">
+                    <h3>Ausstattung & Features</h3>
+                    <ul class="feature-list">
+                        ${location.features.map(feature => `<li>${feature}</li>`).join('')}
+                    </ul>
                 </div>
-                <div class="stat-card ${kritischerBestand > 0 ? 'critical' : ''}">
-                    <h3>Kritischer Bestand</h3>
-                    <div class="number">${kritischerBestand}</div>
+                ` : ''}
+                
+                ${location.images && location.images.length > 1 ? `
+                <div class="info-section">
+                    <h3>Bildergalerie</h3>
+                    <div class="gallery">
+                        ${location.images.map((img, index) => 
+                            `<img src="${img}" alt="${location.name} Bild ${index + 1}" onclick="openImageModal('${img}')">`
+                        ).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div class="info-section">
+                    <h3>Kontakt & Informationen</h3>
+                    <p><strong>📍 Adresse:</strong> ${location.address}</p>
+                    ${location.openingHours ? `<p><strong>🕒 Öffnungszeiten:</strong> ${location.openingHours}</p>` : ''}
+                    ${location.contact ? `<p><strong>📞 Kontakt:</strong> ${location.contact}</p>` : ''}
+                    ${location.website ? `<p><strong>🌐 Website:</strong> <a href="https://${location.website}" target="_blank">${location.website}</a></p>` : ''}
                 </div>
             `;
             
-            // Tabelle füllen
-            tabelle.innerHTML = aktuellesLager.map((item, index) => {
-                let statusKlasse = '';
-                let statusText = 'OK';
-                
-                if (item.menge < item.mindestmenge * 0.5) {
-                    statusKlasse = 'critical-stock';
-                    statusText = 'Kritisch';
-                } else if (item.menge < item.mindestmenge) {
-                    statusKlasse = 'low-stock';
-                    statusText = 'Niedrig';
-                }
-                
-                // Für Lebensmittel: Haltbarkeit prüfen
-                if (aktuellerLagerTab === 'lebensmittel' && item.haltbarkeit) {
-                    const heute = new Date();
-                    const haltbarkeit = new Date(item.haltbarkeit);
-                    const tageBisAblauf = Math.ceil((haltbarkeit - heute) / (1000 * 60 * 60 * 24));
-                    
-                    if (tageBisAblauf < 0) {
-                        statusKlasse = 'expired';
-                        statusText = 'Abgelaufen';
-                    } else if (tageBisAblauf <= 30) {
-                        statusKlasse = 'expiring-soon';
-                        statusText = `Läuft in ${tageBisAblauf} Tagen ab`;
-                    }
-                }
-                
-                const haltbarkeitText = item.haltbarkeit ? new Date(item.haltbarkeit).toLocaleDateString('de-DE') : '-';
-                
-                if (aktuellerLagerTab === 'lebensmittel') {
-                    return `
-                        <tr class="${statusKlasse}">
-                            <td>${item.name}</td>
-                            <td>${item.kategorie}</td>
-                            <td>${item.einheit}</td>
-                            <td>
-                                <input type="number" class="menge-input" value="${item.menge}" 
-                                       onchange="mengeDirektAendern(${index}, this.value)"
-                                       min="0">
-                            </td>
-                            <td>${item.mindestmenge}</td>
-                            <td>${haltbarkeitText}</td>
-                            <td>${item.lagerort}</td>
-                            <td>${statusText}</td>
-                            <td class="lager-actions">
-                                <button onclick="lagerItemLoeschen(${index})" class="danger">Löschen</button>
-                            </td>
-                        </tr>
-                    `;
-                } else {
-                    return `
-                        <tr class="${statusKlasse}">
-                            <td>${item.name}</td>
-                            <td>${item.kategorie}</td>
-                            <td>${item.einheit}</td>
-                            <td>
-                                <input type="number" class="menge-input" value="${item.menge}" 
-                                       onchange="mengeDirektAendern(${index}, this.value)"
-                                       min="0">
-                            </td>
-                            <td>${item.mindestmenge}</td>
-                            <td>${item.lagerort}</td>
-                            <td>${statusText}</td>
-                            <td class="lager-actions">
-                                <button onclick="lagerItemLoeschen(${index})" class="danger">Löschen</button>
-                            </td>
-                        </tr>
-                    `;
-                }
-            }).join('');
+            // Panel einblenden (Standard-Modus)
+            detailPanel.classList.add('active');
+            detailPanel.classList.remove('fullscreen');
         }
 
-        async function neuesLagerItem() {
-            const nameInput = document.getElementById('neues-item');
-            const kategorieInput = document.getElementById('neue-kategorie');
-            const einheitInput = document.getElementById('neue-einheit');
-            const mengeInput = document.getElementById('neue-menge');
-            const mindestmengeInput = document.getElementById('neue-mindestmenge');
-            const lagerortInput = document.getElementById('neue-lagerort');
+        // Vollbild für Detail-Panel umschalten
+        function toggleFullscreenPanel() {
+            const detailPanel = document.getElementById('detail-panel');
+            const fullscreenButton = detailPanel.querySelector('.fullscreen-button i');
             
-            const name = nameInput.value.trim();
-            const kategorie = kategorieInput.value;
-            const einheit = einheitInput.value;
-            const menge = parseInt(mengeInput.value);
-            const mindestmenge = parseInt(mindestmengeInput.value);
-            const lagerort = lagerortInput.value;
-            
-            if (!name || isNaN(menge) || isNaN(mindestmenge)) {
-                alert('Bitte füllen Sie alle Pflichtfelder korrekt aus.');
-                return;
-            }
-            
-            const neuesItem = {
-                name,
-                kategorie,
-                einheit,
-                menge,
-                mindestmenge,
-                lagerort
-            };
-            
-            // Zusätzliche Felder für Lebensmittel
-            if (aktuellerLagerTab === 'lebensmittel') {
-                const haltbarkeitInput = document.getElementById('neue-haltbarkeit');
-                neuesItem.haltbarkeit = haltbarkeitInput.value || null;
-            }
-            
-            lagerDaten[aktuellerLagerTab].push(neuesItem);
-            await lagerDatenSpeichern();
-            lagerAnzeigen();
-            
-            // Formular zurücksetzen
-            nameInput.value = '';
-            mengeInput.value = '0';
-            mindestmengeInput.value = '0';
-            if (aktuellerLagerTab === 'lebensmittel') {
-                document.getElementById('neue-haltbarkeit').value = '';
-            }
-        }
-
-        async function mengeDirektAendern(index, neueMenge) {
-            const aktuellesLager = lagerDaten[aktuellerLagerTab];
-            if (index < 0 || index >= aktuellesLager.length) return;
-            
-            aktuellesLager[index].menge = parseInt(neueMenge) || 0;
-            
-            if (aktuellesLager[index].menge < 0) {
-                aktuellesLager[index].menge = 0;
-            }
-            
-            await lagerDatenSpeichern();
-            lagerAnzeigen();
-        }
-
-        async function lagerItemLoeschen(index) {
-            const aktuellesLager = lagerDaten[aktuellerLagerTab];
-            if (confirm('Möchten Sie diesen Artikel wirklich löschen?')) {
-                aktuellesLager.splice(index, 1);
-                await lagerDatenSpeichern();
-                lagerAnzeigen();
-            }
-        }
-
-        // VERBESSERTE CSV-EXPORT-FUNKTION
-        function lagerExportieren() {
-            const aktuellesLager = lagerDaten[aktuellerLagerTab];
-            const lagerTyp = aktuellerLagerTab === 'lebensmittel' ? 'Lebensmittel' : 'Material';
-            
-            let csvHeader, csvRows;
-            
-            if (aktuellerLagerTab === 'lebensmittel') {
-                // Verbesserte CSV-Struktur für Excel
-                csvHeader = [
-                    'SEG Feldküche - Lagerbestand ' + lagerTyp,
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    ''
-                ].join(',') + '\n' +
-                [
-                    'Erstellt am: ' + new Date().toLocaleDateString('de-DE'),
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    ''
-                ].join(',') + '\n' +
-                [
-                    'Artikel',
-                    'Kategorie',
-                    'Einheit',
-                    'Menge',
-                    'Mindestmenge',
-                    'Haltbarkeit (MHD)',
-                    'Lagerort'
-                ].join(',') + '\n';
-                
-                csvRows = aktuellesLager.map(item => {
-                    // Datum im deutschen Format für Excel
-                    const haltbarkeit = item.haltbarkeit ? 
-                        new Date(item.haltbarkeit).toLocaleDateString('de-DE') : '';
-                    
-                    return [
-                        `"${item.name}"`,
-                        `"${item.kategorie}"`,
-                        `"${item.einheit}"`,
-                        item.menge,
-                        item.mindestmenge,
-                        `"${haltbarkeit}"`,
-                        `"${item.lagerort}"`
-                    ].join(',');
-                }).join('\n');
+            if (detailPanel.classList.contains('fullscreen')) {
+                // Vollbild verlassen
+                detailPanel.classList.remove('fullscreen');
+                fullscreenButton.className = 'fas fa-expand';
             } else {
-                // Verbesserte CSV-Struktur für Material
-                csvHeader = [
-                    'SEG Feldküche - Lagerbestand ' + lagerTyp,
-                    '',
-                    '',
-                    '',
-                    '',
-                    ''
-                ].join(',') + '\n' +
-                [
-                    'Erstellt am: ' + new Date().toLocaleDateString('de-DE'),
-                    '',
-                    '',
-                    '',
-                    '',
-                    ''
-                ].join(',') + '\n' +
-                [
-                    'Artikel',
-                    'Kategorie',
-                    'Einheit',
-                    'Menge',
-                    'Mindestmenge',
-                    'Lagerort'
-                ].join(',') + '\n';
-                
-                csvRows = aktuellesLager.map(item => 
-                    [
-                        `"${item.name}"`,
-                        `"${item.kategorie}"`,
-                        `"${item.einheit}"`,
-                        item.menge,
-                        item.mindestmenge,
-                        `"${item.lagerort}"`
-                    ].join(',')
-                ).join('\n');
-            }
-            
-            // UTF-8 BOM hinzufügen für korrekte Zeichen in Excel
-            const csvContent = '\uFEFF' + csvHeader + csvRows;
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            
-            link.setAttribute('href', url);
-            link.setAttribute('download', `SEG_Feldkueche_Lager_${lagerTyp}_${new Date().toISOString().split('T')[0]}.csv`);
-            link.style.visibility = 'hidden';
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function lagerImportieren() {
-            document.getElementById('lager-import-file').click();
-        }
-
-        async function lagerLeeren() {
-            const lagerTyp = aktuellerLagerTab === 'lebensmittel' ? 'Lebensmittel' : 'Material';
-            if (confirm(`Möchten Sie wirklich das ${lagerTyp}-Lager zurücksetzen? Diese Aktion kann nicht rückgängig gemacht werden.`)) {
-                lagerDaten[aktuellerLagerTab] = [];
-                await lagerDatenSpeichern();
-                lagerAnzeigen();
+                // Vollbild aktivieren
+                detailPanel.classList.add('fullscreen');
+                fullscreenButton.className = 'fas fa-compress';
             }
         }
 
-        // Event Listener für Datei-Import
-        document.getElementById('lager-import-file').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const csvText = e.target.result;
-                    const lines = csvText.split('\n');
-                    const newLagerDaten = [];
-                    
-                    // Header überspringen (erste Zeile)
-                    for (let i = 1; i < lines.length; i++) {
-                        const line = lines[i].trim();
-                        if (!line) continue;
-                        
-                        const fields = line.split(',').map(field => 
-                            field.replace(/^"|"$/g, '')
-                        );
-                        
-                        if (fields[0] && fields[1]) {
-                            const item = {
-                                name: fields[0],
-                                kategorie: fields[1],
-                                einheit: fields[2],
-                                menge: parseInt(fields[3]) || 0,
-                                mindestmenge: parseInt(fields[4]) || 0,
-                                lagerort: fields[6] || 'Standard'
-                            };
-                            
-                            if (aktuellerLagerTab === 'lebensmittel' && fields[5]) {
-                                item.haltbarkeit = fields[5];
-                            }
-                            
-                            newLagerDaten.push(item);
-                        }
-                    }
-                    
-                    lagerDaten[aktuellerLagerTab] = newLagerDaten;
-                    lagerDatenSpeichern();
-                    lagerAnzeigen();
-                    alert('Lager erfolgreich importiert!');
-                    
-                } catch (error) {
-                    console.error('Fehler beim Importieren:', error);
-                    alert('Fehler beim Importieren der CSV-Datei.');
+        // Detail-Panel schließen
+        function closeDetailPanel() {
+            const detailPanel = document.getElementById('detail-panel');
+            detailPanel.classList.remove('active');
+            detailPanel.classList.remove('fullscreen');
+            currentLocationId = null;
+        }
+
+        // Zurück zum eigenen Standort
+        function centerOnUserLocation() {
+            if (userLat && userLng) {
+                map.setView([userLat, userLng], 15);
+                if (userLocationMarker) {
+                    userLocationMarker.openPopup();
                 }
-            };
-            
-            reader.readAsText(file);
-            event.target.value = '';
-        });
-
-        // CLOUD-FUNKTIONEN
-        async function cloudSpeichern() {
-            const status = document.getElementById('cloud-status');
-            status.innerHTML = '<span style="color: var(--drk-orange);">🔄 Speichere in Cloud...</span>';
-            
-            try {
-                await lagerDatenSpeichern();
-                status.innerHTML = '<span style="color: var(--drk-gruen);">✅ Erfolgreich in Cloud gespeichert</span>';
-                
-                // Status automatisch nach 5 Sekunden zurücksetzen
-                setTimeout(() => {
-                    if (status.innerHTML.includes('Erfolgreich')) {
-                        status.innerHTML = 'Bereit für nächste Synchronisation';
-                    }
-                }, 5000);
-                
-            } catch (error) {
-                console.error('Cloud-Speichern Fehler:', error);
-                status.innerHTML = '<span style="color: #c62828;">❌ Fehler beim Speichern: ' + error.message + '</span>';
-            }
-        }
-
-        async function cloudLaden() {
-            const status = document.getElementById('cloud-status');
-            status.innerHTML = '<span style="color: var(--drk-orange);">🔄 Lade aus Cloud...</span>';
-            
-            try {
-                await lagerDatenLaden();
-                lagerAnzeigen();
-                status.innerHTML = '<span style="color: var(--drk-gruen);">✅ Daten erfolgreich aus Cloud geladen</span>';
-                
-                // Status automatisch nach 5 Sekunden zurücksetzen
-                setTimeout(() => {
-                    if (status.innerHTML.includes('erfolgreich')) {
-                        status.innerHTML = 'Bereit für nächste Synchronisation';
-                    }
-                }, 5000);
-                
-            } catch (error) {
-                console.error('Cloud-Laden Fehler:', error);
-                status.innerHTML = '<span style="color: #c62828;">❌ Fehler beim Laden: ' + error.message + '</span>';
-            }
-        }
-
-        function cloudStatusPrüfen() {
-            const status = document.getElementById('cloud-status');
-            const lastSync = localStorage.getItem('lastCloudSync');
-            
-            if (lastSync) {
-                const syncDate = new Date(lastSync);
-                const now = new Date();
-                const diffMinutes = Math.floor((now - syncDate) / (1000 * 60));
-                
-                let statusText = `<span style="color: var(--drk-rot);">📅 Letzte Synchronisation: ${syncDate.toLocaleString('de-DE')}</span>`;
-                
-                if (diffMinutes > 60) {
-                    statusText += `<br><span style="color: var(--drk-orange);">⚠️ Letzte Synchronisation vor ${diffMinutes} Minuten</span>`;
-                } else {
-                    statusText += `<br><span style="color: var(--drk-gruen);">✅ Synchronisation aktuell (vor ${diffMinutes} Minuten)</span>`;
-                }
-                
-                status.innerHTML = statusText;
             } else {
-                status.innerHTML = '<span style="color: var(--drk-orange);">⚠️ Noch keine Synchronisation durchgeführt</span>';
+                getLocation();
             }
         }
 
-        // VERBESSERTE PDF-EXPORT FUNKTION FÜR EINKAUFSLISTE
-        function exportEinkaufslistePDF() {
-            if (!aktuellesRezept) {
-                alert('Bitte wähle zuerst ein Rezept aus!');
-                return;
-            }
-        
-            const druckContainer = document.getElementById('druck-einkaufsliste-container');
-            const lagerOption = document.querySelector('input[name="lager-option"]:checked').value;
-            
-            const einkaufslisteHTML = aktuellesRezept.zutaten.map(zutat => {
-                const mengenBerechnung = berechneBenötigteMenge(zutat, lagerOption);
-                const { zuKaufen, ausLager, benötigt } = mengenBerechnung;
-                
-                const { menge: anzuzeigendeMenge, einheit: anzuzeigendeEinheit } = konvertiereZuFeldkueche(zuKaufen, zutat.einheit, zutat.name);
-                const { menge: lagerMenge, einheit: lagerEinheit } = konvertiereZuFeldkueche(ausLager, zutat.einheit, zutat.name);
-                const { menge: gesamtMenge, einheit: gesamtEinheit } = konvertiereZuFeldkueche(benötigt, zutat.einheit, zutat.name);
-
-                if (lagerOption === 'alles-kaufen') {
-                    return `
-                        <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt;">
-                            <span>${zutat.name}</span>
-                            <span style="color: var(--drk-rot); font-weight: bold;">${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
-                        </div>
-                    `;
-                } else {
-                    if (ausLager >= benötigt) {
-                        // Komplett aus Lager
-                        return `
-                            <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt; background: #f1f8e9;">
-                                <span style="text-decoration: line-through; color: var(--drk-grau);">${zutat.name}</span>
-                                <span style="color: var(--drk-gruen); font-weight: bold;">Aus Lager (${gesamtMenge} ${gesamtEinheit})</span>
-                            </div>
-                        `;
-                    } else if (ausLager > 0 && zuKaufen > 0) {
-                        // Teilweise aus Lager - KORRIGIERTE PDF-DARSTELLUNG
-                        return `
-                            <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt; background: #fff8e1;">
-                                <div>
-                                    <span>${zutat.name}</span>
-                                    <div style="font-size: 8pt; color: #666;">
-                                        Gesamt: ${gesamtMenge} ${gesamtEinheit} | 
-                                        <span style="color: var(--drk-gruen);">${lagerMenge} ${lagerEinheit} aus Lager</span> | 
-                                        <span style="color: var(--drk-rot);">${anzuzeigendeMenge} ${anzuzeigendeEinheit} zu kaufen</span>
-                                    </div>
-                                </div>
-                                <span style="color: var(--drk-rot); font-weight: bold;">${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
-                            </div>
-                        `;
-                    } else {
-                        // Gar nicht aus Lager
-                        return `
-                            <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt;">
-                                <span>${zutat.name}</span>
-                                <span style="color: var(--drk-rot); font-weight: bold;">${anzuzeigendeMenge} ${anzuzeigendeEinheit}</span>
-                            </div>
-                        `;
-                    }
-                }
-            }).join('');
-            
-            druckContainer.innerHTML = `
-                <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 15px; font-size: 10pt;">
-                    <div style="text-align: center; margin-bottom: 15px;">
-                        <h2 style="font-size: 16pt; margin-bottom: 5px; color: var(--drk-rot);">Einkaufsliste</h2>
-                        <p style="font-size: 10pt;"><strong>${aktuellesRezept.titel}</strong> für ${personenAnzahl} Personen</p>
-                        <p style="font-size: 9pt; color: #666;">Modus: ${lagerOption === 'alles-kaufen' ? 'Alles neu kaufen' : 'Lager verwenden'}</p>
-                    </div>
-                    
-                    <div style="background: white; padding: 15px; margin-bottom: 12px; border-radius: 3px; border: 1px solid #eee;">
-                        <h3 style="color: var(--drk-rot); font-size: 12pt; margin-bottom: 10px; border-bottom: 1px solid var(--drk-rot); padding-bottom: 3px;">
-                            Zutaten ${lagerOption === 'lager-verwenden' ? '(mit Lagerabzug)' : ''}
-                        </h3>
-                        ${einkaufslisteHTML}
-                        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 10pt; background: #fff5f5; margin-top: 10px; padding: 10px; border-radius: 4px;">
-                            <span style="font-weight: bold;">Getränke (Wasser, Saftschorle)</span>
-                            <span style="color: var(--drk-rot); font-weight: bold;">${personenAnzahl} l</span>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 20px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 8pt; color: #666; text-align: center;">
-                        <p>Erstellt am: ${new Date().toLocaleString('de-DE')} | Quelle: SEG Feldküche - Katastrophenschutz</p>
-                    </div>
-                </div>
-            `;
-        
-            druckContainer.style.display = 'block';
-            
-            setTimeout(() => {
-                window.print();
-                
-                setTimeout(() => {
-                    druckContainer.style.display = 'none';
-                    druckContainer.innerHTML = '';
-                }, 500);
-            }, 100);
+        // Bild-Modal öffnen (einfache Version)
+        function openImageModal(imageUrl) {
+            window.open(imageUrl, '_blank');
         }
 
-        // Initialisierung
+        // Karte initialisieren wenn Seite geladen
         document.addEventListener('DOMContentLoaded', function() {
-            // Event Listener für Filter
-            document.getElementById('verpflegungsart').addEventListener('change', filterRezepte);
-            document.getElementById('verpflegungstyp').addEventListener('change', filterRezepte);
-            document.getElementById('vegetarisch').addEventListener('change', filterRezepte);
-            
-            // Personenanzahl Event-Listener
-            document.getElementById('personen').addEventListener('input', function() {
-                personenAnzahl = parseInt(this.value) || 1;
-                document.getElementById('zutaten-personen').textContent = personenAnzahl;
-                document.getElementById('einkauf-personen').textContent = personenAnzahl;
-                
-                if (aktuellesRezept) {
-                    zeigeAusgewaehltesRezept(aktuellesRezept.id);
-                }
-                
-                aktualisiereEinkaufsliste();
-            });
-
-            // Navigation
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const pageId = this.getAttribute('data-page');
-                    showPage(pageId);
-                });
-            });
-
-            // Startseite anzeigen
-            showPage('rezepte');
-            
-            // Browser Navigation behandeln
-            window.addEventListener('popstate', function() {
-                const hash = window.location.hash.replace('#', '') || 'rezepte';
-                showPage(hash);
-            });
-
-            const initialPage = window.location.hash.replace('#', '') || 'rezepte';
-            showPage(initialPage);
-            
-            // Rezepte initial laden
-            filterRezepte();
-            
-            // Lager initial laden
-            lagerDatenLaden().then(() => {
-                // Automatisch Cloud-Status prüfen wenn auf Lager-Seite
-                if (window.location.hash === '#lager' || !window.location.hash) {
-                    setTimeout(cloudStatusPrüfen, 1000);
-                }
-            }).catch(error => {
-                console.log('Automatisches Laden fehlgeschlagen, aber lokale Daten verfügbar');
-            });
+            initMap();
         });
 
-        function showPage(pageId) {
-            // Navigation aktualisieren
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('data-page') === pageId) {
-                    link.classList.add('active');
+        // Klick außerhalb des Panels schließt es
+        document.addEventListener('click', function(event) {
+            const detailPanel = document.getElementById('detail-panel');
+            if (detailPanel.classList.contains('active') && 
+                !detailPanel.classList.contains('fullscreen') &&
+                !detailPanel.contains(event.target) && 
+                !event.target.closest('.custom-popup')) {
+                closeDetailPanel();
+            }
+        });
+
+        // ESC-Taste schließt Vollbild oder Panel
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const detailPanel = document.getElementById('detail-panel');
+                if (detailPanel.classList.contains('fullscreen')) {
+                    toggleFullscreenPanel();
+                } else if (detailPanel.classList.contains('active')) {
+                    closeDetailPanel();
                 }
-            });
-
-            // Alle Seiten ausblenden
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-                page.style.display = 'none';
-            });
-            
-            // Nur die gewünschte Seite anzeigen
-            const aktiveSeite = document.getElementById(pageId);
-            if (aktiveSeite) {
-                aktiveSeite.classList.add('active');
-                aktiveSeite.style.display = 'block';
             }
-
-            // URL aktualisieren
-            window.history.pushState(null, null, `#${pageId}`);
-
-            // Spezielle Aktionen pro Seite
-            if (pageId === 'rezepte') {
-                filterRezepte();
-            } else if (pageId === 'einkaufsliste') {
-                aktualisiereEinkaufsliste();
-            } else if (pageId === 'lager') {
-                lagerAnzeigen();
-            }
-        }
-
-        function filterRezepte() {
-            const verpflegungsart = document.getElementById('verpflegungsart').value;
-            const verpflegungstyp = document.getElementById('verpflegungstyp').value;
-            const nurVegetarisch = document.getElementById('vegetarisch').checked;
-
-            const gefilterteRezepte = rezepteDaten.filter(rezept => {
-                if (verpflegungsart && rezept.verpflegungsart !== verpflegungsart) return false;
-                if (verpflegungstyp && rezept.verpflegungstyp !== verpflegungstyp) return false;
-                if (nurVegetarisch && !rezept.vegetarisch) return false;
-                return true;
-            });
-
-            const grid = document.getElementById('rezepte-grid');
-            
-            if (gefilterteRezepte.length === 0) {
-                grid.innerHTML = '<div class="keine-rezepte">Keine Rezepte gefunden, die den Filterkriterien entsprechen.</div>';
-                return;
-            }
-
-            grid.innerHTML = gefilterteRezepte.map(rezept => `
-                <div class="rezept-karte" onclick="zeigeAusgewaehltesRezept(${rezept.id})">
-                    <h4>${rezept.titel}</h4>
-                    <div class="rezept-info">
-                        <span>${rezept.kalorien} kcal/Person</span>
-                        <span>${rezept.basisZeit} min (50 Pers.)</span>
-                        <span>${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}</span>
-                    </div>
-                    <p class="rezept-beschreibung">${rezept.beschreibung}</p>
-                </div>
-            `).join('');
-
-            document.getElementById('rezept-details').style.display = 'none';
-            aktuellesRezept = null;
-        }
-
-        function zeigeAusgewaehltesRezept(rezeptId) {
-            const rezept = rezepteDaten.find(r => r.id === rezeptId);
-            aktuellesRezept = rezept;
-
-            if (!rezept) return;
-
-            // Skalierte Zeit berechnen
-            const skalierteZeit = Math.round(rezept.basisZeit * (personenAnzahl / 50));
-
-            // Alle Rezept-Karten zurücksetzen
-            document.querySelectorAll('.rezept-karte').forEach(karte => {
-                karte.classList.remove('ausgewaehlt');
-            });
-
-            // Aktuelle Karte markieren
-            document.querySelectorAll('.rezept-karte').forEach(karte => {
-                if (karte.querySelector('h4').textContent === rezept.titel) {
-                    karte.classList.add('ausgewaehlt');
-                }
-            });
-
-            // Personenanzahl anzeigen
-            document.getElementById('zutaten-personen').textContent = personenAnzahl;
-
-            // Details anzeigen
-            document.getElementById('rezept-titel').textContent = rezept.titel;
-            document.getElementById('rezept-kalorien').textContent = `${rezept.kalorien * personenAnzahl} kcal gesamt`;
-            document.getElementById('rezept-zubereitungszeit').textContent = `${skalierteZeit} min Zubereitung`;
-            document.getElementById('rezept-art').textContent = `${rezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${rezept.verpflegungstyp === 'voll' ? 'Vollverpflegung' : rezept.verpflegungstyp === 'lunch' ? 'Lunchpakete' : 'Handverpflegung'} • ${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}`;
-
-            // Zutaten anzeigen
-            const zutatenListe = document.getElementById('rezept-zutaten');
-            zutatenListe.innerHTML = rezept.zutaten.map(zutat => {
-                const skalierteMenge = (zutat.menge / 50) * personenAnzahl;
-                const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
-                
-                return `<li>${menge} ${einheit} ${zutat.name}</li>`;
-            }).join('');
-
-            // Zubereitung anzeigen
-            const zubereitungListe = document.getElementById('rezept-zubereitung');
-            zubereitungListe.innerHTML = rezept.zubereitung.map(schritt => 
-                `<li>${schritt}</li>`
-            ).join('');
-
-            // Portionierung anzeigen
-            document.getElementById('rezept-portionierung').textContent = rezept.portionierung;
-
-            // Details einblenden
-            document.getElementById('rezept-details').style.display = 'block';
-        }
-
-        function zurEinkaufsliste() {
-            if (aktuellesRezept) {
-                showPage('einkaufsliste');
-            } else {
-                alert('Bitte wähle zuerst ein Rezept aus!');
-            }
-        }
-
-        // PDF Export Funktionen (angepasst für Lagerintegration)
-        function exportRezeptPDF() {
-            if (!aktuellesRezept) {
-                alert('Bitte wähle zuerst ein Rezept aus!');
-                return;
-            }
-        
-            const skalierteZeit = Math.round(aktuellesRezept.basisZeit * (personenAnzahl / 50));
-            const druckContainer = document.getElementById('druck-rezept-container');
-            
-            const zutatenTabelle = aktuellesRezept.zutaten.map(zutat => {
-                const skalierteMenge = (zutat.menge / 50) * personenAnzahl;
-                const { menge, einheit } = konvertiereZuFeldkueche(skalierteMenge, zutat.einheit, zutat.name);
-                
-                return `
-                    <tr>
-                        <td style="padding: 4px 6px; border-bottom: 1px solid #ddd; font-size: 10pt;">${zutat.name}</td>
-                        <td style="padding: 4px 6px; border-bottom: 1px solid #ddd; text-align: right; font-weight: bold; font-size: 10pt;">${menge} ${einheit}</td>
-                    </tr>
-                `;
-            }).join('');
-        
-            const zubereitungListe = aktuellesRezept.zubereitung.map((schritt, index) => 
-                `<li style="margin-bottom: 6px; line-height: 1.3; font-size: 10pt;">${schritt}</li>`
-            ).join('');
-        
-            druckContainer.innerHTML = `
-                <div class="druck-rezept" style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto; padding: 15px; font-size: 10pt;">
-                    <div style="border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 15px;">
-                        <h1 style="color: var(--drk-rot); font-size: 16pt; margin-bottom: 8px; text-align: center;">${aktuellesRezept.titel}</h1>
-                        <div style="display: flex; justify-content: center; gap: 15px; font-size: 9pt; color: #666; flex-wrap: wrap;">
-                            <span><strong>${aktuellesRezept.kalorien * personenAnzahl} kcal</strong> gesamt</span>
-                            <span><strong>${skalierteZeit} min</strong> Zubereitung</span>
-                            <span>${aktuellesRezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${aktuellesRezept.verpflegungstyp === 'voll' ? 'Vollverpflegung' : aktuellesRezept.verpflegungstyp === 'lunch' ? 'Lunchpakete' : 'Handverpflegung'} • ${aktuellesRezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}</span>
-                        </div>
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <h2 style="color: var(--drk-rot); font-size: 12pt; border-bottom: 1px solid var(--drk-rot); padding-bottom: 5px; margin-bottom: 10px;">
-                            Zutaten für ${personenAnzahl} Personen
-                        </h2>
-                        <table style="width: 100%; border-collapse: collapse; font-size: 9pt;">
-                            <thead>
-                                <tr>
-                                    <th style="padding: 6px 8px; border-bottom: 1px solid var(--drk-rot); text-align: left; background: #f8f9fa;">Zutat</th>
-                                    <th style="padding: 6px 8px; border-bottom: 1px solid var(--drk-rot); text-align: right; background: #f8f9fa;">Menge</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${zutatenTabelle}
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div style="margin-bottom: 20px;">
-                        <h2 style="color: var(--drk-rot); font-size: 12pt; border-bottom: 1px solid var(--drk-rot); padding-bottom: 5px; margin-bottom: 10px;">
-                            Zubereitung
-                        </h2>
-                        <ol style="padding-left: 15px; font-size: 10pt; line-height: 1.3;">
-                            ${zubereitungListe}
-                        </ol>
-                    </div>
-                    
-                    <div style="background: #f8f9fa; padding: 10px; border-radius: 3px; margin-top: 15px; border-left: 3px solid var(--drk-rot);">
-                        <h3 style="color: var(--drk-rot); font-size: 11pt; margin-bottom: 5px;">Portionierung & Getränke</h3>
-                        <p style="line-height: 1.3; margin: 0; font-size: 9pt;">${aktuellesRezept.portionierung}</p>
-                        <p style="line-height: 1.3; margin: 10px 0 0 0; font-size: 9pt; font-weight: bold;">Getränke: ${personenAnzahl} Liter (Wasser, Saftschorle) - 1 Liter pro Person</p>
-                    </div>
-
-                    <div style="margin-top: 20px; padding-top: 10px; border-top: 1px solid #ddd; font-size: 8pt; color: #666; text-align: center;">
-                        <p>Erstellt am: ${new Date().toLocaleString('de-DE')} | Quelle: SEG Feldküche - Katastrophenschutz</p>
-                    </div>
-                </div>
-            `;
-        
-            druckContainer.style.display = 'block';
-            
-            setTimeout(() => {
-                window.print();
-                
-                setTimeout(() => {
-                    druckContainer.style.display = 'none';
-                    druckContainer.innerHTML = '';
-                }, 500);
-            }, 100);
-        }
+        });
     </script>
 </body>
 </html>
