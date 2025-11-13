@@ -181,6 +181,35 @@ const rezepteDaten = [
 let aktuellesRezept = null;
 let personenAnzahl = 4;
 
+// Funktion zur automatischen Einheiten-Umrechnung
+function konvertiereEinheit(menge, einheit) {
+    let neueMenge = menge;
+    let neueEinheit = einheit;
+    
+    // Gramm zu Kilogramm (ab 1000g)
+    if (einheit === "g" && menge >= 1000) {
+        neueMenge = menge / 1000;
+        neueEinheit = "kg";
+    }
+    // Milliliter zu Liter (ab 1000ml)
+    else if (einheit === "ml" && menge >= 1000) {
+        neueMenge = menge / 1000;
+        neueEinheit = "l";
+    }
+    // Kilogramm zu Gramm (unter 1kg für bessere Lesbarkeit)
+    else if (einheit === "kg" && menge < 1) {
+        neueMenge = menge * 1000;
+        neueEinheit = "g";
+    }
+    // Liter zu Milliliter (unter 1l für bessere Lesbarkeit)
+    else if (einheit === "l" && menge < 1) {
+        neueMenge = menge * 1000;
+        neueEinheit = "ml";
+    }
+    
+    return { menge: neueMenge, einheit: neueEinheit };
+}
+
 // Initialisierung
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM geladen - starte Initialisierung');
@@ -328,18 +357,23 @@ function zeigeAusgewaehltesRezept() {
     document.getElementById('rezept-zubereitungszeit').textContent = `${rezept.zubereitungszeit} min Zubereitung`;
     document.getElementById('rezept-art').textContent = `${rezept.verpflegungsart === 'warm' ? 'Warm' : 'Kalt'} • ${rezept.verpflegungstyp === 'voll' ? 'Voll' : 'Hand'} • ${rezept.vegetarisch ? 'Vegetarisch' : 'Mit Fleisch'}`;
 
-    // Zutaten anzeigen (skaliert)
+    // Zutaten anzeigen (skaliert und mit Einheiten-Umrechnung)
     const zutatenListe = document.getElementById('rezept-zutaten');
     zutatenListe.innerHTML = rezept.zutaten.map(zutat => {
         const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
+        
+        // Einheiten automatisch umrechnen
+        const konvertierteEinheit = konvertiereEinheit(skalierteMenge, zutat.einheit);
+        let angezeigteMenge = konvertierteEinheit.menge;
+        
         // Bei kleinen Mengen runden
-        let angezeigteMenge = skalierteMenge;
-        if (skalierteMenge < 1 && zutat.einheit !== 'Prise' && zutat.einheit !== 'TL' && zutat.einheit !== 'EL') {
-            angezeigteMenge = skalierteMenge.toFixed(2);
-        } else if (skalierteMenge % 1 !== 0) {
-            angezeigteMenge = skalierteMenge.toFixed(1);
+        if (angezeigteMenge < 1 && !['Prise', 'TL', 'EL', 'Bund', 'Blätter', 'Scheiben', ''].includes(konvertierteEinheit.einheit)) {
+            angezeigteMenge = angezeigteMenge.toFixed(2);
+        } else if (angezeigteMenge % 1 !== 0) {
+            angezeigteMenge = angezeigteMenge.toFixed(1);
         }
-        return `<li>${angezeigteMenge} ${zutat.einheit} ${zutat.name}</li>`;
+        
+        return `<li>${angezeigteMenge} ${konvertierteEinheit.einheit} ${zutat.name}</li>`;
     }).join('');
 
     // Zubereitung anzeigen
@@ -413,18 +447,22 @@ function gruppiereZutaten(zutaten) {
 
     zutaten.forEach(zutat => {
         const skalierteMenge = (zutat.menge / 4) * personenAnzahl;
-        let angezeigteMenge = skalierteMenge;
         
-        // Mengen anpassen für bessere Lesbarkeit
-        if (skalierteMenge < 1 && zutat.einheit !== 'Prise' && zutat.einheit !== 'TL' && zutat.einheit !== 'EL') {
-            angezeigteMenge = skalierteMenge.toFixed(2);
-        } else if (skalierteMenge % 1 !== 0) {
-            angezeigteMenge = skalierteMenge.toFixed(1);
+        // Einheiten automatisch umrechnen
+        const konvertierteEinheit = konvertiereEinheit(skalierteMenge, zutat.einheit);
+        let angezeigteMenge = konvertierteEinheit.menge;
+        
+        // Bei kleinen Mengen runden
+        if (angezeigteMenge < 1 && !['Prise', 'TL', 'EL', 'Bund', 'Blätter', 'Scheiben', ''].includes(konvertierteEinheit.einheit)) {
+            angezeigteMenge = angezeigteMenge.toFixed(2);
+        } else if (angezeigteMenge % 1 !== 0) {
+            angezeigteMenge = angezeigteMenge.toFixed(1);
         }
 
         const zutatMitMenge = {
             ...zutat,
-            menge: angezeigteMenge
+            menge: angezeigteMenge,
+            einheit: konvertierteEinheit.einheit
         };
 
         // Einfache Kategorisierung basierend auf Zutatenname
