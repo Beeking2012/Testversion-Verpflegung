@@ -632,631 +632,631 @@
     <div id="druck-rezept-container" class="druck-container" style="display: none;"></div>
     <div id="druck-einkaufsliste-container" class="druck-container" style="display: none;"></div>
 
-    // Rezepte Daten - SEG-optimiert mit Getränken und ohne Backen
-    const rezepteDaten = [
-        {
-            id: 1,
-            titel: "SEG-Eintopf mit Rindfleisch",
-            beschreibung: "Kraftvoller Eintopf für kalte Einsatztage",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 650,
-            basisZeit: 60,
-            zutaten: [
-                { menge: 7500, einheit: "g", name: "Rindfleisch, gewürfelt" },
-                { menge: 50, einheit: "", name: "Kartoffeln, gewürfelt" },
-                { menge: 30, einheit: "", name: "Karotten, in Scheiben" },
-                { menge: 20, einheit: "", name: "Zwiebeln, gewürfelt" },
-                { menge: 10, einheit: "", name: "Sellerie, gewürfelt" },
-                { menge: 200, einheit: "g", name: "Tomatenmark" },
-                { menge: 25, einheit: "l", name: "Rinderbrühe" },
-                { menge: 100, einheit: "g", name: "Paprikapulver" },
-                { menge: 50, einheit: "g", name: "Majoran" },
-                { menge: 300, einheit: "ml", name: "Öl" },
-                { menge: 100, einheit: "g", name: "Salz" },
-                { menge: 50, einheit: "g", name: "Pfeffer" }
-            ],
-            zubereitung: [
-                "Rindfleisch in großen Bratentöpfen portionsweise scharf anbraten",
-                "Zwiebeln und Sellerie im Bratfond glasig dünsten",
-                "Tomatenmark zugeben und kurz mitrösten",
-                "Fleisch zurück in den Topf geben, mit Brühe ablöschen",
-                "Kartoffeln und Karotten hinzufügen, aufkochen lassen",
-                "Bei mittlerer Hitze 45 Minuten köcheln lassen",
-                "Gewürze zugeben und weitere 15 Minuten garen",
-                "Mit Salz und Pfeffer abschmecken"
-            ],
-            portionierung: "In Feldküchen-Schüsseln portionieren. Pro Person ca. 500ml Eintopf. Dazu 1 Liter Getränke pro Person (Wasser, Apfelschorle im Verhältnis 1:3). Mit frischem Brot servieren."
-        },
-        {
-            id: 2,
-            titel: "Nudelpfanne mit Gemüse und Tofu",
-            beschreibung: "Vegetarische Pfanne für schnelle Verpflegung",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 580,
-            basisZeit: 35,
-            zutaten: [
-                { menge: 5000, einheit: "g", name: "Nudeln (Spiralnudeln)" },
-                { menge: 4000, einheit: "g", name: "Tofu, gewürfelt" },
-                { menge: 30, einheit: "", name: "Zucchini, in Scheiben" },
-                { menge: 25, einheit: "", name: "Paprika, gewürfelt" },
-                { menge: 20, einheit: "", name: "Zwiebeln, gewürfelt" },
-                { menge: 400, einheit: "g", name: "Tomatenmark" },
-                { menge: 300, einheit: "ml", name: "Sojasauce" },
-                { menge: 200, einheit: "ml", name: "Öl" },
-                { menge: 100, einheit: "g", name: "Knoblauch, gehackt" },
-                { menge: 80, einheit: "g", name: "Salz" },
-                { menge: 40, einheit: "g", name: "Pfeffer" },
-                { menge: 50, einheit: "g", name: "Paprikapulver" }
-            ],
-            zubereitung: [
-                "Nudeln in großen Töpfen bissfest kochen, abgießen",
-                "Tofu in Bratpfannen goldbraun anbraten",
-                "Zwiebeln und Knoblauch in Öl anschwitzen",
-                "Paprika und Zucchini zugeben, 5 Minuten braten",
-                "Tomatenmark und Gewürze zugeben, kurz mitrösten",
-                "Gekochte Nudeln und Tofu unterheben",
-                "Mit Sojasauce abschmecken, alles gut vermengen"
-            ],
-            portionierung: "In wärmeisolierten Behältern portionieren. Pro Person ca. 400g Nudelpfanne. Dazu 1 Liter Getränke pro Person (Wasser, Tee). Mit Sojajoghurt oder geriebenem Käse servieren."
-        },
-        {
-            id: 3,
-            titel: "SEG-Lunchpaket Standard",
-            beschreibung: "Komplettes Lunchpaket für Tageseinsätze",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "lunch",
-            vegetarisch: true,
-            kalorien: 850,
-            basisZeit: 20,
-            zutaten: [
-                { menge: 100, einheit: "", name: "Vollkornbrötchen" },
-                { menge: 2500, einheit: "g", name: "Käse, in Scheiben" },
-                { menge: 2500, einheit: "g", name: "Frischkäse" },
-                { menge: 1500, einheit: "g", name: "Vegetarischer Aufstrich" },
-                { menge: 50, einheit: "", name: "Äpfel" },
-                { menge: 50, einheit: "", name: "Bananen" },
-                { menge: 2500, einheit: "g", name: "Müsliriegel" },
-                { menge: 2500, einheit: "g", name: "Nüsse, gemischt" },
-                { menge: 100, einheit: "", name: "Schokoriegel" },
-                { menge: 50, einheit: "Päckchen", name: "Feuchttücher" }
-            ],
-            zubereitung: [
-                "Brötchen mit Frischkäse bestreichen",
-                "Käsescheiben und Aufstrich gleichmäßig verteilen",
-                "Jedes Lunchpaket mit 1 Brötchen, 1 Apfel, 1 Banane befüllen",
-                "Pro Paket 1 Müsliriegel, 1 Schokoriegel und 1 Nuss-Portion hinzufügen",
-                "Feuchttücher separat beipacken",
-                "Pakete in Papiertüten oder Frischhalteboxen verpacken"
-            ],
-            portionierung: "Pro Person 1 Lunchpaket. Zusätzlich 1 Liter Getränke pro Person (Mineralwasser, Saftschorle). Pakete beschriften und nach Einheit/Einsatzbereich sortieren."
-        },
-        {
-            id: 4,
-            titel: "Energie-Handverpflegung",
-            beschreibung: "Kompakte Verpflegung für kurze Einsätze",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "hand",
-            vegetarisch: true,
-            kalorien: 450,
-            basisZeit: 10,
-            zutaten: [
-                { menge: 5000, einheit: "g", name: "Müsliriegel" },
-                { menge: 5000, einheit: "g", name: "Studentenfutter" },
-                { menge: 2500, einheit: "g", name: "Trockenfrüchte" },
-                { menge: 2500, einheit: "g", name: "Kekse" },
-                { menge: 100, einheit: "", name: "Energieriegel" },
-                { menge: 50, einheit: "Päckchen", name: "Kaugummi" }
-            ],
-            zubereitung: [
-                "Alle Komponenten nach Arten sortieren",
-                "Pro Person 2 Müsliriegel, 1 Handvoll Studentenfutter portionieren",
-                "Trockenfrüchte und Kekse gleichmäßig aufteilen",
-                "Energieriegel und Kaugummi hinzufügen",
-                "In wiederverschließbare Beutel abfüllen",
-                "Beutel beschriften und stapeln"
-            ],
-            portionierung: "Pro Person 1 Handverpflegungsbeutel. Zusätzlich 1 Liter Getränke pro Person (Isotonische Getränke, Wasser). Für Einsätze unter 4 Stunden geeignet."
-        },
-        {
-            id: 5,
-            titel: "Kartoffel-Gemüse-Pfanne",
-            beschreibung: "Einfache, nahrhafte Pfanne aus Feldküche",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 520,
-            basisZeit: 40,
-            zutaten: [
-                { menge: 60, einheit: "", name: "Kartoffeln, gewürfelt" },
-                { menge: 30, einheit: "", name: "Karotten, in Scheiben" },
-                { menge: 20, einheit: "", name: "Zwiebeln, gewürfelt" },
-                { menge: 15, einheit: "", name: "Lauch, in Ringen" },
-                { menge: 4000, einheit: "g", name: "Tiefkühl-Erbsen" },
-                { menge: 300, einheit: "ml", name: "Öl" },
-                { menge: 150, einheit: "g", name: "Senf" },
-                { menge: 100, einheit: "g", name: "Salz" },
-                { menge: 50, einheit: "g", name: "Pfeffer" },
-                { menge: 30, einheit: "g", name: "Kümmel" },
-                { menge: 20, einheit: "g", name: "Paprikapulver" }
-            ],
-            zubereitung: [
-                "Kartoffeln und Karotten in Salzwasser 15 Minuten vorkochen",
-                "Zwiebeln und Lauch in großen Pfannen anschwitzen",
-                "Vorgekochte Kartoffeln und Karotten zugeben",
-                "Bei mittlerer Hitze 10 Minuten braten bis goldbraun",
-                "Tiefkühlerbsen zugeben, 5 Minuten mitgaren",
-                "Senf und Gewürze unterrühren, abschmecken"
-            ],
-            portionierung: "In wärmeisolierten Behältern portionieren. Pro Person ca. 400g Pfannengericht. Dazu 1 Liter Getränke pro Person (Wasser, Tee). Mit Senf oder Ketchup servieren."
-        },
-        {
-            id: 6,
-            titel: "Notfall-Handverpflegung",
-            beschreibung: "Minimalistische Verpflegung für Akuteinsätze",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "hand",
-            vegetarisch: true,
-            kalorien: 300,
-            basisZeit: 5,
-            zutaten: [
-                { menge: 100, einheit: "", name: "Energieriegel" },
-                { menge: 5000, einheit: "g", name: "Traubenzucker" },
-                { menge: 50, einheit: "Päckchen", name: "Salzstangen" },
-                { menge: 50, einheit: "Päckchen", name: "Kekse" }
-            ],
-            zubereitung: [
-                "Energieriegel und Traubenzucker sortieren",
-                "Pro Person 2 Energieriegel, 1 Päckchen Salzstangen portionieren",
-                "Traubenzucker und Kekse gleichmäßig verteilen",
-                "In kleine Beutel oder Tüten abfüllen",
-                "Für schnelle Verteilung bereitstellen"
-            ],
-            portionierung: "Pro Person 1 Notfallpaket. Zusätzlich 0,5 Liter Wasser pro Person. Nur für Einsätze unter 2 Stunden oder als Überbrückung bis zur Hauptverpflegung."
-        },
-        {
-            id: 7,
-            titel: "Gulasch mit Kartoffeln",
-            beschreibung: "Klassisches Gulasch für Kraftspender",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 680,
-            basisZeit: 75,
-            zutaten: [
-                { menge: 8000, einheit: "g", name: "Rindergulasch" },
-                { menge: 60, einheit: "", name: "Kartoffeln, gewürfelt" },
-                { menge: 25, einheit: "", name: "Zwiebeln, gewürfelt" },
-                { menge: 200, einheit: "g", name: "Tomatenmark" },
-                { menge: 150, einheit: "g", name: "Paprikapulver, edelsüß" },
-                { menge: 50, einheit: "g", name: "Kümmel, gemahlen" },
-                { menge: 30, einheit: "l", name: "Rinderfond" },
-                { menge: 400, einheit: "ml", name: "Öl" },
-                { menge: 120, einheit: "g", name: "Salz" },
-                { menge: 60, einheit: "g", name: "Pfeffer" }
-            ],
-            zubereitung: [
-                "Rindergulasch portionsweise scharf anbraten",
-                "Zwiebeln glasig dünsten, Tomatenmark zugeben",
-                "Paprikapulver einrühren, kurz mitrösten",
-                "Fleisch zurückgeben, mit Fond ablöschen",
-                "2 Stunden bei kleiner Hitze schmoren lassen",
-                "Kartoffeln zugeben, weitere 30 Minuten garen",
-                "Mit Salz, Pfeffer und Kümmel abschmecken"
-            ],
-            portionierung: "Pro Person 500ml Gulasch mit Kartoffeln. Dazu 1 Liter Getränke (Wasser, Malzbier). Mit frischem Brot servieren."
-        },
-        {
-            id: 8,
-            titel: "Gemüse-Curry mit Reis",
-            beschreibung: "Würziges Curry für vegetarische Verpflegung",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 560,
-            basisZeit: 45,
-            zutaten: [
-                { menge: 6000, einheit: "g", name: "Reis, langkorn" },
-                { menge: 40, einheit: "", name: "Kartoffeln, gewürfelt" },
-                { menge: 25, einheit: "", name: "Karotten, in Scheiben" },
-                { menge: 20, einheit: "", name: "Zwiebeln, gewürfelt" },
-                { menge: 15, einheit: "", name: "Paprika, gewürfelt" },
-                { menge: 8000, einheit: "g", name: "Kokosmilch" },
-                { menge: 200, einheit: "g", name: "Currypaste, gelb" },
-                { menge: 150, einheit: "g", name: "Currypulver" },
-                { menge: 100, einheit: "g", name: "Knoblauch, gehackt" },
-                { menge: 50, einheit: "g", name: "Ingwer, gerieben" },
-                { menge: 300, einheit: "ml", name: "Öl" },
-                { menge: 100, einheit: "g", name: "Salz" }
-            ],
-            zubereitung: [
-                "Reis nach Packungsanleitung kochen",
-                "Zwiebeln, Knoblauch und Ingwer in Öl anschwitzen",
-                "Currypaste zugeben, kurz anbraten",
-                "Gemüse hinzufügen, 5 Minuten mitdünsten",
-                "Kokosmilch angießen, aufkochen lassen",
-                "20 Minuten bei mittlerer Hitze köcheln",
-                "Mit Salz und Currypulver abschmecken"
-            ],
-            portionierung: "Pro Person 200g Reis mit 300ml Curry. Dazu 1 Liter Getränke (Wasser, Tee). Mit frischen Kräutern garnieren."
-        },
-        {
-            id: 9,
-            titel: "Bratwurst mit Kartoffelsalat",
-            beschreibung: "Deftige Mahlzeit für Einsatzkräfte",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 720,
-            basisZeit: 50,
-            zutaten: [
-                { menge: 100, einheit: "", name: "Bratwürste" },
-                { menge: 80, einheit: "", name: "Kartoffeln, festkochend" },
-                { menge: 20, einheit: "", name: "Zwiebeln, gewürfelt" },
-                { menge: 1500, einheit: "ml", name: "Brühe" },
-                { menge: 1000, einheit: "ml", name: "Essig" },
-                { menge: 500, einheit: "ml", name: "Öl" },
-                { menge: 300, einheit: "g", name: "Senf" },
-                { menge: 200, einheit: "g", name: "Gurken, gewürfelt" },
-                { menge: 100, einheit: "g", name: "Salz" },
-                { menge: 50, einheit: "g", name: "Pfeffer" },
-                { menge: 50, einheit: "g", name: "Zucker" }
-            ],
-            zubereitung: [
-                "Kartoffeln kochen, schälen und in Scheiben schneiden",
-                "Brühe, Essig, Öl und Gewürze zur Marinade verrühren",
-                "Kartoffelscheiben mit Zwiebeln und Gurken mischen",
-                "Marinade darüber gießen, ziehen lassen",
-                "Bratwürste grillen oder braten",
-                "Kartoffelsalat mindestens 1 Stunde durchziehen lassen"
-            ],
-            portionierung: "Pro Person 1 Bratwurst mit 300g Kartoffelsalat. Dazu 1 Liter Getränke (Wasser, Apfelschorle). Mit Senf und Brot servieren."
-        },
-        {
-            id: 10,
-            titel: "Linseneintopf mit Würstchen",
-            beschreibung: "Nahrhafter Eintopf mit hohem Eiweißgehalt",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 590,
-            basisZeit: 55,
-            zutaten: [
-                { menge: 5000, einheit: "g", name: "Linsen, trocken" },
-                { menge: 75, einheit: "", name: "Wiener Würstchen" },
-                { menge: 25, einheit: "", name: "Zwiebeln, gewürfelt" },
-                { menge: 20, einheit: "", name: "Karotten, gewürfelt" },
-                { menge: 15, einheit: "", name: "Sellerie, gewürfelt" },
-                { menge: 30, einheit: "l", name: "Gemüsebrühe" },
-                { menge: 200, einheit: "g", name: "Tomatenmark" },
-                { menge: 150, einheit: "g", name: "Majoran" },
-                { menge: 100, einheit: "g", name: "Thymian" },
-                { menge: 250, einheit: "ml", name: "Öl" },
-                { menge: 120, einheit: "g", name: "Salz" },
-                { menge: 60, einheit: "g", name: "Pfeffer" }
-            ],
-            zubereitung: [
-                "Zwiebeln, Karotten und Sellerie in Öl anschwitzen",
-                "Tomatenmark zugeben, kurz mitrösten",
-                "Linsen hinzufügen, mit Brühe ablöschen",
-                "45 Minuten köcheln lassen, bis Linsen weich sind",
-                "Würstchen in Scheiben schneiden, zugeben",
-                "10 Minuten mitgaren, mit Gewürzen abschmecken"
-            ],
-            portionierung: "Pro Person 500ml Linseneintopf. Dazu 1 Liter Getränke (Wasser, Tee). Mit Brot oder Brötchen servieren."
-        },
-        {
-            id: 11,
-            titel: "Käsespätzle mit Röstzwiebeln",
-            beschreibung: "Beliebtes Gericht für kalte Tage",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 610,
-            basisZeit: 40,
-            zutaten: [
-                { menge: 8000, einheit: "g", name: "Spätzle, frisch" },
-                { menge: 4000, einheit: "g", name: "Bergkäse, gerieben" },
-                { menge: 1000, einheit: "g", name: "Emmentaler, gerieben" },
-                { menge: 500, einheit: "g", name: "Röstzwiebeln" },
-                { menge: 400, einheit: "ml", name: "Öl" },
-                { menge: 300, einheit: "g", name: "Butter" },
-                { menge: 150, einheit: "g", name: "Muskatnuss" },
-                { menge: 100, einheit: "g", name: "Salz" },
-                { menge: 50, einheit: "g", name: "Pfeffer" }
-            ],
-            zubereitung: [
-                "Spätzle in kochendem Salzwasser al dente kochen",
-                "Abgießen und gut abtropfen lassen",
-                "Butter in großen Pfannen schmelzen",
-                "Spätzle darin schwenken",
-                "Käse unterheben, schmelzen lassen",
-                "Mit Muskat, Salz und Pfeffer würzen",
-                "Röstzwiebeln darüber streuen"
-            ],
-            portionierung: "Pro Person 300g Käsespätzle. Dazu 1 Liter Getränke (Wasser, Apfelsaftschorle). Mit grünem Salat servieren."
-        },
-        {
-            id: 12,
-            titel: "Chili con Carne",
-            beschreibung: "Würziges Chili für anstrengende Einsätze",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 670,
-            basisZeit: 70,
-            zutaten: [
-                { menge: 6000, einheit: "g", name: "Hackfleisch, gemischt" },
-                { menge: 8000, einheit: "g", name: "Kidneybohnen, Dose" },
-                { menge: 4000, einheit: "g", name: "Mais, Dose" },
-                { menge: 30, einheit: "", name: "Zwiebeln, gewürfelt" },
-                { menge: 1000, einheit: "g", name: "Tomaten, stückig" },
-                { menge: 200, einheit: "g", name: "Chilipulver" },
-                { menge: 150, einheit: "g", name: "Kreuzkümmel" },
-                { menge: 100, einheit: "g", name: "Oregano" },
-                { menge: 400, einheit: "ml", name: "Öl" },
-                { menge: 120, einheit: "g", name: "Salz" },
-                { menge: 50, einheit: "g", name: "Knoblauch, gehackt" }
-            ],
-            zubereitung: [
-                "Hackfleisch in Portionen scharf anbraten",
-                "Zwiebeln und Knoblauch zugeben, glasig dünsten",
-                "Gewürze zugeben, kurz mitrösten",
-                "Tomaten, Bohnen und Mais hinzufügen",
-                "60 Minuten bei kleiner Hitze köcheln lassen",
-                "Mit Salz und weiteren Gewürzen abschmecken"
-            ],
-            portionierung: "Pro Person 400ml Chili con Carne. Dazu 1 Liter Getränke (Wasser, isotonische Getränke). Mit Reis oder Brot servieren."
-        },
-        {
-            id: 13,
-            titel: "Gemüse-Reis-Pfanne mit Hähnchen",
-            beschreibung: "Leichte Pfanne für warme Tage",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 540,
-            basisZeit: 35,
-            zutaten: [
-                { menge: 6000, einheit: "g", name: "Reis, gekocht" },
-                { menge: 8000, einheit: "g", name: "Hähnchenbrust, gewürfelt" },
-                { menge: 25, einheit: "", name: "Paprika, gewürfelt" },
-                { menge: 20, einheit: "", name: "Zucchini, gewürfelt" },
-                { menge: 15, einheit: "", name: "Karotten, gewürfelt" },
-                { menge: 400, einheit: "ml", name: "Sojasauce" },
-                { menge: 300, einheit: "ml", name: "Öl" },
-                { menge: 100, einheit: "g", name: "Ingwer, gerieben" },
-                { menge: 80, einheit: "g", name: "Knoblauch, gehackt" },
-                { menge: 100, einheit: "g", name: "Salz" },
-                { menge: 50, einheit: "g", name: "Pfeffer" }
-            ],
-            zubereitung: [
-                "Hähnchenwürfel in Öl anbraten, herausnehmen",
-                "Gemüse im Wok kurz anbraten",
-                "Ingwer und Knoblauch zugeben",
-                "Reis hinzufügen, mitbraten",
-                "Hähnchen zurückgeben",
-                "Mit Sojasauce ablöschen, abschmecken"
-            ],
-            portionierung: "Pro Person 350g Reis-Pfanne. Dazu 1 Liter Getränke (Wasser, Tee). Mit Sojasauce extra servieren."
-        },
-        {
-            id: 14,
-            titel: "Kürbissuppe mit Croutons",
-            beschreibung: "Cremige Suppe für herbstliche Einsätze",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 480,
-            basisZeit: 45,
-            zutaten: [
-                { menge: 40, einheit: "", name: "Hokkaido-Kürbis" },
-                { menge: 15, einheit: "", name: "Kartoffeln, gewürfelt" },
-                { menge: 10, einheit: "", name: "Zwiebeln, gewürfelt" },
-                { menge: 20, einheit: "l", name: "Gemüsebrühe" },
-                { menge: 1000, einheit: "ml", name: "Sahne" },
-                { menge: 200, einheit: "g", name: "Ingwer, gerieben" },
-                { menge: 150, einheit: "g", name: "Currypulver" },
-                { menge: 100, einheit: "g", name: "Muskatnuss" },
-                { menge: 300, einheit: "ml", name: "Öl" },
-                { menge: 120, einheit: "g", name: "Salz" },
-                { menge: 2000, einheit: "g", name: "Brotwürfel für Croutons" }
-            ],
-            zubereitung: [
-                "Kürbis und Kartoffeln schälen, würfeln",
-                "Zwiebeln in Öl glasig dünsten",
-                "Kürbis und Kartoffeln zugeben, kurz mitdünsten",
-                "Mit Brühe ablöschen, 25 Minuten kochen",
-                "Pürieren, Sahne unterrühren",
-                "Mit Gewürzen abschmecken",
-                "Croutons in Öl goldbraun rösten"
-            ],
-            portionierung: "Pro Person 400ml Suppe mit Croutons. Dazu 1 Liter Getränke (Wasser, Apfelsaft). Mit frischem Brot servieren."
-        },
-        {
-            id: 15,
-            titel: "SEG-Brotzeitpaket",
-            beschreibung: "Bayrische Brotzeit für Zwischendurch",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "lunch",
-            vegetarisch: false,
-            kalorien: 780,
-            basisZeit: 25,
-            zutaten: [
-                { menge: 100, einheit: "", name: "Brezeln" },
-                { menge: 100, einheit: "", name: "Brötchen" },
-                { menge: 3000, einheit: "g", name: "Obazda/Käsecreme" },
-                { menge: 2000, einheit: "g", name: "Leberkäse, in Scheiben" },
-                { menge: 1500, einheit: "g", name: "Radi, geputzt" },
-                { menge: 2000, einheit: "g", name: "Gurken, sauer" },
-                { menge: 100, einheit: "", name: "Äpfel" },
-                { menge: 50, einheit: "Päckchen", name: "Senf" },
-                { menge: 50, einheit: "Päckchen", name: "Meerrettich" }
-            ],
-            zubereitung: [
-                "Brezeln und Brötchen in Tüten packen",
-                "Obazda in Portionsschälchen abfüllen",
-                "Leberkäse in Scheiben schneiden, portionieren",
-                "Radi und Gurken waschen, portionieren",
-                "Äpfel waschen, pro Paket 1 Stück",
-                "Senf und Meerrettich beipacken",
-                "Alles in Brotzeitboxen anrichten"
-            ],
-            portionierung: "Pro Person 1 Brotzeitpaket. Dazu 1 Liter Getränke (Wasser, Radler). Für Zwischenverpflegung geeignet."
-        },
-        {
-            id: 16,
-            titel: "Protein-Power-Paket",
-            beschreibung: "Eiweißreiche Verpflegung für körperliche Arbeit",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "hand",
-            vegetarisch: true,
-            kalorien: 520,
-            basisZeit: 15,
-            zutaten: [
-                { menge: 4000, einheit: "g", name: "Eiweißriegel" },
-                { menge: 3000, einheit: "g", name: "Studentenfutter" },
-                { menge: 2000, einheit: "g", name: "Kürbiskerne" },
-                { menge: 2000, einheit: "g", name: "Sonnenblumenkerne" },
-                { menge: 3000, einheit: "g", name: "Trockenfrüchte" },
-                { menge: 100, einheit: "", name: "Protein-Shakes" }
-            ],
-            zubereitung: [
-                "Alle Komponenten nach Art sortieren",
-                "Pro Person 2 Eiweißriegel portionieren",
-                "Handvoll Studentenfutter abmessen",
-                "Kerne und Samen mischen, portionieren",
-                "Protein-Shakes kühl halten",
-                "In robuste Beutel verpacken"
-            ],
-            portionierung: "Pro Person 1 Protein-Paket mit 1 Protein-Shake. Zusätzlich 1,5 Liter Wasser pro Person. Für schwere körperliche Arbeit geeignet."
-        },
-        {
-            id: 17,
-            titel: "Italienische Nudelpfanne",
-            beschreibung: "Mediterrane Pfanne für Abwechslung",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 570,
-            basisZeit: 30,
-            zutaten: [
-                { menge: 5000, einheit: "g", name: "Penne-Nudeln" },
-                { menge: 8000, einheit: "g", name: "Tomaten, stückig" },
-                { menge: 3000, einheit: "g", name: "Mozzarella, gewürfelt" },
-                { menge: 500, einheit: "g", name: "Basilikum, frisch" },
-                { menge: 300, einheit: "ml", name: "Olivenöl" },
-                { menge: 200, einheit: "g", name: "Knoblauch, gehackt" },
-                { menge: 150, einheit: "g", name: "Oregano" },
-                { menge: 100, einheit: "g", name: "Salz" },
-                { menge: 50, einheit: "g", name: "Pfeffer" },
-                { menge: 1000, einheit: "g", name: "Parmesan, gerieben" }
-            ],
-            zubereitung: [
-                "Nudeln bissfest kochen, abgießen",
-                "Knoblauch in Olivenöl anschwitzen",
-                "Tomaten zugeben, 10 Minuten köcheln",
-                "Gewürze und Basilikum unterrühren",
-                "Nudeln und Mozzarella unterheben",
-                "Mit Parmesan bestreuen"
-            ],
-            portionierung: "Pro Person 350g Nudelpfanne. Dazu 1 Liter Getränke (Wasser, Mineralwasser). Mit frischem Basilikum garnieren."
-        },
-        {
-            id: 18,
-            titel: "Asiatische Gemüsepfanne",
-            beschreibung: "Wok-Gericht mit asiatischen Aromen",
-            verpflegungsart: "warm",
-            verpflegungstyp: "voll",
-            vegetarisch: true,
-            kalorien: 530,
-            basisZeit: 25,
-            zutaten: [
-                { menge: 6000, einheit: "g", name: "Reisnudeln" },
-                { menge: 30, einheit: "", name: "Frühlingszwiebeln, in Ringen" },
-                { menge: 25, einheit: "", name: "Möhren, in Streifen" },
-                { menge: 20, einheit: "", name: "Paprika, in Streifen" },
-                { menge: 4000, einheit: "g", name: "Sojasprossen" },
-                { menge: 500, einheit: "ml", name: "Sojasauce" },
-                { menge: 300, einheit: "ml", name: "Sesamöl" },
-                { menge: 200, einheit: "g", name: "Ingwer, gerieben" },
-                { menge: 100, einheit: "g", name: "Chiliflocken" },
-                { menge: 150, einheit: "g", name: "Sesam, geröstet" }
-            ],
-            zubereitung: [
-                "Reisnudeln nach Packungsanweisung zubereiten",
-                "Gemüse im Wok kurz und scharf anbraten",
-                "Ingwer und Chili zugeben",
-                "Nudeln unterheben",
-                "Mit Sojasauce und Sesamöl abschmecken",
-                "Mit Sesam bestreuen"
-            ],
-            portionierung: "Pro Person 350g Nudelpfanne. Dazu 1 Liter Getränke (Wasser, grüner Tee). Mit Limettenspalten servieren."
-        },
-        {
-            id: 19,
-            titel: "Kalter Teller für heiße Tage",
-            beschreibung: "Erfrischende kalte Platte",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "voll",
-            vegetarisch: false,
-            kalorien: 620,
-            basisZeit: 35,
-            zutaten: [
-                { menge: 75, einheit: "", name: "Geflügelbrust, gekocht" },
-                { menge: 50, einheit: "", name: "Eier, gekocht" },
-                { menge: 40, einheit: "", name: "Tomaten" },
-                { menge: 40, einheit: "", name: "Gurken" },
-                { menge: 3000, einheit: "g", name: "Kartoffelsalat" },
-                { menge: 2000, einheit: "g", name: "Kräuterquark" },
-                { menge: 100, einheit: "", name: "Brötchen" },
-                { menge: 50, einheit: "Päckchen", name: "Senf" },
-                { menge: 50, einheit: "Päckchen", name: "Mayonnaise" }
-            ],
-            zubereitung: [
-                "Geflügelbrust in Scheiben schneiden",
-                "Eier schälen, halbieren",
-                "Tomaten und Gurken waschen, schneiden",
-                "Kartoffelsalat und Kräuterquark portionieren",
-                "Alles auf Tellern anrichten",
-                "Brötchen und Saucen separat dazu"
-            ],
-            portionierung: "Pro Person 1 kalten Teller. Dazu 1,5 Liter Getränke (Wasser, Eistee). Für heiße Einsatztage geeignet."
-        },
-        {
-            id: 20,
-            titel: "24-Stunden-Notfallpaket",
-            beschreibung: "Komplettverpflegung für Tageseinsätze",
-            verpflegungsart: "kalt",
-            verpflegungstyp: "lunch",
-            vegetarisch: true,
-            kalorien: 2200,
-            basisZeit: 40,
-            zutaten: [
-                { menge: 150, einheit: "", name: "Müsliriegel" },
-                { menge: 150, einheit: "", name: "Energieriegel" },
-                { menge: 7500, einheit: "g", name: "Studentenfutter" },
-                { menge: 5000, einheit: "g", name: "Trockenfrüchte" },
-                { menge: 5000, einheit: "g", name: "Kekse" },
-                { menge: 150, einheit: "", name: "Fertiggerichte (selbsterhitzend)" },
-                { menge: 150, einheit: "Päckchen", name: "Instantkaffee" },
-                { menge: 150, einheit: "Päckchen", name: "Zucker" },
-                { menge: 150, einheit: "Päckchen", name: "Milchpulver" }
-            ],
-            zubereitung: [
-                "Alle Komponenten nach Mahlzeiten sortieren",
-                "Frühstück: Müsliriegel, Kaffee, Kekse",
-                "Mittag: Fertiggericht, Energieriegel",
-                "Abend: Studentenfutter, Trockenfrüchte",
-                "In Tagesrationen verpacken",
-                "Beschriften und stapeln"
-            ],
-            portionierung: "Pro Person 1 24-Stunden-Paket. Zusätzlich 3 Liter Wasser pro Person. Für komplette Tagesverpflegung ohne Küche."
-        }
-    ];
+        // Rezepte Daten - SEG-optimiert mit Getränken und ohne Backen
+        const rezepteDaten = [
+            {
+                id: 1,
+                titel: "SEG-Eintopf mit Rindfleisch",
+                beschreibung: "Kraftvoller Eintopf für kalte Einsatztage",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 650,
+                basisZeit: 60,
+                zutaten: [
+                    { menge: 7500, einheit: "g", name: "Rindfleisch, gewürfelt" },
+                    { menge: 50, einheit: "", name: "Kartoffeln, gewürfelt" },
+                    { menge: 30, einheit: "", name: "Karotten, in Scheiben" },
+                    { menge: 20, einheit: "", name: "Zwiebeln, gewürfelt" },
+                    { menge: 10, einheit: "", name: "Sellerie, gewürfelt" },
+                    { menge: 200, einheit: "g", name: "Tomatenmark" },
+                    { menge: 25, einheit: "l", name: "Rinderbrühe" },
+                    { menge: 100, einheit: "g", name: "Paprikapulver" },
+                    { menge: 50, einheit: "g", name: "Majoran" },
+                    { menge: 300, einheit: "ml", name: "Öl" },
+                    { menge: 100, einheit: "g", name: "Salz" },
+                    { menge: 50, einheit: "g", name: "Pfeffer" }
+                ],
+                zubereitung: [
+                    "Rindfleisch in großen Bratentöpfen portionsweise scharf anbraten",
+                    "Zwiebeln und Sellerie im Bratfond glasig dünsten",
+                    "Tomatenmark zugeben und kurz mitrösten",
+                    "Fleisch zurück in den Topf geben, mit Brühe ablöschen",
+                    "Kartoffeln und Karotten hinzufügen, aufkochen lassen",
+                    "Bei mittlerer Hitze 45 Minuten köcheln lassen",
+                    "Gewürze zugeben und weitere 15 Minuten garen",
+                    "Mit Salz und Pfeffer abschmecken"
+                ],
+                portionierung: "In Feldküchen-Schüsseln portionieren. Pro Person ca. 500ml Eintopf. Dazu 1 Liter Getränke pro Person (Wasser, Apfelschorle im Verhältnis 1:3). Mit frischem Brot servieren."
+            },
+            {
+                id: 2,
+                titel: "Nudelpfanne mit Gemüse und Tofu",
+                beschreibung: "Vegetarische Pfanne für schnelle Verpflegung",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 580,
+                basisZeit: 35,
+                zutaten: [
+                    { menge: 5000, einheit: "g", name: "Nudeln (Spiralnudeln)" },
+                    { menge: 4000, einheit: "g", name: "Tofu, gewürfelt" },
+                    { menge: 30, einheit: "", name: "Zucchini, in Scheiben" },
+                    { menge: 25, einheit: "", name: "Paprika, gewürfelt" },
+                    { menge: 20, einheit: "", name: "Zwiebeln, gewürfelt" },
+                    { menge: 400, einheit: "g", name: "Tomatenmark" },
+                    { menge: 300, einheit: "ml", name: "Sojasauce" },
+                    { menge: 200, einheit: "ml", name: "Öl" },
+                    { menge: 100, einheit: "g", name: "Knoblauch, gehackt" },
+                    { menge: 80, einheit: "g", name: "Salz" },
+                    { menge: 40, einheit: "g", name: "Pfeffer" },
+                    { menge: 50, einheit: "g", name: "Paprikapulver" }
+                ],
+                zubereitung: [
+                    "Nudeln in großen Töpfen bissfest kochen, abgießen",
+                    "Tofu in Bratpfannen goldbraun anbraten",
+                    "Zwiebeln und Knoblauch in Öl anschwitzen",
+                    "Paprika und Zucchini zugeben, 5 Minuten braten",
+                    "Tomatenmark und Gewürze zugeben, kurz mitrösten",
+                    "Gekochte Nudeln und Tofu unterheben",
+                    "Mit Sojasauce abschmecken, alles gut vermengen"
+                ],
+                portionierung: "In wärmeisolierten Behältern portionieren. Pro Person ca. 400g Nudelpfanne. Dazu 1 Liter Getränke pro Person (Wasser, Tee). Mit Sojajoghurt oder geriebenem Käse servieren."
+            },
+            {
+                id: 3,
+                titel: "SEG-Lunchpaket Standard",
+                beschreibung: "Komplettes Lunchpaket für Tageseinsätze",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "lunch",
+                vegetarisch: true,
+                kalorien: 850,
+                basisZeit: 20,
+                zutaten: [
+                    { menge: 100, einheit: "", name: "Vollkornbrötchen" },
+                    { menge: 2500, einheit: "g", name: "Käse, in Scheiben" },
+                    { menge: 2500, einheit: "g", name: "Frischkäse" },
+                    { menge: 1500, einheit: "g", name: "Vegetarischer Aufstrich" },
+                    { menge: 50, einheit: "", name: "Äpfel" },
+                    { menge: 50, einheit: "", name: "Bananen" },
+                    { menge: 2500, einheit: "g", name: "Müsliriegel" },
+                    { menge: 2500, einheit: "g", name: "Nüsse, gemischt" },
+                    { menge: 100, einheit: "", name: "Schokoriegel" },
+                    { menge: 50, einheit: "Päckchen", name: "Feuchttücher" }
+                ],
+                zubereitung: [
+                    "Brötchen mit Frischkäse bestreichen",
+                    "Käsescheiben und Aufstrich gleichmäßig verteilen",
+                    "Jedes Lunchpaket mit 1 Brötchen, 1 Apfel, 1 Banane befüllen",
+                    "Pro Paket 1 Müsliriegel, 1 Schokoriegel und 1 Nuss-Portion hinzufügen",
+                    "Feuchttücher separat beipacken",
+                    "Pakete in Papiertüten oder Frischhalteboxen verpacken"
+                ],
+                portionierung: "Pro Person 1 Lunchpaket. Zusätzlich 1 Liter Getränke pro Person (Mineralwasser, Saftschorle). Pakete beschriften und nach Einheit/Einsatzbereich sortieren."
+            },
+            {
+                id: 4,
+                titel: "Energie-Handverpflegung",
+                beschreibung: "Kompakte Verpflegung für kurze Einsätze",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "hand",
+                vegetarisch: true,
+                kalorien: 450,
+                basisZeit: 10,
+                zutaten: [
+                    { menge: 5000, einheit: "g", name: "Müsliriegel" },
+                    { menge: 5000, einheit: "g", name: "Studentenfutter" },
+                    { menge: 2500, einheit: "g", name: "Trockenfrüchte" },
+                    { menge: 2500, einheit: "g", name: "Kekse" },
+                    { menge: 100, einheit: "", name: "Energieriegel" },
+                    { menge: 50, einheit: "Päckchen", name: "Kaugummi" }
+                ],
+                zubereitung: [
+                    "Alle Komponenten nach Arten sortieren",
+                    "Pro Person 2 Müsliriegel, 1 Handvoll Studentenfutter portionieren",
+                    "Trockenfrüchte und Kekse gleichmäßig aufteilen",
+                    "Energieriegel und Kaugummi hinzufügen",
+                    "In wiederverschließbare Beutel abfüllen",
+                    "Beutel beschriften und stapeln"
+                ],
+                portionierung: "Pro Person 1 Handverpflegungsbeutel. Zusätzlich 1 Liter Getränke pro Person (Isotonische Getränke, Wasser). Für Einsätze unter 4 Stunden geeignet."
+            },
+            {
+                id: 5,
+                titel: "Kartoffel-Gemüse-Pfanne",
+                beschreibung: "Einfache, nahrhafte Pfanne aus Feldküche",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 520,
+                basisZeit: 40,
+                zutaten: [
+                    { menge: 60, einheit: "", name: "Kartoffeln, gewürfelt" },
+                    { menge: 30, einheit: "", name: "Karotten, in Scheiben" },
+                    { menge: 20, einheit: "", name: "Zwiebeln, gewürfelt" },
+                    { menge: 15, einheit: "", name: "Lauch, in Ringen" },
+                    { menge: 4000, einheit: "g", name: "Tiefkühl-Erbsen" },
+                    { menge: 300, einheit: "ml", name: "Öl" },
+                    { menge: 150, einheit: "g", name: "Senf" },
+                    { menge: 100, einheit: "g", name: "Salz" },
+                    { menge: 50, einheit: "g", name: "Pfeffer" },
+                    { menge: 30, einheit: "g", name: "Kümmel" },
+                    { menge: 20, einheit: "g", name: "Paprikapulver" }
+                ],
+                zubereitung: [
+                    "Kartoffeln und Karotten in Salzwasser 15 Minuten vorkochen",
+                    "Zwiebeln und Lauch in großen Pfannen anschwitzen",
+                    "Vorgekochte Kartoffeln und Karotten zugeben",
+                    "Bei mittlerer Hitze 10 Minuten braten bis goldbraun",
+                    "Tiefkühlerbsen zugeben, 5 Minuten mitgaren",
+                    "Senf und Gewürze unterrühren, abschmecken"
+                ],
+                portionierung: "In wärmeisolierten Behältern portionieren. Pro Person ca. 400g Pfannengericht. Dazu 1 Liter Getränke pro Person (Wasser, Tee). Mit Senf oder Ketchup servieren."
+            },
+            {
+                id: 6,
+                titel: "Notfall-Handverpflegung",
+                beschreibung: "Minimalistische Verpflegung für Akuteinsätze",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "hand",
+                vegetarisch: true,
+                kalorien: 300,
+                basisZeit: 5,
+                zutaten: [
+                    { menge: 100, einheit: "", name: "Energieriegel" },
+                    { menge: 5000, einheit: "g", name: "Traubenzucker" },
+                    { menge: 50, einheit: "Päckchen", name: "Salzstangen" },
+                    { menge: 50, einheit: "Päckchen", name: "Kekse" }
+                ],
+                zubereitung: [
+                    "Energieriegel und Traubenzucker sortieren",
+                    "Pro Person 2 Energieriegel, 1 Päckchen Salzstangen portionieren",
+                    "Traubenzucker und Kekse gleichmäßig verteilen",
+                    "In kleine Beutel oder Tüten abfüllen",
+                    "Für schnelle Verteilung bereitstellen"
+                ],
+                portionierung: "Pro Person 1 Notfallpaket. Zusätzlich 0,5 Liter Wasser pro Person. Nur für Einsätze unter 2 Stunden oder als Überbrückung bis zur Hauptverpflegung."
+            },
+            {
+                id: 7,
+                titel: "Gulasch mit Kartoffeln",
+                beschreibung: "Klassisches Gulasch für Kraftspender",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 680,
+                basisZeit: 75,
+                zutaten: [
+                    { menge: 8000, einheit: "g", name: "Rindergulasch" },
+                    { menge: 60, einheit: "", name: "Kartoffeln, gewürfelt" },
+                    { menge: 25, einheit: "", name: "Zwiebeln, gewürfelt" },
+                    { menge: 200, einheit: "g", name: "Tomatenmark" },
+                    { menge: 150, einheit: "g", name: "Paprikapulver, edelsüß" },
+                    { menge: 50, einheit: "g", name: "Kümmel, gemahlen" },
+                    { menge: 30, einheit: "l", name: "Rinderfond" },
+                    { menge: 400, einheit: "ml", name: "Öl" },
+                    { menge: 120, einheit: "g", name: "Salz" },
+                    { menge: 60, einheit: "g", name: "Pfeffer" }
+                ],
+                zubereitung: [
+                    "Rindergulasch portionsweise scharf anbraten",
+                    "Zwiebeln glasig dünsten, Tomatenmark zugeben",
+                    "Paprikapulver einrühren, kurz mitrösten",
+                    "Fleisch zurückgeben, mit Fond ablöschen",
+                    "2 Stunden bei kleiner Hitze schmoren lassen",
+                    "Kartoffeln zugeben, weitere 30 Minuten garen",
+                    "Mit Salz, Pfeffer und Kümmel abschmecken"
+                ],
+                portionierung: "Pro Person 500ml Gulasch mit Kartoffeln. Dazu 1 Liter Getränke (Wasser, Malzbier). Mit frischem Brot servieren."
+            },
+            {
+                id: 8,
+                titel: "Gemüse-Curry mit Reis",
+                beschreibung: "Würziges Curry für vegetarische Verpflegung",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 560,
+                basisZeit: 45,
+                zutaten: [
+                    { menge: 6000, einheit: "g", name: "Reis, langkorn" },
+                    { menge: 40, einheit: "", name: "Kartoffeln, gewürfelt" },
+                    { menge: 25, einheit: "", name: "Karotten, in Scheiben" },
+                    { menge: 20, einheit: "", name: "Zwiebeln, gewürfelt" },
+                    { menge: 15, einheit: "", name: "Paprika, gewürfelt" },
+                    { menge: 8000, einheit: "g", name: "Kokosmilch" },
+                    { menge: 200, einheit: "g", name: "Currypaste, gelb" },
+                    { menge: 150, einheit: "g", name: "Currypulver" },
+                    { menge: 100, einheit: "g", name: "Knoblauch, gehackt" },
+                    { menge: 50, einheit: "g", name: "Ingwer, gerieben" },
+                    { menge: 300, einheit: "ml", name: "Öl" },
+                    { menge: 100, einheit: "g", name: "Salz" }
+                ],
+                zubereitung: [
+                    "Reis nach Packungsanleitung kochen",
+                    "Zwiebeln, Knoblauch und Ingwer in Öl anschwitzen",
+                    "Currypaste zugeben, kurz anbraten",
+                    "Gemüse hinzufügen, 5 Minuten mitdünsten",
+                    "Kokosmilch angießen, aufkochen lassen",
+                    "20 Minuten bei mittlerer Hitze köcheln",
+                    "Mit Salz und Currypulver abschmecken"
+                ],
+                portionierung: "Pro Person 200g Reis mit 300ml Curry. Dazu 1 Liter Getränke (Wasser, Tee). Mit frischen Kräutern garnieren."
+            },
+            {
+                id: 9,
+                titel: "Bratwurst mit Kartoffelsalat",
+                beschreibung: "Deftige Mahlzeit für Einsatzkräfte",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 720,
+                basisZeit: 50,
+                zutaten: [
+                    { menge: 100, einheit: "", name: "Bratwürste" },
+                    { menge: 80, einheit: "", name: "Kartoffeln, festkochend" },
+                    { menge: 20, einheit: "", name: "Zwiebeln, gewürfelt" },
+                    { menge: 1500, einheit: "ml", name: "Brühe" },
+                    { menge: 1000, einheit: "ml", name: "Essig" },
+                    { menge: 500, einheit: "ml", name: "Öl" },
+                    { menge: 300, einheit: "g", name: "Senf" },
+                    { menge: 200, einheit: "g", name: "Gurken, gewürfelt" },
+                    { menge: 100, einheit: "g", name: "Salz" },
+                    { menge: 50, einheit: "g", name: "Pfeffer" },
+                    { menge: 50, einheit: "g", name: "Zucker" }
+                ],
+                zubereitung: [
+                    "Kartoffeln kochen, schälen und in Scheiben schneiden",
+                    "Brühe, Essig, Öl und Gewürze zur Marinade verrühren",
+                    "Kartoffelscheiben mit Zwiebeln und Gurken mischen",
+                    "Marinade darüber gießen, ziehen lassen",
+                    "Bratwürste grillen oder braten",
+                    "Kartoffelsalat mindestens 1 Stunde durchziehen lassen"
+                ],
+                portionierung: "Pro Person 1 Bratwurst mit 300g Kartoffelsalat. Dazu 1 Liter Getränke (Wasser, Apfelschorle). Mit Senf und Brot servieren."
+            },
+            {
+                id: 10,
+                titel: "Linseneintopf mit Würstchen",
+                beschreibung: "Nahrhafter Eintopf mit hohem Eiweißgehalt",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 590,
+                basisZeit: 55,
+                zutaten: [
+                    { menge: 5000, einheit: "g", name: "Linsen, trocken" },
+                    { menge: 75, einheit: "", name: "Wiener Würstchen" },
+                    { menge: 25, einheit: "", name: "Zwiebeln, gewürfelt" },
+                    { menge: 20, einheit: "", name: "Karotten, gewürfelt" },
+                    { menge: 15, einheit: "", name: "Sellerie, gewürfelt" },
+                    { menge: 30, einheit: "l", name: "Gemüsebrühe" },
+                    { menge: 200, einheit: "g", name: "Tomatenmark" },
+                    { menge: 150, einheit: "g", name: "Majoran" },
+                    { menge: 100, einheit: "g", name: "Thymian" },
+                    { menge: 250, einheit: "ml", name: "Öl" },
+                    { menge: 120, einheit: "g", name: "Salz" },
+                    { menge: 60, einheit: "g", name: "Pfeffer" }
+                ],
+                zubereitung: [
+                    "Zwiebeln, Karotten und Sellerie in Öl anschwitzen",
+                    "Tomatenmark zugeben, kurz mitrösten",
+                    "Linsen hinzufügen, mit Brühe ablöschen",
+                    "45 Minuten köcheln lassen, bis Linsen weich sind",
+                    "Würstchen in Scheiben schneiden, zugeben",
+                    "10 Minuten mitgaren, mit Gewürzen abschmecken"
+                ],
+                portionierung: "Pro Person 500ml Linseneintopf. Dazu 1 Liter Getränke (Wasser, Tee). Mit Brot oder Brötchen servieren."
+            },
+            {
+                id: 11,
+                titel: "Käsespätzle mit Röstzwiebeln",
+                beschreibung: "Beliebtes Gericht für kalte Tage",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 610,
+                basisZeit: 40,
+                zutaten: [
+                    { menge: 8000, einheit: "g", name: "Spätzle, frisch" },
+                    { menge: 4000, einheit: "g", name: "Bergkäse, gerieben" },
+                    { menge: 1000, einheit: "g", name: "Emmentaler, gerieben" },
+                    { menge: 500, einheit: "g", name: "Röstzwiebeln" },
+                    { menge: 400, einheit: "ml", name: "Öl" },
+                    { menge: 300, einheit: "g", name: "Butter" },
+                    { menge: 150, einheit: "g", name: "Muskatnuss" },
+                    { menge: 100, einheit: "g", name: "Salz" },
+                    { menge: 50, einheit: "g", name: "Pfeffer" }
+                ],
+                zubereitung: [
+                    "Spätzle in kochendem Salzwasser al dente kochen",
+                    "Abgießen und gut abtropfen lassen",
+                    "Butter in großen Pfannen schmelzen",
+                    "Spätzle darin schwenken",
+                    "Käse unterheben, schmelzen lassen",
+                    "Mit Muskat, Salz und Pfeffer würzen",
+                    "Röstzwiebeln darüber streuen"
+                ],
+                portionierung: "Pro Person 300g Käsespätzle. Dazu 1 Liter Getränke (Wasser, Apfelsaftschorle). Mit grünem Salat servieren."
+            },
+            {
+                id: 12,
+                titel: "Chili con Carne",
+                beschreibung: "Würziges Chili für anstrengende Einsätze",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 670,
+                basisZeit: 70,
+                zutaten: [
+                    { menge: 6000, einheit: "g", name: "Hackfleisch, gemischt" },
+                    { menge: 8000, einheit: "g", name: "Kidneybohnen, Dose" },
+                    { menge: 4000, einheit: "g", name: "Mais, Dose" },
+                    { menge: 30, einheit: "", name: "Zwiebeln, gewürfelt" },
+                    { menge: 1000, einheit: "g", name: "Tomaten, stückig" },
+                    { menge: 200, einheit: "g", name: "Chilipulver" },
+                    { menge: 150, einheit: "g", name: "Kreuzkümmel" },
+                    { menge: 100, einheit: "g", name: "Oregano" },
+                    { menge: 400, einheit: "ml", name: "Öl" },
+                    { menge: 120, einheit: "g", name: "Salz" },
+                    { menge: 50, einheit: "g", name: "Knoblauch, gehackt" }
+                ],
+                zubereitung: [
+                    "Hackfleisch in Portionen scharf anbraten",
+                    "Zwiebeln und Knoblauch zugeben, glasig dünsten",
+                    "Gewürze zugeben, kurz mitrösten",
+                    "Tomaten, Bohnen und Mais hinzufügen",
+                    "60 Minuten bei kleiner Hitze köcheln lassen",
+                    "Mit Salz und weiteren Gewürzen abschmecken"
+                ],
+                portionierung: "Pro Person 400ml Chili con Carne. Dazu 1 Liter Getränke (Wasser, isotonische Getränke). Mit Reis oder Brot servieren."
+            },
+            {
+                id: 13,
+                titel: "Gemüse-Reis-Pfanne mit Hähnchen",
+                beschreibung: "Leichte Pfanne für warme Tage",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 540,
+                basisZeit: 35,
+                zutaten: [
+                    { menge: 6000, einheit: "g", name: "Reis, gekocht" },
+                    { menge: 8000, einheit: "g", name: "Hähnchenbrust, gewürfelt" },
+                    { menge: 25, einheit: "", name: "Paprika, gewürfelt" },
+                    { menge: 20, einheit: "", name: "Zucchini, gewürfelt" },
+                    { menge: 15, einheit: "", name: "Karotten, gewürfelt" },
+                    { menge: 400, einheit: "ml", name: "Sojasauce" },
+                    { menge: 300, einheit: "ml", name: "Öl" },
+                    { menge: 100, einheit: "g", name: "Ingwer, gerieben" },
+                    { menge: 80, einheit: "g", name: "Knoblauch, gehackt" },
+                    { menge: 100, einheit: "g", name: "Salz" },
+                    { menge: 50, einheit: "g", name: "Pfeffer" }
+                ],
+                zubereitung: [
+                    "Hähnchenwürfel in Öl anbraten, herausnehmen",
+                    "Gemüse im Wok kurz anbraten",
+                    "Ingwer und Knoblauch zugeben",
+                    "Reis hinzufügen, mitbraten",
+                    "Hähnchen zurückgeben",
+                    "Mit Sojasauce ablöschen, abschmecken"
+                ],
+                portionierung: "Pro Person 350g Reis-Pfanne. Dazu 1 Liter Getränke (Wasser, Tee). Mit Sojasauce extra servieren."
+            },
+            {
+                id: 14,
+                titel: "Kürbissuppe mit Croutons",
+                beschreibung: "Cremige Suppe für herbstliche Einsätze",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 480,
+                basisZeit: 45,
+                zutaten: [
+                    { menge: 40, einheit: "", name: "Hokkaido-Kürbis" },
+                    { menge: 15, einheit: "", name: "Kartoffeln, gewürfelt" },
+                    { menge: 10, einheit: "", name: "Zwiebeln, gewürfelt" },
+                    { menge: 20, einheit: "l", name: "Gemüsebrühe" },
+                    { menge: 1000, einheit: "ml", name: "Sahne" },
+                    { menge: 200, einheit: "g", name: "Ingwer, gerieben" },
+                    { menge: 150, einheit: "g", name: "Currypulver" },
+                    { menge: 100, einheit: "g", name: "Muskatnuss" },
+                    { menge: 300, einheit: "ml", name: "Öl" },
+                    { menge: 120, einheit: "g", name: "Salz" },
+                    { menge: 2000, einheit: "g", name: "Brotwürfel für Croutons" }
+                ],
+                zubereitung: [
+                    "Kürbis und Kartoffeln schälen, würfeln",
+                    "Zwiebeln in Öl glasig dünsten",
+                    "Kürbis und Kartoffeln zugeben, kurz mitdünsten",
+                    "Mit Brühe ablöschen, 25 Minuten kochen",
+                    "Pürieren, Sahne unterrühren",
+                    "Mit Gewürzen abschmecken",
+                    "Croutons in Öl goldbraun rösten"
+                ],
+                portionierung: "Pro Person 400ml Suppe mit Croutons. Dazu 1 Liter Getränke (Wasser, Apfelsaft). Mit frischem Brot servieren."
+            },
+            {
+                id: 15,
+                titel: "SEG-Brotzeitpaket",
+                beschreibung: "Bayrische Brotzeit für Zwischendurch",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "lunch",
+                vegetarisch: false,
+                kalorien: 780,
+                basisZeit: 25,
+                zutaten: [
+                    { menge: 100, einheit: "", name: "Brezeln" },
+                    { menge: 100, einheit: "", name: "Brötchen" },
+                    { menge: 3000, einheit: "g", name: "Obazda/Käsecreme" },
+                    { menge: 2000, einheit: "g", name: "Leberkäse, in Scheiben" },
+                    { menge: 1500, einheit: "g", name: "Radi, geputzt" },
+                    { menge: 2000, einheit: "g", name: "Gurken, sauer" },
+                    { menge: 100, einheit: "", name: "Äpfel" },
+                    { menge: 50, einheit: "Päckchen", name: "Senf" },
+                    { menge: 50, einheit: "Päckchen", name: "Meerrettich" }
+                ],
+                zubereitung: [
+                    "Brezeln und Brötchen in Tüten packen",
+                    "Obazda in Portionsschälchen abfüllen",
+                    "Leberkäse in Scheiben schneiden, portionieren",
+                    "Radi und Gurken waschen, portionieren",
+                    "Äpfel waschen, pro Paket 1 Stück",
+                    "Senf und Meerrettich beipacken",
+                    "Alles in Brotzeitboxen anrichten"
+                ],
+                portionierung: "Pro Person 1 Brotzeitpaket. Dazu 1 Liter Getränke (Wasser, Radler). Für Zwischenverpflegung geeignet."
+            },
+            {
+                id: 16,
+                titel: "Protein-Power-Paket",
+                beschreibung: "Eiweißreiche Verpflegung für körperliche Arbeit",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "hand",
+                vegetarisch: true,
+                kalorien: 520,
+                basisZeit: 15,
+                zutaten: [
+                    { menge: 4000, einheit: "g", name: "Eiweißriegel" },
+                    { menge: 3000, einheit: "g", name: "Studentenfutter" },
+                    { menge: 2000, einheit: "g", name: "Kürbiskerne" },
+                    { menge: 2000, einheit: "g", name: "Sonnenblumenkerne" },
+                    { menge: 3000, einheit: "g", name: "Trockenfrüchte" },
+                    { menge: 100, einheit: "", name: "Protein-Shakes" }
+                ],
+                zubereitung: [
+                    "Alle Komponenten nach Art sortieren",
+                    "Pro Person 2 Eiweißriegel portionieren",
+                    "Handvoll Studentenfutter abmessen",
+                    "Kerne und Samen mischen, portionieren",
+                    "Protein-Shakes kühl halten",
+                    "In robuste Beutel verpacken"
+                ],
+                portionierung: "Pro Person 1 Protein-Paket mit 1 Protein-Shake. Zusätzlich 1,5 Liter Wasser pro Person. Für schwere körperliche Arbeit geeignet."
+            },
+            {
+                id: 17,
+                titel: "Italienische Nudelpfanne",
+                beschreibung: "Mediterrane Pfanne für Abwechslung",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 570,
+                basisZeit: 30,
+                zutaten: [
+                    { menge: 5000, einheit: "g", name: "Penne-Nudeln" },
+                    { menge: 8000, einheit: "g", name: "Tomaten, stückig" },
+                    { menge: 3000, einheit: "g", name: "Mozzarella, gewürfelt" },
+                    { menge: 500, einheit: "g", name: "Basilikum, frisch" },
+                    { menge: 300, einheit: "ml", name: "Olivenöl" },
+                    { menge: 200, einheit: "g", name: "Knoblauch, gehackt" },
+                    { menge: 150, einheit: "g", name: "Oregano" },
+                    { menge: 100, einheit: "g", name: "Salz" },
+                    { menge: 50, einheit: "g", name: "Pfeffer" },
+                    { menge: 1000, einheit: "g", name: "Parmesan, gerieben" }
+                ],
+                zubereitung: [
+                    "Nudeln bissfest kochen, abgießen",
+                    "Knoblauch in Olivenöl anschwitzen",
+                    "Tomaten zugeben, 10 Minuten köcheln",
+                    "Gewürze und Basilikum unterrühren",
+                    "Nudeln und Mozzarella unterheben",
+                    "Mit Parmesan bestreuen"
+                ],
+                portionierung: "Pro Person 350g Nudelpfanne. Dazu 1 Liter Getränke (Wasser, Mineralwasser). Mit frischem Basilikum garnieren."
+            },
+            {
+                id: 18,
+                titel: "Asiatische Gemüsepfanne",
+                beschreibung: "Wok-Gericht mit asiatischen Aromen",
+                verpflegungsart: "warm",
+                verpflegungstyp: "voll",
+                vegetarisch: true,
+                kalorien: 530,
+                basisZeit: 25,
+                zutaten: [
+                    { menge: 6000, einheit: "g", name: "Reisnudeln" },
+                    { menge: 30, einheit: "", name: "Frühlingszwiebeln, in Ringen" },
+                    { menge: 25, einheit: "", name: "Möhren, in Streifen" },
+                    { menge: 20, einheit: "", name: "Paprika, in Streifen" },
+                    { menge: 4000, einheit: "g", name: "Sojasprossen" },
+                    { menge: 500, einheit: "ml", name: "Sojasauce" },
+                    { menge: 300, einheit: "ml", name: "Sesamöl" },
+                    { menge: 200, einheit: "g", name: "Ingwer, gerieben" },
+                    { menge: 100, einheit: "g", name: "Chiliflocken" },
+                    { menge: 150, einheit: "g", name: "Sesam, geröstet" }
+                ],
+                zubereitung: [
+                    "Reisnudeln nach Packungsanweisung zubereiten",
+                    "Gemüse im Wok kurz und scharf anbraten",
+                    "Ingwer und Chili zugeben",
+                    "Nudeln unterheben",
+                    "Mit Sojasauce und Sesamöl abschmecken",
+                    "Mit Sesam bestreuen"
+                ],
+                portionierung: "Pro Person 350g Nudelpfanne. Dazu 1 Liter Getränke (Wasser, grüner Tee). Mit Limettenspalten servieren."
+            },
+            {
+                id: 19,
+                titel: "Kalter Teller für heiße Tage",
+                beschreibung: "Erfrischende kalte Platte",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "voll",
+                vegetarisch: false,
+                kalorien: 620,
+                basisZeit: 35,
+                zutaten: [
+                    { menge: 75, einheit: "", name: "Geflügelbrust, gekocht" },
+                    { menge: 50, einheit: "", name: "Eier, gekocht" },
+                    { menge: 40, einheit: "", name: "Tomaten" },
+                    { menge: 40, einheit: "", name: "Gurken" },
+                    { menge: 3000, einheit: "g", name: "Kartoffelsalat" },
+                    { menge: 2000, einheit: "g", name: "Kräuterquark" },
+                    { menge: 100, einheit: "", name: "Brötchen" },
+                    { menge: 50, einheit: "Päckchen", name: "Senf" },
+                    { menge: 50, einheit: "Päckchen", name: "Mayonnaise" }
+                ],
+                zubereitung: [
+                    "Geflügelbrust in Scheiben schneiden",
+                    "Eier schälen, halbieren",
+                    "Tomaten und Gurken waschen, schneiden",
+                    "Kartoffelsalat und Kräuterquark portionieren",
+                    "Alles auf Tellern anrichten",
+                    "Brötchen und Saucen separat dazu"
+                ],
+                portionierung: "Pro Person 1 kalten Teller. Dazu 1,5 Liter Getränke (Wasser, Eistee). Für heiße Einsatztage geeignet."
+            },
+            {
+                id: 20,
+                titel: "24-Stunden-Notfallpaket",
+                beschreibung: "Komplettverpflegung für Tageseinsätze",
+                verpflegungsart: "kalt",
+                verpflegungstyp: "lunch",
+                vegetarisch: true,
+                kalorien: 2200,
+                basisZeit: 40,
+                zutaten: [
+                    { menge: 150, einheit: "", name: "Müsliriegel" },
+                    { menge: 150, einheit: "", name: "Energieriegel" },
+                    { menge: 7500, einheit: "g", name: "Studentenfutter" },
+                    { menge: 5000, einheit: "g", name: "Trockenfrüchte" },
+                    { menge: 5000, einheit: "g", name: "Kekse" },
+                    { menge: 150, einheit: "", name: "Fertiggerichte (selbsterhitzend)" },
+                    { menge: 150, einheit: "Päckchen", name: "Instantkaffee" },
+                    { menge: 150, einheit: "Päckchen", name: "Zucker" },
+                    { menge: 150, einheit: "Päckchen", name: "Milchpulver" }
+                ],
+                zubereitung: [
+                    "Alle Komponenten nach Mahlzeiten sortieren",
+                    "Frühstück: Müsliriegel, Kaffee, Kekse",
+                    "Mittag: Fertiggericht, Energieriegel",
+                    "Abend: Studentenfutter, Trockenfrüchte",
+                    "In Tagesrationen verpacken",
+                    "Beschriften und stapeln"
+                ],
+                portionierung: "Pro Person 1 24-Stunden-Paket. Zusätzlich 3 Liter Wasser pro Person. Für komplette Tagesverpflegung ohne Küche."
+            }
+        ];
 
         // Globale Variablen
         let aktuellesRezept = null;
