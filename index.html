@@ -98,7 +98,7 @@
             font-size: 0.9rem;
         }
 
-        select, input[type="number"] {
+        select, input[type="number"], input[type="text"] {
             padding: 0.5rem;
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -286,6 +286,30 @@
             background: #2980b9;
         }
 
+        button.secondary {
+            background: #95a5a6;
+        }
+
+        button.secondary:hover {
+            background: #7f8c8d;
+        }
+
+        button.success {
+            background: #27ae60;
+        }
+
+        button.success:hover {
+            background: #219a52;
+        }
+
+        button.warning {
+            background: #e67e22;
+        }
+
+        button.warning:hover {
+            background: #d35400;
+        }
+
         /* Einkaufsliste */
         .einkaufsliste-info {
             background: white;
@@ -343,6 +367,120 @@
         .einkaufsliste-item span:last-child {
             color: #3498db;
             font-weight: bold;
+        }
+
+        /* Lager-Styles */
+        .lager-controls {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .lager-form {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: end;
+            flex: 1;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .lager-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .lager-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .lager-table th,
+        .lager-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .lager-table th {
+            background: #34495e;
+            color: white;
+            font-weight: 600;
+        }
+
+        .lager-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .lager-table .low-stock {
+            background: #ffeaa7;
+        }
+
+        .lager-table .critical-stock {
+            background: #fab1a0;
+        }
+
+        .lager-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .lager-actions button {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .lager-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .stat-card.warning .number {
+            color: #e67e22;
+        }
+
+        .stat-card.critical .number {
+            color: #e74c3c;
         }
 
         .keine-rezepte {
@@ -471,6 +609,19 @@
                 flex-direction: column;
                 gap: 0.5rem;
             }
+            
+            .lager-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .lager-table {
+                overflow-x: auto;
+            }
+            
+            .lager-actions {
+                flex-direction: column;
+            }
         }
         
         /* Mobile First Optimierungen */
@@ -508,6 +659,10 @@
                 padding: 0.6rem 1.2rem;
                 font-size: 0.9rem;
             }
+            
+            .lager-stats {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -519,6 +674,7 @@
             <div class="nav-links">
                 <a href="#rezepte" class="nav-link active" data-page="rezepte">Rezepte</a>
                 <a href="#einkaufsliste" class="nav-link" data-page="einkaufsliste">Einkaufsliste</a>
+                <a href="#lager" class="nav-link" data-page="lager">Lager</a>
             </div>
         </div>
     </nav>
@@ -626,13 +782,95 @@
                 </div>
             </div>
         </div>
+
+        <!-- Lager-Seite -->
+        <div id="lager" class="page">
+            <div class="container">
+                <h2>Lagerverwaltung</h2>
+                
+                <!-- Lager-Statistiken -->
+                <div class="lager-stats" id="lager-stats">
+                    <!-- Statistiken werden dynamisch eingefügt -->
+                </div>
+
+                <!-- Lager-Controls -->
+                <div class="lager-controls">
+                    <div class="lager-form">
+                        <div class="form-group">
+                            <label for="neues-item">Artikelname</label>
+                            <input type="text" id="neues-item" placeholder="z.B. Kartoffeln">
+                        </div>
+                        <div class="form-group">
+                            <label for="neue-einheit">Einheit</label>
+                            <select id="neue-einheit">
+                                <option value="kg">kg</option>
+                                <option value="g">g</option>
+                                <option value="l">l</option>
+                                <option value="ml">ml</option>
+                                <option value="Stück">Stück</option>
+                                <option value="Packungen">Packungen</option>
+                                <option value="Dosen">Dosen</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="neue-menge">Menge</label>
+                            <input type="number" id="neue-menge" min="0" step="0.1" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="neue-mindestmenge">Mindestmenge</label>
+                            <input type="number" id="neue-mindestmenge" min="0" step="0.1" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label>&nbsp;</label>
+                            <button class="success" onclick="neuesLagerItem()">Hinzufügen</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lager-Tabelle -->
+                <div class="lager-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Artikel</th>
+                                <th>Einheit</th>
+                                <th>Menge</th>
+                                <th>Mindestmenge</th>
+                                <th>Status</th>
+                                <th>Aktionen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lager-tabelle">
+                            <!-- Lagerdaten werden dynamisch eingefügt -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Lager-Aktionen -->
+                <div class="rezept-actions">
+                    <button onclick="lagerExportieren()">Lager als CSV exportieren</button>
+                    <button class="secondary" onclick="lagerImportieren()">Lager importieren</button>
+                    <button class="warning" onclick="lagerLeeren()">Lager zurücksetzen</button>
+                </div>
+            </div>
+        </div>
     </main>
 
     <!-- Versteckte Druck-Container -->
     <div id="druck-rezept-container" class="druck-container" style="display: none;"></div>
     <div id="druck-einkaufsliste-container" class="druck-container" style="display: none;"></div>
 
+    <!-- Versteckter Datei-Input für Import -->
+    <input type="file" id="lager-import-file" accept=".csv" style="display: none;">
+
     <script>
+        // Upstash Redis Konfiguration
+        const UPSTASH_CONFIG = {
+            URL: "https://helping-cougar-30935.upstash.io",
+            TOKEN: "AXjXAAIncDJhNzc0OTViMWEwZGI0MDdlYmRjNWFhOTYxYjRmNjVhYXAyMzA5MzU",
+            READ_ONLY_TOKEN: "AnjXAAIgcDKLfeRS33kEwLSXH-5rwwYziTlTxrIHmmAT-n9rbo_Elg"
+        };
+
         // Rezepte Daten - SEG-optimiert mit Getränken und ohne Backen
         const rezepteDaten = [
             {
@@ -970,7 +1208,7 @@
                     { menge: 50, einheit: "g", name: "Pfeffer" }
                 ],
                 zubereitung: [
-                    "Spätzle in kochendem Salzwater al dente kochen",
+                    "Spätzle in kochendem Salzwasser al dente kochen",
                     "Abgießen und gut abtropfen lassen",
                     "Butter in großen Pfannen schmelzen",
                     "Spätzle darin schwenken",
@@ -1262,6 +1500,7 @@
         // Globale Variablen
         let aktuellesRezept = null;
         let personenAnzahl = 50; // BASIS: 50 Personen für SEG
+        let lagerDaten = [];
 
         // NEUE FUNKTION: Berechnet skalierte Zubereitungszeit
         function berechneZubereitungszeit(basisZeit, personenAnzahl) {
@@ -1282,6 +1521,290 @@
                 return Math.round(basisZeit * (2 + ((personenAnzahl - 100) / 50) * zusatzFaktor));
             }
         }
+
+        // LAGER-FUNKTIONEN
+        async function lagerDatenLaden() {
+            try {
+                console.log('Lade Lagerdaten von Upstash...');
+                
+                const response = await fetch(`${UPSTASH_CONFIG.URL}/get/lager`, {
+                    headers: {
+                        'Authorization': `Bearer ${UPSTASH_CONFIG.TOKEN}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.result) {
+                    lagerDaten = JSON.parse(data.result);
+                    console.log('Lagerdaten erfolgreich geladen:', lagerDaten);
+                } else {
+                    // Fallback: Standard-Lagerdaten
+                    lagerDaten = [
+                        { name: "Kartoffeln", einheit: "kg", menge: 100, mindestmenge: 50 },
+                        { name: "Karotten", einheit: "kg", menge: 30, mindestmenge: 15 },
+                        { name: "Zwiebeln", einheit: "kg", menge: 20, mindestmenge: 10 },
+                        { name: "Nudeln", einheit: "kg", menge: 50, mindestmenge: 25 },
+                        { name: "Reis", einheit: "kg", menge: 40, mindestmenge: 20 },
+                        { name: "Öl", einheit: "l", menge: 20, mindestmenge: 10 },
+                        { name: "Wasser", einheit: "l", menge: 200, mindestmenge: 100 },
+                        { name: "Konserven", einheit: "Dosen", menge: 100, mindestmenge: 50 }
+                    ];
+                    console.log('Standard-Lagerdaten geladen');
+                }
+                
+                lagerAnzeigen();
+                
+            } catch (error) {
+                console.error('Fehler beim Laden der Lagerdaten:', error);
+                // Fallback zu localStorage
+                const localData = localStorage.getItem('lagerDaten');
+                if (localData) {
+                    lagerDaten = JSON.parse(localData);
+                    console.log('Lagerdaten aus localStorage geladen');
+                } else {
+                    // Standard-Lagerdaten
+                    lagerDaten = [
+                        { name: "Kartoffeln", einheit: "kg", menge: 100, mindestmenge: 50 },
+                        { name: "Karotten", einheit: "kg", menge: 30, mindestmenge: 15 },
+                        { name: "Zwiebeln", einheit: "kg", menge: 20, mindestmenge: 10 },
+                        { name: "Nudeln", einheit: "kg", menge: 50, mindestmenge: 25 },
+                        { name: "Reis", einheit: "kg", menge: 40, mindestmenge: 20 },
+                        { name: "Öl", einheit: "l", menge: 20, mindestmenge: 10 },
+                        { name: "Wasser", einheit: "l", menge: 200, mindestmenge: 100 },
+                        { name: "Konserven", einheit: "Dosen", menge: 100, mindestmenge: 50 }
+                    ];
+                    console.log('Standard-Lagerdaten geladen');
+                }
+                lagerAnzeigen();
+            }
+        }
+
+        async function lagerDatenSpeichern() {
+            try {
+                console.log('Speichere Lagerdaten in Upstash...');
+                
+                const response = await fetch(`${UPSTASH_CONFIG.URL}/set/lager`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${UPSTASH_CONFIG.TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(JSON.stringify(lagerDaten))
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                await response.json();
+                console.log('Lagerdaten erfolgreich gespeichert');
+                
+            } catch (error) {
+                console.error('Fehler beim Speichern der Lagerdaten:', error);
+                // Fallback zu localStorage
+                localStorage.setItem('lagerDaten', JSON.stringify(lagerDaten));
+                console.log('Lagerdaten in localStorage gespeichert');
+            }
+        }
+
+        function lagerAnzeigen() {
+            const tabelle = document.getElementById('lager-tabelle');
+            const statsContainer = document.getElementById('lager-stats');
+            
+            if (!tabelle || !statsContainer) return;
+            
+            // Statistiken berechnen
+            const gesamtArtikel = lagerDaten.length;
+            const niedrigerBestand = lagerDaten.filter(item => item.menge < item.mindestmenge).length;
+            const kritischerBestand = lagerDaten.filter(item => item.menge < item.mindestmenge * 0.5).length;
+            
+            // Statistiken anzeigen
+            statsContainer.innerHTML = `
+                <div class="stat-card">
+                    <h3>Gesamtartikel</h3>
+                    <div class="number">${gesamtArtikel}</div>
+                </div>
+                <div class="stat-card ${niedrigerBestand > 0 ? 'warning' : ''}">
+                    <h3>Niedriger Bestand</h3>
+                    <div class="number">${niedrigerBestand}</div>
+                </div>
+                <div class="stat-card ${kritischerBestand > 0 ? 'critical' : ''}">
+                    <h3>Kritischer Bestand</h3>
+                    <div class="number">${kritischerBestand}</div>
+                </div>
+            `;
+            
+            // Tabelle füllen
+            tabelle.innerHTML = lagerDaten.map((item, index) => {
+                const status = item.menge < item.mindestmenge * 0.5 ? 'critical-stock' : 
+                              item.menge < item.mindestmenge ? 'low-stock' : '';
+                const statusText = item.menge < item.mindestmenge * 0.5 ? 'Kritisch' : 
+                                 item.menge < item.mindestmenge ? 'Niedrig' : 'OK';
+                
+                return `
+                    <tr class="${status}">
+                        <td>${item.name}</td>
+                        <td>${item.einheit}</td>
+                        <td>${item.menge}</td>
+                        <td>${item.mindestmenge}</td>
+                        <td>${statusText}</td>
+                        <td class="lager-actions">
+                            <button onclick="mengeAendern(${index}, 1)" class="success">+1</button>
+                            <button onclick="mengeAendern(${index}, -1)" class="warning">-1</button>
+                            <button onclick="lagerItemLoeschen(${index})" class="secondary">Löschen</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function neuesLagerItem() {
+            const nameInput = document.getElementById('neues-item');
+            const einheitInput = document.getElementById('neue-einheit');
+            const mengeInput = document.getElementById('neue-menge');
+            const mindestmengeInput = document.getElementById('neue-mindestmenge');
+            
+            const name = nameInput.value.trim();
+            const einheit = einheitInput.value;
+            const menge = parseFloat(mengeInput.value);
+            const mindestmenge = parseFloat(mindestmengeInput.value);
+            
+            if (!name || isNaN(menge) || isNaN(mindestmenge)) {
+                alert('Bitte füllen Sie alle Felder korrekt aus.');
+                return;
+            }
+            
+            // Prüfen ob Artikel bereits existiert
+            const existiert = lagerDaten.find(item => 
+                item.name.toLowerCase() === name.toLowerCase()
+            );
+            
+            if (existiert) {
+                alert('Dieser Artikel existiert bereits im Lager.');
+                return;
+            }
+            
+            const neuesItem = {
+                name,
+                einheit,
+                menge,
+                mindestmenge
+            };
+            
+            lagerDaten.push(neuesItem);
+            await lagerDatenSpeichern();
+            lagerAnzeigen();
+            
+            // Formular zurücksetzen
+            nameInput.value = '';
+            mengeInput.value = '0';
+            mindestmengeInput.value = '0';
+        }
+
+        async function mengeAendern(index, aenderung) {
+            if (index < 0 || index >= lagerDaten.length) return;
+            
+            lagerDaten[index].menge += aenderung;
+            
+            // Negative Mengen verhindern
+            if (lagerDaten[index].menge < 0) {
+                lagerDaten[index].menge = 0;
+            }
+            
+            await lagerDatenSpeichern();
+            lagerAnzeigen();
+        }
+
+        async function lagerItemLoeschen(index) {
+            if (confirm('Möchten Sie diesen Artikel wirklich löschen?')) {
+                lagerDaten.splice(index, 1);
+                await lagerDatenSpeichern();
+                lagerAnzeigen();
+            }
+        }
+
+        function lagerExportieren() {
+            const csvHeader = 'Artikel,Einheit,Menge,Mindestmenge\n';
+            const csvRows = lagerDaten.map(item => 
+                `"${item.name}",${item.einheit},${item.menge},${item.mindestmenge}`
+            ).join('\n');
+            
+            const csvContent = csvHeader + csvRows;
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `lager_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function lagerImportieren() {
+            document.getElementById('lager-import-file').click();
+        }
+
+        async function lagerLeeren() {
+            if (confirm('Möchten Sie wirklich das gesamte Lager zurücksetzen? Diese Aktion kann nicht rückgängig gemacht werden.')) {
+                lagerDaten = [];
+                await lagerDatenSpeichern();
+                lagerAnzeigen();
+            }
+        }
+
+        // Event Listener für Datei-Import
+        document.getElementById('lager-import-file').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const csvText = e.target.result;
+                    const lines = csvText.split('\n');
+                    const newLagerDaten = [];
+                    
+                    // Header überspringen (erste Zeile)
+                    for (let i = 1; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+                        
+                        const [name, einheit, menge, mindestmenge] = line.split(',').map(field => 
+                            field.replace(/^"|"$/g, '') // Anführungszeichen entfernen
+                        );
+                        
+                        if (name && einheit) {
+                            newLagerDaten.push({
+                                name,
+                                einheit,
+                                menge: parseFloat(menge) || 0,
+                                mindestmenge: parseFloat(mindestmenge) || 0
+                            });
+                        }
+                    }
+                    
+                    lagerDaten = newLagerDaten;
+                    lagerDatenSpeichern();
+                    lagerAnzeigen();
+                    alert('Lager erfolgreich importiert!');
+                    
+                } catch (error) {
+                    console.error('Fehler beim Importieren:', error);
+                    alert('Fehler beim Importieren der CSV-Datei.');
+                }
+            };
+            
+            reader.readAsText(file);
+            event.target.value = ''; // Reset file input
+        });
 
         // Initialisierung
         document.addEventListener('DOMContentLoaded', function() {
@@ -1333,6 +1856,9 @@
             
             // Rezepte initial laden
             filterRezepte();
+            
+            // Lager initial laden
+            lagerDatenLaden();
         });
 
         // Seitenwechsel
@@ -1368,6 +1894,8 @@
                 filterRezepte();
             } else if (pageId === 'einkaufsliste') {
                 aktualisiereEinkaufsliste();
+            } else if (pageId === 'lager') {
+                lagerAnzeigen();
             }
         }
 
