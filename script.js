@@ -65,8 +65,7 @@ const rezepteDaten = [
             "Butter in einer Auflaufform schmelzen, Nudeln und Gemüse einfüllen",
             "Geriebenen Gouda unterheben und gleichmäßig verteilen",
             "Eiermischung darüber gießen, alles gut durchmischen",
-            "Mit Parmesan bestreuen und im vorgeheizten Ofen",
-            "25-30 Minuten backen bis die Oberfläche goldbraun ist"
+            "Mit Parmesan bestreuen und im vorgeheizten Ofen 25-30 Minuten backen bis die Oberfläche goldbraun ist"
         ],
         portionierung: "In Auflaufformen portionieren. Pro Person 1/8 der Form. Mit frischem Feldsalat oder eingelegtem Gemüse servieren. Für Außeneinsätze in Aluschalen abfüllen."
     },
@@ -95,7 +94,7 @@ const rezepteDaten = [
         zubereitung: [
             "Brot scheibenweise mit Frischkäse bestreichen",
             "Avocado halbieren, Stein entfernen, Fruchtfleisch herauslöffeln",
-            "Avocado mit Zitronensauf, Salz und Pfeffer zerdrücken",
+            "Avocado mit Zitronensaft, Salz und Pfeffer zerdrücken",
             "Auf 4 Brotscheiben Salatblätter legen",
             "Gurken- und Tomatenscheiben gleichmäßig darauf anordnen",
             "Rote Zwiebelringe darüber verteilen",
@@ -206,6 +205,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Einkaufsliste auch aktualisieren
         aktualisiereEinkaufsliste();
     });
+
+    // Rezept-Auswahl Event-Listener
+    document.getElementById('rezept-auswahl').addEventListener('change', zeigeAusgewaehltesRezept);
 
     // Navigation
     document.querySelectorAll('.nav-link').forEach(link => {
