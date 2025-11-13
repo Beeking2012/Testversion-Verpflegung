@@ -125,7 +125,32 @@ select, input[type="number"] {
     width: 80px;
 }
 
-/* Rezepte Grid */
+/* Rezept Dropdown */
+.rezept-dropdown-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.rezept-dropdown-section label {
+    font-weight: bold;
+    margin-right: 1rem;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+#rezept-auswahl {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+    font-size: 1rem;
+    background: white;
+}
+
+/* Rezepte Grid (falls noch benötigt) */
 .rezepte-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -216,13 +241,24 @@ select, input[type="number"] {
     font-size: 1.2rem;
 }
 
+.zutaten-section h4 {
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 0.5rem;
+}
+
 .zutaten-section ul {
     list-style: none;
+    padding: 0;
 }
 
 .zutaten-section li {
-    padding: 0.5rem 0;
+    padding: 0.75rem 0;
     border-bottom: 1px solid #ecf0f1;
+    font-size: 1rem;
+}
+
+.zutaten-section li:last-child {
+    border-bottom: none;
 }
 
 .zubereitung-section ol {
@@ -230,16 +266,29 @@ select, input[type="number"] {
 }
 
 .zubereitung-section li {
-    padding: 0.5rem 0;
+    padding: 0.75rem 0;
     margin-bottom: 0.5rem;
+    line-height: 1.6;
+    border-bottom: 1px solid #f8f9fa;
 }
 
 .portionierung-section {
     grid-column: 1 / -1;
-    background: #f8f9fa;
+    background: #e8f4f8;
     padding: 1.5rem;
     border-radius: 6px;
     margin-top: 1rem;
+    border-left: 4px solid #3498db;
+}
+
+.portionierung-section h4 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.portionierung-section p {
+    line-height: 1.6;
+    margin: 0;
 }
 
 .rezept-actions {
@@ -279,6 +328,15 @@ button:hover {
     gap: 1rem;
 }
 
+.einkaufsliste-info p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.einkaufsliste-info p strong {
+    color: #2c3e50;
+}
+
 .einkaufsliste-kategorie {
     background: white;
     border-radius: 8px;
@@ -297,12 +355,22 @@ button:hover {
 .einkaufsliste-item {
     display: flex;
     justify-content: space-between;
-    padding: 0.5rem 0;
+    padding: 0.75rem 0;
     border-bottom: 1px solid #ecf0f1;
+    align-items: center;
 }
 
 .einkaufsliste-item:last-child {
     border-bottom: none;
+}
+
+.einkaufsliste-item span:first-child {
+    font-weight: 500;
+}
+
+.einkaufsliste-item span:last-child {
+    color: #3498db;
+    font-weight: bold;
 }
 
 .keine-rezepte {
@@ -311,6 +379,33 @@ button:hover {
     background: white;
     border-radius: 8px;
     color: #666;
+}
+
+/* Druck-Styles für PDF-Export */
+@media print {
+    .navbar,
+    .rezept-actions,
+    .einkaufsliste-info button {
+        display: none !important;
+    }
+    
+    .content {
+        margin-top: 0;
+    }
+    
+    .container {
+        padding: 0;
+    }
+    
+    .page {
+        display: block !important;
+    }
+    
+    .rezept-details,
+    .einkaufsliste-kategorie {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
 }
 
 /* Responsive Design */
@@ -331,6 +426,7 @@ button:hover {
     
     .rezept-content {
         grid-template-columns: 1fr;
+        gap: 2rem;
     }
     
     .rezepte-grid {
@@ -340,6 +436,7 @@ button:hover {
     .einkaufsliste-info {
         flex-direction: column;
         align-items: stretch;
+        text-align: center;
     }
     
     .rezept-actions {
@@ -350,4 +447,47 @@ button:hover {
         flex-direction: column;
         gap: 0.5rem;
     }
+    
+    .rezept-dropdown-section {
+        padding: 1rem;
+    }
+    
+    #rezept-auswahl {
+        padding: 0.5rem;
+    }
+    
+    button {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Zusätzliche Verbesserungen für bessere Lesbarkeit */
+.rezept-header h3 {
+    line-height: 1.3;
+}
+
+.zutaten-section,
+.zubereitung-section {
+    background: #fafafa;
+    padding: 1.5rem;
+    border-radius: 6px;
+}
+
+.zubereitung-section ol {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Hover-Effekte für bessere Interaktivität */
+.rezept-dropdown-section select:hover {
+    border-color: #2980b9;
+}
+
+.einkaufsliste-kategorie:hover {
+    transform: translateY(-1px);
+    transition: transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
